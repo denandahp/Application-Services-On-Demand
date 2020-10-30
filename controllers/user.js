@@ -133,7 +133,7 @@ async verifikasiUser (req,res,next){
 
   async register (req, res, next) {
     let data = req.body;
-    try {
+    // try {
       let result = await user.register(data);
       // let response = await sendWAUtils.sendWAMessage(result);
       // if (response.status == 200){
@@ -144,9 +144,9 @@ async verifikasiUser (req,res,next){
           }
         );
       //}
-    } catch (e) {
-      next(e.detail);
-    }
+    // } catch (e) {
+    //   next(e.detail);
+    // }
   }
 
 }

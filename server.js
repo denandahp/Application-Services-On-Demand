@@ -6,6 +6,7 @@ const io = require('socket.io')(server);
 const bodyParser = require('body-parser');
 const CONFIG_FILE_PATH = __dirname + '/configs.json';
 const config = require(CONFIG_FILE_PATH);
+const logger = require('morgan');
 
 const PORT = process.env.PORT || 3000;
 
@@ -18,8 +19,9 @@ app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 
 // Body Parser
+app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true })); 
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // cookie-session
 app.set('trust proxy', 1); // trust first proxy
