@@ -36,6 +36,27 @@ class UserController {
     authUtils.processRequestWithJWT(req, callback, fallback);
   }
 
+  async userstatus (req, res, next) {
+    let callback = async() =>{
+      try {
+        res.locals.edit = true;
+        let id = req.params.id;
+        debug('detail %o', id);
+        let detail = (await user.userstatus(id)).rows[0];
+
+        res.status(200).json({
+          detail
+        });
+      }catch (e) {
+        next(e.detail || e);
+      }
+    };
+    let fallback = (err) => {
+      next(err);
+    }
+    authUtils.processRequestWithJWT(req, callback, fallback);
+  }
+
   async edit (req, res, next) {
     let callback = async () => {
       let data = req.body;
@@ -105,8 +126,9 @@ class UserController {
   
   async verifikasiotp (req,res,next){
     let kodeOTP = req.body.otp;
+    let username = req.body.username;
     try{
-    let result = await user.verifikasiotp(kodeOTP);
+    let result = await user.verifikasiotp(kodeOTP,username);
     res.status(200).json(
       {
         pesan : "OTP telah terverifikasi"
@@ -115,6 +137,21 @@ class UserController {
   } catch (e) {
     next(e.detail);
   }
+}
+
+async resendotp (req,res,next){
+  let data = req.body;
+  try{
+  let result = await user.resendotp(data);
+  res.status(200).json(
+    {
+      pesan : "OTP telah diperbaharui",
+      result
+    }
+  )
+} catch (e) {
+  next(e.detail);
+}
 }
 
 async verifikasiUser (req,res,next){
@@ -132,21 +169,43 @@ async verifikasiUser (req,res,next){
 }
 
   async register (req, res, next) {
+
     let data = req.body;
-    // try {
+    try {
       let result = await user.register(data);
       // let response = await sendWAUtils.sendWAMessage(result);
       // if (response.status == 200){
         res.status(200).json(
           {
-            pesan : "berhasil didaftarkan", 
-            userData: result, 
+            pesan : "Registrasi awal selesai, menunggu verifikasi OTP", 
+            userData: result,
+            //timer : newDateObj
           }
         );
+
       //}
-    // } catch (e) {
-    //   next(e.detail);
-    // }
+    } catch (e) {
+      next(e.detail);
+    }
+  }
+
+  async registerlanjut (req, res, next) {
+
+    let data = req.body;
+    try {
+      let result = await user.registerlanjut(data);
+
+        res.status(200).json(
+          {
+            pesan : "Akun Driver berhasil didaftarkan", 
+            userData: result,
+
+          }
+        );
+
+    } catch (e) {
+      next(e.detail);
+    }
   }
 
 }

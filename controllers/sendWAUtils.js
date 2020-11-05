@@ -4,7 +4,7 @@ require('dotenv').config();
 
 const templateMessage = (userData) => {
     return {
-        phone: "082335506673",
+        phone: userData.phone,
         message: `Halo! Nomor OTP anda adalah ${userData.otp}`
     }
 }

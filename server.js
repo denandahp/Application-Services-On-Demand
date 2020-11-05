@@ -48,12 +48,15 @@ const user = require('./routes/user.js');
 const schedule = require('./routes/schedule.js')
 const warning = require('./routes/warning.js')
 const comment = require('./routes/comment.js')
+const wilayah = require('./routes/wilayah.js')
+
 
 app.use('/', index);
 app.use('/user', user);
 app.use('/user/comment', comment);
 app.use('/schedule', schedule);
 app.use('/warning', warning);
+app.use('/wilayah', wilayah);
 
 
 // Error Middleware
