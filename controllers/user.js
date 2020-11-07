@@ -4,13 +4,14 @@ const user = require('../models/user.js');
 const jwt = require('jsonwebtoken');
 const config = require('../configs.json');
 const sendWAUtils = require('./sendWAUtils.js');
+const sendSMSUtils = require('./sendSMSUtils.js');
 const maxAge = 1 * 24 * 60 * 60;
 
 class UserController {
   async showAllUser (req, res) {
-    let users = (await user.get()).rows;
+    let users = (await user.showAllUser()).rows;
 
-    res.render('index', {
+    res.status(200).json({
       users
     });
   }
@@ -143,15 +144,19 @@ async resendotp (req,res,next){
   let data = req.body;
   try{
   let result = await user.resendotp(data);
+  // let response = await sendWAUtils.sendWAMessage(result);
+  let responsesms = await sendSMSUtils.sendWAmsg(result);
+  if (response.status == 200){
   res.status(200).json(
     {
       pesan : "OTP telah diperbaharui",
       result
     }
   )
-} catch (e) {
-  next(e.detail);
-}
+  }
+    } catch (e) {
+      next(e.detail);
+    }
 }
 
 async verifikasiUser (req,res,next){
@@ -173,13 +178,13 @@ async verifikasiUser (req,res,next){
     let data = req.body;
     try {
       let result = await user.register(data);
-      let response = await sendWAUtils.sendWAMessage(result);
+      // let response = await sendWAUtils.sendWAMessage(result);
+      let responsesms = await sendSMSUtils.sendWAmsg(result);
       if (response.status == 200){
         res.status(200).json(
           {
             pesan : "Registrasi awal selesai, menunggu verifikasi OTP", 
             userData: result,
-            //timer : newDateObj
           }
         );
 

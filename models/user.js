@@ -16,7 +16,7 @@ class UserModel {
   async login (username, password) {
     // password = encryptPassword(password, username);
 
-    const res = await pool.query('SELECT id, username, password, role, email, phone from ' + dbTable + ' where username = $1', [username]);
+    const res = await pool.query('SELECT id, username, password, role, email, phone, is_verified from ' + dbTable + ' where username = $1', [username]);
     debug('login %o', res);
 
     if (res.rowCount <= 0) {
@@ -50,7 +50,6 @@ class UserModel {
 
     }catch(ex){
       console.log('Enek seng salah iki ' + ex)
-      return 'Error : ' + ex;
     };
 
   }
@@ -77,7 +76,6 @@ class UserModel {
 
     }catch(ex){
       console.log('Enek seng salah iki ' + ex)
-      return 'Error : ' + ex;
     };
 
   }
@@ -155,6 +153,16 @@ class UserModel {
       res = await pool.query('SELECT * from ' + dbTable + ' where id = $1 ORDER BY id ASC', [id]);
     }
 
+    debug('get %o', res);
+
+    return res;
+    
+  }
+
+  async showAllUser () {
+
+    let res;
+      res = await pool.query('SELECT * from ' + dbTable + ' ORDER BY id ASC')
     debug('get %o', res);
 
     return res;
