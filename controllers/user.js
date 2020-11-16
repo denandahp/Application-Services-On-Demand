@@ -145,15 +145,15 @@ async resendotp (req,res,next){
   try{
   let result = await user.resendotp(data);
   // let response = await sendWAUtils.sendWAMessage(result);
-  let responsesms = await sendSMSUtils.sendWAmsg(result);
-  if (response.status == 200){
+  // let responsesms = await sendSMSUtils.sendWAmsg(result);
+  // if (response.status == 200){
   res.status(200).json(
     {
       pesan : "OTP telah diperbaharui",
       result
     }
   )
-  }
+  // }
     } catch (e) {
       next(e.detail);
     }
@@ -179,8 +179,8 @@ async verifikasiUser (req,res,next){
     try {
       let result = await user.register(data);
       // let response = await sendWAUtils.sendWAMessage(result);
-      let responsesms = await sendSMSUtils.sendWAmsg(result);
-      if (response.status == 200){
+      // let responsesms = await sendSMSUtils.sendWAmsg(result);
+      // if (response.status == 200){
         res.status(200).json(
           {
             pesan : "Registrasi awal selesai, menunggu verifikasi OTP", 
@@ -188,7 +188,7 @@ async verifikasiUser (req,res,next){
           }
         );
 
-      }
+      // }
     } catch (e) {
       next(e.detail);
     }
@@ -211,6 +211,20 @@ async verifikasiUser (req,res,next){
     } catch (e) {
       next(e.detail);
     }
+  }
+
+  async searchingdata (req, res, next) {
+    let data = req.body.keyword;
+    try{
+    let result = await user.searchingdata(data);
+    res.status(200).json(
+      {
+        result
+      }
+    )
+  } catch (e) {
+    next(e.detail);
+  }
   }
 
 }

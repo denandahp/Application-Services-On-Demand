@@ -54,6 +54,19 @@ class UserModel {
 
   }
 
+  async searchingdata (data) {
+    let res;
+    console.log("cek sini");
+    res = await pool.query('SELECT * from ' + dbTable + ' WHERE namadepan = $1 OR namabelakang = $1 OR username = $1 OR email = $1 OR phone = $1 OR phone_darurat = $1',[data]);
+    debug('get %o', res);
+
+    if (res.rowCount <= 0) {
+      return 'User tidak ditemukan';
+    } else {
+      return res;
+    }  
+}
+
   async registerlanjut (data) {
     try{
       var d = new Date(Date.now());
