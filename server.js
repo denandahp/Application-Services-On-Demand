@@ -20,8 +20,13 @@ app.set('views', __dirname + '/views');
 
 // Body Parser
 app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
+
+//Limit JSON
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
+
 
 // cookie-session
 app.set('trust proxy', 1); // trust first proxy
@@ -49,7 +54,7 @@ const schedule = require('./routes/schedule.js')
 const warning = require('./routes/warning.js')
 const comment = require('./routes/comment.js')
 const wilayah = require('./routes/wilayah.js')
-
+const atribut = require('./routes/atribut.js')
 
 app.use('/', index);
 app.use('/user', user);
@@ -57,6 +62,8 @@ app.use('/user/comment', comment);
 app.use('/schedule', schedule);
 app.use('/warning', warning);
 app.use('/wilayah', wilayah);
+app.use('/atribut', atribut);
+
 
 
 // Error Middleware

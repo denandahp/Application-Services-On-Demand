@@ -9,7 +9,9 @@ const maxAge = 1 * 24 * 60 * 60;
 
 class UserController {
   async showAllUser (req, res) {
-    let users = (await user.showAllUser()).rows;
+    res.locals.edit = true;
+    let role = req.params.role;
+    let users = (await user.showAllUser(role)).rows;
 
     res.status(200).json({
       users

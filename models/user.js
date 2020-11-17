@@ -172,10 +172,16 @@ class UserModel {
     
   }
 
-  async showAllUser () {
+  async showAllUser (role) {
 
     let res;
+
+    if (role === 'all') {
       res = await pool.query('SELECT * from ' + dbTable + ' ORDER BY id ASC')
+    } else {
+      res = await pool.query('SELECT * from ' + dbTable + ' where role = $1 ORDER BY id ASC', [role]);
+    }
+    
     debug('get %o', res);
 
     return res;
