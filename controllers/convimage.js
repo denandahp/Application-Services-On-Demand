@@ -8,10 +8,10 @@ const convertdata = (username ,base64raw, dataname) => {
  
         let direction =  path.resolve("./") + '/uploads/' + username +'/';    
         let base64Str = base64raw;
-        let optionalObj = {'fileName': username + '_' + dataname,'type':'jpg'};
+        let optionalObj = {'fileName': username + '_' + Date.now()+Math.floor(Math.random()*1000000),'type':'jpg'};
         base64ToImage(base64Str,direction,optionalObj);
         var imageInfo = base64ToImage(base64Str, direction, optionalObj);
-        return direction + imageInfo.fileName;
+        return username + '/' + imageInfo.fileName;
     
 }
 exports.base64toimage = (userData) => {
