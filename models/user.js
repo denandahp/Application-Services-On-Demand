@@ -67,14 +67,14 @@ class UserModel {
     }  
 }
 
-  async registerlanjut (data) {
+  async registerlanjut (data, datagambar) {
     try{
       var d = new Date(Date.now());
       //console.log(created);
       let user = [data.id, data.username, data.phone,
-                  data.phone_darurat, data.photo, data.provinsi_identitas, data.kota_kab_identitas, data.kecamatan_identitas, data.kodepos_identitas, data.alamat_identitas, 
+                  data.phone_darurat, datagambar.photo, data.provinsi_identitas, data.kota_kab_identitas, data.kecamatan_identitas, data.kodepos_identitas, data.alamat_identitas, 
                   data.nama_kendaraan, data.pabrikan_kendaraan, data.kapasitas_mesin, data.plat_nomor, data.tahun_produksi, data.an_kepemilikan,
-                  data.tampak_depan, data.tampak_samping, data.tampak_belakang, data.foto_identitas, data.foto_stnk, d];
+                  datagambar.tampak_depan, datagambar.tampak_samping, datagambar.tampak_belakang, datagambar.foto_identitas, datagambar.foto_stnk, d];
       let res = await pool.query('UPDATE' + dbTable + 
               'SET (phone_darurat, photo, provinsi_identitas, kota_kab_identitas, kecamatan_identitas, kodepos_identitas, alamat_identitas, nama_kendaraan, pabrikan_kendaraan, kapasitas_mesin, plat_nomor, tahun_produksi, an_kepemilikan, tampak_depan, tampak_samping, tampak_belakang, foto_identitas, foto_stnk, user_lastdate) = ' +
               '($4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22) WHERE id = $1 AND username = $2 AND phone = $3 RETURNING *',

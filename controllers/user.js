@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const config = require('../configs.json');
 const sendWAUtils = require('./sendWAUtils.js');
 const sendSMSUtils = require('./sendSMSUtils.js');
+const convimage = require('./convimage.js');
 const maxAge = 1 * 24 * 60 * 60;
 
 class UserController {
@@ -201,7 +202,8 @@ async verifikasiUser (req,res,next){
 
     let data = req.body;
     try {
-      let result = await user.registerlanjut(data);
+      let response = await convimage.base64toimage(data);
+      let result = await user.registerlanjut(data,response);
 
         res.status(200).json(
           {
