@@ -93,33 +93,41 @@ class UserModel {
 
   }
 
-  async verifikasiotp(kodeOTP){
-    const res = await pool.query('SELECT id, username, password, role, phone, otp FROM' + dbTable + 'where otp = $1',[kodeOTP]);
-    //console.table(res.rows);
-    //1 =  not verified , 2 = Pending, 3 = Verified
+  async verifikasiotp(kodeOTP,username){
+    var d = new Date(Date.now());
+    const res = await pool.query('SELECT id, username, password, role, phone, otp, limit_otp FROM' + dbTable + 'where username = $1 AND otp = $2',[username,kodeOTP]);
     if (res.rowCount <= 0) {
       throw new Error('OTP tidak ditemukan');
+      
     } else {
-      if (await totp.verify(kodeOTP)) {
+      if (await kodeOTP == res.rows[0].otp && d <= res.rows[0].limit_otp) {
         const updateVerif = await pool.query('UPDATE' + dbTable + 'SET is_verified = $1 WHERE otp = $2 ',[2,kodeOTP]);
-        return res.rows[0];
+        return updateVerif.rows[0];
       } else {
         throw new Error('OTP salah.');
+        // console.log(FormattedDate);
       }
     }
-    
   }
 
   async resendotp (data) {
+    let otplimit = 120; // in Second
+    var d = new Date(Date.now());
+    d.setSeconds(d.getSeconds() + otplimit);
+    var dd = d.getDate();var mm = d.getMonth() + 1;var y = d.getFullYear();var hour = d.getHours();var minute = d.getMinutes();var second = d.getSeconds();
+    var FormattedDate = y + '-'+ mm + '-'+ dd + ' ' + hour+':'+minute+':'+second;
+    console.log(FormattedDate);
     var randomOTP = totp.now(); // => generate OTP
-    console.log("pass");
-    const res = await pool.query('SELECT id, username, password, role, phone FROM' + dbTable + 'where username = $1 AND phone = $2',[data.username,data.phone]);
+
+    const res = await pool.query('SELECT id, username, password, role, phone, user_lastdate, otp, limit_otp FROM' + dbTable + 'where username = $1 AND phone = $2',[data.username,data.phone]);
     if (res.rowCount <= 0) {
       throw new Error('User tidak ditemukan');
     } else {
-      let sets = [data.username, data.phone, randomOTP];
-      let resdata = await pool.query('UPDATE' + dbTable + 'SET otp = $3 WHERE username =$1 AND phone = $2 RETURNING id,username,phone,otp', sets);
+
+      let sets = [data.username, data.phone, randomOTP, d, FormattedDate];
+      let resdata = await pool.query('UPDATE' + dbTable + 'SET otp = $3, user_lastdate = $4 , limit_otp = $5 WHERE username =$1 AND phone = $2 RETURNING id,username,phone,otp,user_lastdate,limit_otp', sets);
       let created = resdata.rows[0];
+      
       debug('edit %o', res);
       return created;
     }

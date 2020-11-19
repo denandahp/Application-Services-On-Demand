@@ -96,7 +96,8 @@ class UserController {
       res.cookie('jwt', token, { httpOnly: true, maxAge: -1 });
       res.status(200).json({
         pesan: "Berhasil login",
-        userData: result
+        userData: result,
+        token : token
       });
 
     } catch (e) {
