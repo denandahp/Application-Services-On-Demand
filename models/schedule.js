@@ -24,10 +24,10 @@ class scheduleModel{
       return result;
   }
 
-  async get(schedule_id) {
+  async get(username) {
 
       let res;
-      res = await pool.query(' SELECT * FROM ' + dbTable + ' where schedule_id = $1 ORDER BY schedule_id DESC', [schedule_id])
+      res = await pool.query(' SELECT * FROM ' + dbTable + ' where username = $1 ORDER BY username DESC', [username])
       debug('get %o', res);
 
       return res.rows;

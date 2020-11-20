@@ -57,12 +57,12 @@ class ScheduleController{
 
       async get(req, res, next) {
         let callback = async () => {
-          let schedule_id = req.params.schedule_id;
+          let username = req.params.username;
     
-          debug('detail %o', schedule_id)
+          debug('detail %o', username)
       
           try {
-            let detail = (await schedule.get(schedule_id));
+            let detail = (await schedule.get(username));
       
             res.status(200).json(detail)
       
