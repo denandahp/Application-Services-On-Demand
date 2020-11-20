@@ -184,16 +184,19 @@ class UserModel {
 
     let res;
 
-    if (role === 'all') {
+    if (role == 'all') {
       res = await pool.query('SELECT * from ' + dbTable + ' ORDER BY id ASC')
     } else {
-      res = await pool.query('SELECT * from ' + dbTable + ' where role = $1 ORDER BY id ASC', [role]);
+      if(status == 'all'){
+        res = await pool.query('SELECT * from ' + dbTable + ' where role = $1 ORDER BY id ASC', [role]);
+      }else {
+        res = await pool.query('SELECT * from ' + dbTable + ' where role = $1 AND is_verified = $2 ORDER BY id ASC', [role, status]);
+      }
     }
     
     debug('get %o', res);
 
     return res;
-    
   }
 
   async userstatus (id) {

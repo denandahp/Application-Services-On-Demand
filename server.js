@@ -9,6 +9,7 @@ const CONFIG_FILE_PATH = __dirname + '/configs.json';
 const config = require(CONFIG_FILE_PATH);
 const logger = require('morgan');
 const path = require('path');
+const cors = require('cors');
 
 const PORT = process.env.PORT || 3000;
 
@@ -33,12 +34,13 @@ app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:500
 app.use(express.static(path.join(__dirname,'uploads')));
 
 //Simple Usage (Enable All CORS Requests)
-app.get('/products/:id', function (req, res, next) {
-  res.json({msg: 'This is CORS-enabled for all origins!'})
-})
-app.listen(80, function () {
-  console.log('CORS-enabled web server listening on port 80')
-})
+app.use(cors())
+// app.get('/products/:id', function (req, res, next) {
+//   res.json({msg: 'This is CORS-enabled for all origins!'})
+// })
+// app.listen(80, function () {
+//   console.log('CORS-enabled web server listening on port 80')
+// })
 
 // cookie-session
 app.set('trust proxy', 1); // trust first proxy

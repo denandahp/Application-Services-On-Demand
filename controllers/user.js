@@ -12,7 +12,8 @@ class UserController {
   async showAllUser (req, res) {
     res.locals.edit = true;
     let role = req.params.role;
-    let users = (await user.showAllUser(role)).rows;
+    let status = req.params.status;
+    let users = (await user.showAllUser(role,status)).rows;
 
     res.status(200).json({
       users
