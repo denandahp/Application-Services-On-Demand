@@ -152,11 +152,11 @@ async resendotp (req,res,next){
   // let response = await sendWAUtils.sendWAMessage(result);
   // let responsesms = await sendSMSUtils.sendWAmsg(result);
   let responsesms = await sendSMSUtils.sendSMSMessage(result);
+  console.log(responsesms);
   // if (response.status == 200){
   res.status(200).json(
     {
       pesan : "OTP telah diperbaharui",
-      SMS : responsesms,
       result
     }
   )
@@ -188,13 +188,12 @@ async verifikasiUser (req,res,next){
       let result = await user.register(data);sendSMSMessage
       // let response = await sendWAUtils.sendWAMessage(result);
       //let responsesms = await sendSMSUtils.sendWAmsg(result);
-       let responsesms = await sendSMSUtils.sendSMSMessage(result);
-       console.log(responsesms)
+      let responsesms = await sendSMSUtils.sendSMSMessage(result);
+      console.log(responsesms);
       // if (response.status == 200){
         res.status(200).json(
           {
             pesan : "Registrasi awal selesai, menunggu verifikasi OTP",
-            SMS : responsesms, 
             userData: result
           }
         );
