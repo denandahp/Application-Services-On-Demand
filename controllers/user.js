@@ -20,6 +20,16 @@ class UserController {
     });
   }
 
+  async userbyschedule (req, res) {
+    res.locals.edit = true;
+    let username = req.params.username;
+    let users = (await user.userbyschedule(username)).rows;
+
+    res.status(200).json({
+      users
+    });
+  }
+
   async detail (req, res, next) {
     let callback = async() =>{
       try {
@@ -170,10 +180,10 @@ async verifikasiUser (req,res,next){
   let statusUserUpdate = req.body;
   try{
   let result = await user.verifikasiUser(statusUserUpdate);
-  console.log(responsesms)
   res.status(200).json(
     {
-      pesan : "User Telah Aktif"
+      pesan : "User Telah Aktif",
+      result : result
     }
   )
 } catch (e) {
@@ -185,7 +195,7 @@ async verifikasiUser (req,res,next){
 
     let data = req.body;
     try {
-      let result = await user.register(data);sendSMSMessage
+      let result = await user.register(data);
       // let response = await sendWAUtils.sendWAMessage(result);
       //let responsesms = await sendSMSUtils.sendWAmsg(result);
       let responsesms = await sendSMSUtils.sendSMSMessage(result);

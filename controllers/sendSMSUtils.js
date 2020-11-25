@@ -10,21 +10,21 @@ exports.sendSMSMessage = (userData) => {
       .create({ 
           body: 'JANGAN BERIKAN kode ini kepada siapa pun, Termasuk TIM JAT. Untuk MASUK KE AKUN, masukkan kode RAHASIA  ' + userData.otp, 
           from: '+18623776824',       
-          to: userData.phone 
+          to: '+62' + userData.phone
       }) 
       .then(result => console.log(result.status))
       .done();
 }
 
-// exports.sendWAmsg = (userData) => {
+exports.sendWAmsg = (userData) => {
 
-//     return client.messages 
-//       .create({ 
-//          body: 'JANGAN BERIKAN kode ini kepada siapa pun, Termasuk TIM JAT. Untuk MASUK KE AKUN, masukkan kode RAHASIA  ' + userData.otp, 
-//          from: 'whatsapp:+14155238886',       
-//          to: 'whatsapp:+62' + userData.phone 
-//        }) 
-//       .then(response => console.log(response.status))
-//       .done();
+    return client.messages 
+      .create({ 
+         body: 'JANGAN BERIKAN kode ini kepada siapa pun, Termasuk TIM JAT. Untuk MASUK KE AKUN, masukkan kode RAHASIA  ' + userData.otp, 
+         from: 'whatsapp:+14155238886',       
+         to: 'whatsapp:+62' + userData.phone 
+       }) 
+      .then(response => console.log(response.status))
+      .done();
 
-// } 
+} 

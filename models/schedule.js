@@ -27,7 +27,13 @@ class scheduleModel{
   async get(username) {
 
       let res;
-      res = await pool.query(' SELECT * FROM ' + dbTable + ' where username = $1 ORDER BY username DESC', [username])
+
+      if(status == 'all'){
+        res = await pool.query(' SELECT * FROM ' + dbTable + 'ORDER BY username DESC')
+      }else {
+        res = await pool.query(' SELECT * FROM ' + dbTable + ' where username = $1 ORDER BY username DESC', [username])
+      }
+      
       debug('get %o', res);
 
       return res.rows;

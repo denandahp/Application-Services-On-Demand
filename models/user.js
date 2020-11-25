@@ -10,6 +10,7 @@ const totp = jsotp.TOTP('BASE32ENCODEDSECRET');
 const schema = '"public"';
 const table = '"users"'
 const dbTable = schema + '.' + table;
+const scheduledb = 'public.schedule';
 
 class UserModel {
 
@@ -180,7 +181,7 @@ class UserModel {
     
   }
 
-  async showAllUser (role) {
+  async showAllUser (role,status) {
 
     let res;
 
@@ -198,6 +199,20 @@ class UserModel {
 
     return res;
   }
+
+  async userbyschedule (username) {
+
+    let res;
+    if (username == 'all') {
+      res = await pool.query('SELECT * from ' + dbTable + ' INNER JOIN ' + scheduledb + ' ON ' + dbTable + '.username ' + '= ' + scheduledb +'.username ' + 'ORDER BY id ASC')
+    } else {
+        res = await pool.query('SELECT * from ' + dbTable + ' INNER JOIN ' + scheduledb + ' ON ' + dbTable + '.username ' + '= ' + scheduledb +'.username ' + 'WHERE ' + dbTable + '.username = $1', [username]);
+    }
+    debug('get %o', res);
+
+    return res;
+  }
+
 
   async userstatus (id) {
 

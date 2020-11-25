@@ -12,7 +12,8 @@ Router.post('/login', user.login)
       .post('/edit', user.edit)
       .get('/detail/:id', user.detail)
       .get('/userstatus/:id', user.userstatus)
-      .get('/logout', user.logout)
-      .get('/alluser/:role/:status', user.showAllUser);
+      .post('/logout', user.logout)
+      .get('/alluser/:role/:status', user.showAllUser)
+      .get('/alluserbyschedule/:username', user.userbyschedule);
 
 module.exports = Router;

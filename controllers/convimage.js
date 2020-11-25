@@ -5,13 +5,14 @@ var path = require('path');
 
 
 const convertdata = (username ,base64raw, dataname) => {
- 
+    
+        let ipserver = '3.17.236.174:3000';
         let direction =  path.resolve("./") + '/uploads/' + username +'/';    
         let base64Str = base64raw;
         let optionalObj = {'fileName': username + '_' + Date.now()+Math.floor(Math.random()*1000000),'type':'jpg'};
         base64ToImage(base64Str,direction,optionalObj);
         var imageInfo = base64ToImage(base64Str, direction, optionalObj);
-        return username + '/' + imageInfo.fileName;
+        return ipserver + '/' + username + '/' + imageInfo.fileName;
     
 }
 exports.base64toimage = (userData) => {
@@ -41,6 +42,5 @@ exports.base64toimage = (userData) => {
         phone : urlpath[0], tampak_depan : urlpath[1], tampak_samping : urlpath[2],
         tampak_belakang : urlpath[3], foto_identitas : urlpath[4], foto_stnk : urlpath[5],
     }
-      
     return body;
 }
