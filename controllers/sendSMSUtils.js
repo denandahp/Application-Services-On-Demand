@@ -5,15 +5,19 @@ const authToken = '6bc997bd3f56603f4d599f4d0fca55d2';
 const client = require('twilio')(accountSid, authToken); 
 
 exports.sendSMSMessage = (userData) => {
-  console.log(userData.phone)
-  return client.messages 
-      .create({ 
-          body: 'JANGAN BERIKAN kode ini kepada siapa pun, Termasuk TIM JAT. Untuk MASUK KE AKUN, masukkan kode RAHASIA  ' + userData.otp, 
-          from: '+18623776824',       
-          to: '+62' + userData.phone
-      }) 
-      .then(result => console.log(result.status))
-      .done();
+  return client.messages.create({
+    body:'JANGAN BERIKAN kode ini kepada siapa pun, Termasuk TIM JAT. Untuk MASUK KE AKUN, masukkan kode RAHASIA  ' +randomOTP,
+    from:'+18623776824',
+    to:'+62' + userData.phone
+}, function(err, message) {
+    if (err) {
+      res.status(400).json( 'Coba periksa kembali nomor handphone yang dimasukkan. Sepertinya ada yg keliru.');
+      console.error('Text failed because: '+err.message);
+      //return err.message;
+    } else {
+        console.log('Text sent! Message SID: '+ message.sid);
+    }
+});
 }
 
 exports.sendWAmsg = (userData) => {

@@ -195,11 +195,9 @@ async verifikasiUser (req,res,next){
 
     let data = req.body;
     try {
-      let result = await user.register(data);
-      // let response = await sendWAUtils.sendWAMessage(result);
-      //let responsesms = await sendSMSUtils.sendWAmsg(result);
-      let responsesms = await sendSMSUtils.sendSMSMessage(result);
-      console.log(responsesms);
+      var randomOTP = totp.now(); // => generate OTP
+      let responsesms = await sendSMSUtils.sendSMSMessage(data,randomOTP,res);
+      let result = await user.register(data,randomOTP);
       // if (response.status == 200){
         res.status(200).json(
           {
@@ -210,7 +208,7 @@ async verifikasiUser (req,res,next){
 
       // }
     } catch (e) {
-      next(e.detail);
+      res.status(400).json('Registrasi Gagal !');
     }
   }
 

@@ -33,9 +33,9 @@ class UserModel {
     }
   }
 
-  async register (data) {
+  async register (data,randomOTP) {
     try{
-      var randomOTP = totp.now(); // => generate OTP
+      //var randomOTP = totp.now(); // => generate OTP
       let otplimit = 120; // in Second
       var d = new Date(Date.now());
       d.setSeconds(d.getSeconds() + otplimit);

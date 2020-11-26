@@ -39,7 +39,7 @@ exports.base64toimage = (userData) => {
         }
       }
     const body={
-        phone : urlpath[0], tampak_depan : urlpath[1], tampak_samping : urlpath[2],
+        photo : urlpath[0], tampak_depan : urlpath[1], tampak_samping : urlpath[2],
         tampak_belakang : urlpath[3], foto_identitas : urlpath[4], foto_stnk : urlpath[5],
     }
     return body;
