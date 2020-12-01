@@ -6,6 +6,8 @@ const config = require('../configs.json');
 const sendWAUtils = require('./sendWAUtils.js');
 const sendSMSUtils = require('./sendSMSUtils.js');
 const convimage = require('./convimage.js');
+const jsotp = require('jsotp');
+const totp = jsotp.TOTP('BASE32ENCODEDSECRET');
 const maxAge = 1 * 24 * 60 * 60;
 
 class UserController {
@@ -196,16 +198,24 @@ async verifikasiUser (req,res,next){
     let data = req.body;
     try {
       var randomOTP = totp.now(); // => generate OTP
-      let responsesms = await sendSMSUtils.sendSMSMessage(data,randomOTP,res);
-      let result = await user.register(data,randomOTP);
-      // if (response.status == 200){
-        res.status(200).json(
-          {
-            pesan : "Registrasi awal selesai, menunggu verifikasi OTP",
-            userData: result
-          }
-        );
-
+      let checkdatauser = await user.checkdatauser(data);
+      console.log(checkdatauser.errors);
+      if(checkdatauser.status == '400'){
+        res.status(400).json({
+          status : checkdatauser.errors
+        });
+      }
+      else{
+        let result = await user.register(data,randomOTP);
+        let responsesms = await sendSMSUtils.sendSMSMessage(data,randomOTP,res);
+        // if (response.status == 200){
+          res.status(200).json(
+            {
+              pesan : "Registrasi awal selesai, menunggu verifikasi OTP",
+              userData: result
+            }
+          );
+      }
       // }
     } catch (e) {
       res.status(400).json('Registrasi Gagal !');

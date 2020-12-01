@@ -6,7 +6,7 @@ var path = require('path');
 
 const convertdata = (username ,base64raw, dataname) => {
     
-        let ipserver = '3.17.236.174:3000';
+        let ipserver = 'http://3.17.236.174:3000';
         let direction =  path.resolve("./") + '/uploads/' + username +'/';    
         let base64Str = base64raw;
         let optionalObj = {'fileName': username + '_' + Date.now()+Math.floor(Math.random()*1000000),'type':'jpg'};

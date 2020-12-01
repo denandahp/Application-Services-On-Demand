@@ -55,6 +55,24 @@ class UserModel {
 
   }
 
+  async checkdatauser(data){
+    try{
+    let status ;
+    const res = await pool.query('SELECT * FROM' + dbTable + 'where username = $1 OR email = $2 OR phone = $3',[data.username, data.email, data.phone]);
+    if (res.rowCount > 0) {
+      if (res.rows[0].username == data.username){return {"status":"400", "errors": "username " + data.username + " sudah terdaftar"}}
+      else if (res.rows[0].email == data.email){ return {"status":"400", "errors": "email " + data.email + " sudah terdaftar"}}
+      else if (res.rows[0].phone == data.phone){ return {"status":"400", "errors": "phone " + data.phone + " sudah terdaftar"}}
+      else{return status = '200'}
+    } else {
+      return status = '200'
+    }
+
+  }catch(ex){
+    console.log('Enek seng salah iki ' + ex)
+  };
+  }
+
   async searchingdata (data) {
     let res;
     console.log("cek sini");
