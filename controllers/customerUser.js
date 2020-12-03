@@ -1,6 +1,6 @@
 const debug = require('debug')('app:controller:customerUser');
 const authUtils = require('./authUtils.js');
-const user = require('../models/customeruser.js');
+const user = require('../models/customerUser.js');
 const jwt = require('jsonwebtoken');
 const config = require('../configs.json');
 const sendWAUtils = require('./sendWAUtils.js');

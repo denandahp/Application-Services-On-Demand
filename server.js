@@ -73,9 +73,9 @@ const wilayah = require('./routes/wilayah.js')
 
 app.use('/', index);
 app.use('/api/driver', driver);
-app.use('/api/driver', driverComment);
-app.use('/api/driver', driverSchedule);
-app.use('/api/driver', driverAtribut);
+app.use('/api/driver/comment', driverComment);
+app.use('/api/driver/schedule', driverSchedule);
+app.use('/api/driver/atribut', driverAtribut);
 app.use('/api/customer', customer);
 app.use('/api/warning', warning);
 app.use('/api/wilayah', wilayah);
