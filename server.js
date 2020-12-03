@@ -63,20 +63,22 @@ app.use(function LocalsMiddleware (req, res, next) {
 });
 
 const index = require('./routes/index.js');
-const user = require('./routes/user.js');
-const schedule = require('./routes/schedule.js')
+const driver = require('./routes/user.js');
+const driverSchedule = require('./routes/schedule.js')
+const driverAtribut = require('./routes/atribut.js')
+const driverComment = require('./routes/comment.js')
+const customer = require('./routes/customerUser.js')
 const warning = require('./routes/warning.js')
-const comment = require('./routes/comment.js')
 const wilayah = require('./routes/wilayah.js')
-const atribut = require('./routes/atribut.js')
 
 app.use('/', index);
-app.use('/user', user);
-app.use('/user/comment', comment);
-app.use('/schedule', schedule);
-app.use('/warning', warning);
-app.use('/wilayah', wilayah);
-app.use('/atribut', atribut);
+app.use('/api/driver', driver);
+app.use('/api/driver', driverComment);
+app.use('/api/driver', driverSchedule);
+app.use('/api/driver', driverAtribut);
+app.use('/api/customer', customer);
+app.use('/api/warning', warning);
+app.use('/api/wilayah', wilayah);
 
 
 
