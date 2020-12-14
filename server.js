@@ -68,6 +68,9 @@ const driverSchedule = require('./routes/schedule.js')
 const driverAtribut = require('./routes/atribut.js')
 const driverComment = require('./routes/comment.js')
 const customer = require('./routes/customerUser.js')
+const merchantUser = require('./routes/merchantUser.js');
+const merchantInfopemilik = require('./routes/merchantInfopemilik.js');
+const merchantInfousaha = require('./routes/merchantInfousaha.js');
 const warning = require('./routes/warning.js')
 const wilayah = require('./routes/wilayah.js')
 
@@ -77,6 +80,9 @@ app.use('/api/driver/comment', driverComment);
 app.use('/api/driver/schedule', driverSchedule);
 app.use('/api/driver/atribut', driverAtribut);
 app.use('/api/customer', customer);
+app.use('/api/merchant', merchantUser);
+app.use('/api/merchant/infopemilik', merchantInfopemilik);
+app.use('/api/merchant/infousaha', merchantInfousaha);
 app.use('/api/warning', warning);
 app.use('/api/wilayah', wilayah);
 

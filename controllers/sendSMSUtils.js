@@ -19,6 +19,12 @@ exports.sendSMSMessage = (userData,randomOTP, res) => {
     }
 });
 }
+exports.checkphone = (userData) => {
+  return  client.lookups.phoneNumbers(userData.phone)
+          .fetch({countryCode: 'id'})
+          .then(phone_number => phone_number)
+          .catch(e => e);
+}
 
 exports.sendWAmsg = (userData) => {
 

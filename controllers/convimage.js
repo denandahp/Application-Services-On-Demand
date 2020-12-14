@@ -4,20 +4,20 @@ var path = require('path');
 
 
 
-const convertdata = (username ,base64raw, dataname) => {
+const convertdata = (username ,base64raw, dataname, namedir) => {
     
-        let ipserver = 'http://3.17.236.174:3000';
-        let direction =  path.resolve("./") + '/uploads/' + username +'/';    
+        let ipserver = 'http://3.17.236.174:3000/';
+        let direction =  path.resolve("./") + '/uploads/'+ namedir +'/' + username +'/';    
         let base64Str = base64raw;
-        let optionalObj = {'fileName': username + '_' + Date.now()+Math.floor(Math.random()*1000000),'type':'jpg'};
+        let optionalObj = {'fileName': username + '_' + Date.now(),'type':'jpg'};
         base64ToImage(base64Str,direction,optionalObj);
         var imageInfo = base64ToImage(base64Str, direction, optionalObj);
         return ipserver + '/' + username + '/' + imageInfo.fileName;
     
 }
 exports.base64toimage = (userData) => {
-       
-    const dir = './uploads/' + userData.username + '/';
+    let namedir = 'driver';
+    const dir = './uploads/' + namedir +'/'+ userData.username + '/';
     if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, {
             recursive: true
@@ -42,5 +42,35 @@ exports.base64toimage = (userData) => {
         photo : urlpath[0], tampak_depan : urlpath[1], tampak_samping : urlpath[2],
         tampak_belakang : urlpath[3], foto_identitas : urlpath[4], foto_stnk : urlpath[5],
     }
+    return body;
+}
+
+exports.convImagemerchantpemilik = (userData) => {
+    let namedir = 'merchant';
+    const dir = './uploads/' + namedir +'/' + userData.username + '/';
+    if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, {
+            recursive: true
+        });
+    }
+
+    let data = [userData.infopemilik_kk, userData.infopemilik_ktp ];
+    let dataname = ['infopemilik_kk', 'infopemilik_ktp']
+    let urlpath = [];
+
+    for (var i = 0; i < data.length; i++) {
+        
+        if (data[i].length < 30){
+            urlpath[i] = 'kosong';
+            continue;
+         }else{
+            let result = convertdata(userData.username, data[i], dataname[i],namedir);
+            urlpath[i] = result;
+        }
+      }
+    const body={
+        infopemilik_kk : urlpath[0], infopemilik_ktp : urlpath[1]
+    }
+      
     return body;
 }
