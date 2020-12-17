@@ -222,15 +222,25 @@ class UserController {
     let data = req.body;
     try {
       var randomOTP = totp.now(); // => generate OTP
-
+      let checkphone = await sendSMSUtils.checkphone(data);
+      console.log(checkphone.status);
+      if(checkphone.status == 404){
+        console.log("checkphone.status");
+        res.status(400).json({
+          status : 'Coba periksa kembali nomor handphone yang dimasukkan. Sepertinya ada yg keliru.'
+        });
+      }
+      else{        
         let result = await user.register(data,randomOTP);
-        let responsesms = await sendSMSUtils.sendSMSMessage(data,randomOTP,res);
+        let responsesms = await sendSMSUtils.sendSMSMessage(checkphone.phoneNumber,randomOTP,res);
         res.status(200).json(
           {
              pesan : "Registrasi awal selesai, menunggu verifikasi OTP", 
              userData: result,
           }
         );
+      }
+
       //  }
     } catch (e) {
       res.status(400).json('Registrasi Gagal !');

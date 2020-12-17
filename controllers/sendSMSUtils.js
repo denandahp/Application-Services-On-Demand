@@ -8,7 +8,7 @@ exports.sendSMSMessage = (userData,randomOTP, res) => {
   return client.messages.create({
     body:'JANGAN BERIKAN kode ini kepada siapa pun, Termasuk TIM JAT. Untuk MASUK KE AKUN, masukkan kode RAHASIA  ' +randomOTP,
     from:'+18623776824',
-    to:'+62' + userData.phone
+    to: userData
 }, function(err, message) {
     if (err) {
       res.status(400).json( 'Coba periksa kembali nomor handphone yang dimasukkan. Sepertinya ada yg keliru.');

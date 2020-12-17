@@ -6,13 +6,13 @@ var path = require('path');
 
 const convertdata = (username ,base64raw, dataname, namedir) => {
     
-        let ipserver = 'http://3.17.236.174:3000/';
+        let ipserver = 'http://3.17.236.174:3000';
         let direction =  path.resolve("./") + '/uploads/'+ namedir +'/' + username +'/';    
         let base64Str = base64raw;
         let optionalObj = {'fileName': username + '_' + Date.now(),'type':'jpg'};
         base64ToImage(base64Str,direction,optionalObj);
         var imageInfo = base64ToImage(base64Str, direction, optionalObj);
-        return ipserver + '/' + username + '/' + imageInfo.fileName;
+        return ipserver + '/' + namedir + '/' + username + '/' + imageInfo.fileName;
     
 }
 exports.base64toimage = (userData) => {
