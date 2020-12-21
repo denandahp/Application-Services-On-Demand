@@ -193,34 +193,62 @@ async verifikasiUser (req,res,next){
 }
 }
 
-  async register (req, res, next) {
+async register (req, res, next) {
 
-    let data = req.body;
-    try {
-      var randomOTP = totp.now(); // => generate OTP
+  let data = req.body;
+  try {
+    var randomOTP = totp.now(); // => generate OTP
+    let checkregistrasi = await user.checkregistrasi(data, randomOTP);
+    if (checkregistrasi.status == '200'){
+      let checkphone = await sendSMSUtils.checkphone(data);
+      console.log(checkphone.status);
+      if(checkphone.status == 404){
+        res.status(400).json({
+          status : 'Coba periksa kembali nomor handphone yang dimasukkan. Sepertinya ada yg keliru.'
+        });
+      }
+      else{
+        let responsesms = await sendSMSUtils.sendSMSMessage(checkphone.phoneNumber,randomOTP,res);
+        res.status(200).json(
+          {
+            pesan : "User belum verifikasi OTP", 
+            userData: checkregistrasi.data,
+          }
+        );
+      }
+
+    }else{
       let checkdatauser = await user.checkdatauser(data);
-      console.log(checkdatauser.errors);
       if(checkdatauser.status == '400'){
         res.status(400).json({
           status : checkdatauser.errors
         });
       }
-      else{
-        let result = await user.register(data,randomOTP);
-        let responsesms = await sendSMSUtils.sendSMSMessage(data,randomOTP,res);
-        // if (response.status == 200){
+      else {
+        let checkphone = await sendSMSUtils.checkphone(data);
+        if(checkphone.status == 404){
+          console.log("checkphone.status");
+          res.status(400).json({
+            status : 'Coba periksa kembali nomor handphone yang dimasukkan. Sepertinya ada yg keliru.'
+          });
+        }else{
+          let result = await user.register(data,randomOTP);
+          let responsesms = await sendSMSUtils.sendSMSMessage(checkphone.phoneNumber,randomOTP,res);
           res.status(200).json(
             {
-              pesan : "Registrasi awal selesai, menunggu verifikasi OTP",
-              userData: result
+               pesan : "Registrasi awal selesai, menunggu verifikasi OTP", 
+               userData: result,
             }
           );
+        }
       }
-      // }
-    } catch (e) {
-      res.status(400).json('Registrasi Gagal !');
     }
+
+    //  }
+  } catch (e) {
+    res.status(400).json('Registrasi Gagal !');
   }
+}
 
   async registerlanjut (req, res, next) {
 

@@ -195,32 +195,55 @@ class UserController {
     let data = req.body;
     try {
       var randomOTP = totp.now(); // => generate OTP
-      let checkdatauser = await user.checkdatauser(data);
-      if(checkdatauser.status == '400'){
-        res.status(400).json({
-          status : checkdatauser.errors
-        });
-      }
-      else {
-          let checkphone = await sendSMSUtils.checkphone(data);
-          console.log(checkphone.status);
-          if(checkphone.status == 404){
-            console.log("checkphone.status");
-            res.status(400).json({
-              status : 'Coba periksa kembali nomor handphone yang dimasukkan. Sepertinya ada yg keliru.'
-            });
-          }
-          else{
-            let result = await user.register(data,randomOTP);
-            let responsesms = await sendSMSUtils.sendSMSMessage(checkphone.phoneNumber,randomOTP,res);
-            res.status(200).json(
-              {
-                pesan : "Registrasi Merchant selesai, menunggu verifikasi OTP", 
-                userData: result,
-              }
-            );
-          }
+      let checkregistrasi = await user.checkregistrasi(data, randomOTP);
+      if (checkregistrasi.status == '200'){
+        let checkphone = await sendSMSUtils.checkphone(data);
+        console.log(checkphone.status);
+        if(checkphone.status == 404){
+          console.log("checkphone.status");
+          res.status(400).json({
+            status : 'Coba periksa kembali nomor handphone yang dimasukkan. Sepertinya ada yg keliru.'
+          });
         }
+        else{
+          let responsesms = await sendSMSUtils.sendSMSMessage(checkphone.phoneNumber,randomOTP,res);
+          res.status(200).json(
+            {
+              pesan : "User belum verifikasi OTP", 
+              userData: checkregistrasi.data,
+            }
+          );
+        }
+
+      }else{
+        let checkdatauser = await user.checkdatauser(data);
+        if(checkdatauser.status == '400'){
+          res.status(400).json({
+            status : checkdatauser.errors
+          });
+        }
+        else {
+            let checkphone = await sendSMSUtils.checkphone(data);
+            console.log(checkphone.status);
+            if(checkphone.status == 404){
+              console.log("checkphone.status");
+              res.status(400).json({
+                status : 'Coba periksa kembali nomor handphone yang dimasukkan. Sepertinya ada yg keliru.'
+              });
+            }
+            else{
+              let result = await user.register(data,randomOTP);
+              let responsesms = await sendSMSUtils.sendSMSMessage(checkphone.phoneNumber,randomOTP,res);
+              res.status(200).json(
+                {
+                  pesan : "Registrasi Merchant selesai, menunggu verifikasi OTP", 
+                  userData: result,
+                }
+              );
+            }
+          }
+      }
+
       //  }
     } catch (e) {
       res.status(400).json('Registrasi Gagal !');

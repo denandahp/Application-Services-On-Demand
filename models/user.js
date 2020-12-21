@@ -152,6 +152,30 @@ class UserModel {
     }
   }
 
+  async checkregistrasi(data, randomOTP){
+    try{
+    let otplimit = 120; // in Second
+    var d = new Date(Date.now());
+    d.setSeconds(d.getSeconds() + otplimit);
+    var dd = d.getDate();var mm = d.getMonth() + 1;var y = d.getFullYear();var hour = d.getHours();var minute = d.getMinutes();var second = d.getSeconds();
+    var FormattedDate = y + '-'+ mm + '-'+ dd + ' ' + hour+':'+minute+':'+second;
+    let user =  [data.namadepan, data.namabelakang, data.username, data.password, data.email, data.phone, data.provinsi_penempatan, data.kota_penempatan, data.role, randomOTP, 1, d, FormattedDate];
+    const res = await pool.query('SELECT * FROM' + dbTable + 'where username = $1 AND email = $2 AND phone = $3 AND is_verified = $4 ',[data.username, data.email, data.phone, 1]);
+    if (res.rowCount > 0) {
+      const updateregistrasi = await pool.query('UPDATE' + dbTable + 'SET (namadepan, namabelakang, username, password, email, phone, provinsi_penempatan, kota_penempatan, role, otp, is_verified, user_lastdate, limit_otp)' +
+                              '= ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) WHERE username = $3 RETURNING id, username, email, phone, is_verified, otp, user_lastdate, limit_otp',user);
+      let created = updateregistrasi.rows[0];
+      debug('register %o', updateregistrasi);
+      return {"data" : created, "status" : '200'};
+    } else {
+      return { "status" : '400'};;
+    }
+
+    }catch(ex){
+      console.log('Enek seng salah iki ' + ex)
+    };
+  }
+
   async verifikasiUser (statusUserUpdate) {
     const res = await pool.query('SELECT id, username, role, is_verified FROM' + dbTable + 'where username = $1',[statusUserUpdate.username]);
     //1 =  not verified , 2 = Pending, 3 = Verified
