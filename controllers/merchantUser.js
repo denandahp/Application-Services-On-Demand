@@ -249,6 +249,21 @@ class UserController {
       res.status(400).json('Registrasi Gagal !');
     }
   }
+  
+  async rekeningbank (req,res,next){
+    let data = req.body;
+    try{
+    let result = await user.rekeningbank(data);
+    res.status(200).json(
+      {
+        pesan : "Rekening bank telah didaftarkan",
+        result
+      }
+    )
+  } catch (e) {
+    next(e.detail);
+  }
+}
 
 }
 

@@ -13,10 +13,10 @@ class merchantInfousahaModel{
         var d = new Date(Date.now());
         let value =  [ data.username, data.infousaha_name, data.infousaha_bidangusaha, data.infousaha_penjualanpertahun, 
                       data.infousaha_penjualanperhari, data.infousaha_lokasimaps, data.infousaha_alamat, data.infousaha_provinsi, 
-                      data.infousaha_kota_kab, data.infousaha_patokan, d, d]
+                      data.infousaha_kota_kab, data.infousaha_patokan, d, d, data.infousaha.state]
         let res = await pool.query('INSERT INTO ' + dbTable + ' (username, infousaha_name, infousaha_bidangusaha,' +
                                   'infousaha_penjualanpertahun, infousaha_penjualanperhari, infousaha_lokasimaps, infousaha_alamat, infousaha_provinsi,'+
-                                  'infousaha_kota_kab, infousaha_patokan, infousaha_date, infousaha_lastdate) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *;', value);
+                                  'infousaha_kota_kab, infousaha_patokan, infousaha_date, infousaha_lastdate, infousaha.state) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *;', value);
         debug('register %o', res);
     
         return res;
@@ -31,10 +31,10 @@ class merchantInfousahaModel{
         var d = new Date(Date.now());
         let sets = [ data.username, data.infousaha_name, data.infousaha_bidangusaha, data.infousaha_penjualanpertahun, 
                      data.infousaha_penjualanperhari, data.infousaha_lokasimaps, data.infousaha_alamat, data.infousaha_provinsi, 
-                     data.infousaha_kota_kab, data.infousaha_patokan, d]
+                     data.infousaha_kota_kab, data.infousaha_patokan, d, data.infousaha.state]
         let res = await pool.query('UPDATE' + dbTable + 'SET ( infousaha_name, infousaha_bidangusaha,' +
                      'infousaha_penjualanpertahun, infousaha_penjualanperhari, infousaha_lokasimaps, infousaha_alamat, infousaha_provinsi,'+
-                     'infousaha_kota_kab, infousaha_patokan, infousaha_lastdate) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11)' +
+                     'infousaha_kota_kab, infousaha_patokan, infousaha_lastdate, infousaha.state) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)' +
                      'WHERE username = $1 RETURNING *', sets);
         debug('update %o', res);
         let result = res.rows[0];

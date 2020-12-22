@@ -113,6 +113,24 @@ class UserModel {
     };
   }
 
+  async rekeningbank(data){
+    try{
+      let user = [data.username, data.nama_bank, data.no_rekening, data.beda_pemilik, d];
+      var d = new Date(Date.now());
+      const res = await pool.query('SELECT user_id, username, password, role, phone, limit_otp, rekening_state FROM' + dbTable + 'where username = $1 ',user);
+      if (res.rowCount <= 0) {
+        throw new Error('username tidak ditemukan');
+        
+      } else {
+          const updaterekening = await pool.query('UPDATE' + dbTable + 'SET (nama_bank, no_rekening, beda_pemilik, user_lastdate, rekening_state) = ($2, $3, $4, $5, $6) WHERE username = $1 ',user);
+          return updaterekening.rows[0];
+      }
+
+    }catch(ex){
+      console.log('Enek seng salah iki ' + ex)
+    };
+  }
+
 
   async resendotp (data,randomOTP) {
     try{

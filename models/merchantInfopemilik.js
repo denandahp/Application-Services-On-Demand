@@ -9,8 +9,8 @@ class merchantInfopemilikModel{
     async register (data, datagambar) {
       try{
         var d = new Date(Date.now());
-        let value =  [ data.username, data.infopemilik_nama, datagambar.infopemilik_kk, datagambar.infopemilik_ktp, data.infopemilik_nomeridentitas, data.infopemilik_tanggallahir, d, d]
-        let res = await pool.query('INSERT INTO ' + dbTable + ' (username, infopemilik_nama, infopemilik_kk, infopemilik_ktp, infopemilik_nomeridentitas, infopemilik_tanggallahir, infopemilik_date, infopemilik_lastdate) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *;', value);
+        let value =  [ data.username, data.infopemilik_nama, datagambar.infopemilik_kk, datagambar.infopemilik_ktp, data.infopemilik_nomeridentitas, data.infopemilik_tanggallahir, d, d, data.infopemilik_state]
+        let res = await pool.query('INSERT INTO ' + dbTable + ' (username, infopemilik_nama, infopemilik_kk, infopemilik_ktp, infopemilik_nomeridentitas, infopemilik_tanggallahir, infopemilik_date, infopemilik_lastdate, infopemilik_state) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *;', value);
         debug('register %o', res);
     
         return res;
@@ -22,8 +22,8 @@ class merchantInfopemilikModel{
     async update (data, datagambar) {
       var d = new Date(Date.now());
         console.log(datagambar);
-        let sets = [data.username, data.infopemilik_nama, datagambar.infopemilik_kk, datagambar.infopemilik_ktp, data.infopemilik_nomeridentitas, data.infopemilik_tanggallahir, d]
-        let res = await pool.query('UPDATE' + dbTable + 'SET (infopemilik_nama, infopemilik_kk, infopemilik_ktp, infopemilik_nomeridentitas, infopemilik_tanggallahir, infopemilik_lastdate) = ($2, $3, $4, $5, $6, $7) WHERE username = $1 RETURNING *', sets);
+        let sets = [data.username, data.infopemilik_nama, datagambar.infopemilik_kk, datagambar.infopemilik_ktp, data.infopemilik_nomeridentitas, data.infopemilik_tanggallahir, d, data.infopemilik_state]
+        let res = await pool.query('UPDATE' + dbTable + 'SET (infopemilik_nama, infopemilik_kk, infopemilik_ktp, infopemilik_nomeridentitas, infopemilik_tanggallahir, infopemilik_lastdate) = ($2, $3, $4, $5, $6, $7, $8) WHERE username = $1 RETURNING *', sets);
         debug('update %o', res);
         let result = res.rows[0];
         return result;
