@@ -209,11 +209,17 @@ class UserModel {
     
   }
 
-  async alldetail (user_id) {
+  async alldetail (username) {
     try{
     let res;
+    if (username === 'all') {
     res = await pool.query('SELECT * from ' + dbTable + ' INNER JOIN ' + dbPemilik + ' ON ' + dbTable +'.username = ' + dbPemilik +'.username INNER JOIN ' + 
-                           dbUsaha + ' ON ' + dbTable +'.username = '+ dbUsaha + '.username ORDER BY user_id ASC')
+      dbUsaha + ' ON ' + dbTable +'.username = '+ dbUsaha + '.username ORDER BY user_id ASC')
+    } else {
+      res = await pool.query('SELECT * from ' + dbTable + ' INNER JOIN ' + dbPemilik + ' ON ' + dbTable +'.username = ' + dbPemilik +'.username INNER JOIN ' + 
+      dbUsaha + ' ON ' + dbTable +'.username = '+ dbUsaha + '.username WHERE' + dbTable +'.username = $1 ORDER BY user_id ASC',[username])
+    }
+
     debug('get %o', res);
 
     return res;

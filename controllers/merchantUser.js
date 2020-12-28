@@ -48,9 +48,9 @@ class UserController {
     let callback = async() =>{
       try {
         res.locals.edit = true;
-        let id_user = req.params.id;
+        let username = req.params.username;
         debug('detail %o', id_user);
-        let detail = (await user.alldetail(id_user)).rows[0];
+        let detail = (await user.alldetail(username)).rows[0];
 
         res.status(200).json({
           detail
