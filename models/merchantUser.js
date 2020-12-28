@@ -8,8 +8,10 @@ const jsotp = require('jsotp');
 const totp = jsotp.TOTP('BASE32ENCODEDSECRET');
 
 const schema = '"merchant"';
-const table = '"users"'
+const table = '"users"';
 const dbTable = schema + '.' + table;
+const dbPemilik = '"merchant.infopemilik"';
+const dbUsaha = '"merchant.infousaha"';
 
 class UserModel {
 
@@ -115,14 +117,14 @@ class UserModel {
 
   async rekeningbank(data){
     try{
-      let user = [data.username, data.nama_bank, data.no_rekening, data.beda_pemilik, d];
+      let user = [data.username, data.nama_bank, data.no_rekening, data.beda_pemilik, d, data.rekening_state];
       var d = new Date(Date.now());
-      const res = await pool.query('SELECT user_id, username, password, role, phone, limit_otp, rekening_state FROM' + dbTable + 'where username = $1 ',user);
+      const res = await pool.query('SELECT * FROM' + dbTable + 'where username = $1 ',[data.username]);
       if (res.rowCount <= 0) {
         throw new Error('username tidak ditemukan');
         
       } else {
-          const updaterekening = await pool.query('UPDATE' + dbTable + 'SET (nama_bank, no_rekening, beda_pemilik, user_lastdate, rekening_state) = ($2, $3, $4, $5, $6) WHERE username = $1 ',user);
+          const updaterekening = await pool.query('UPDATE' + dbTable + 'SET (nama_bank, no_rekening, beda_pemilik, user_lastdate, rekening_state) = ($2, $3, $4, $5, $6) WHERE username = $1 RETURNING username, nama_bank, no_rekening, beda_pemilik, rekeningstate;',user);
           return updaterekening.rows[0];
       }
 
@@ -190,18 +192,34 @@ class UserModel {
   }
 
   async get (user_id) {
-
+    try{
     let res;
 
     if (user_id === undefined) {
       res = await pool.query('SELECT * from ' + dbTable + ' ORDER BY user_id ASC')
     } else {
-      res = await pool.query('SELECT * from ' + dbTable + ' where user_id = $1 ORDER BY id ASC', [user_id]);
+      res = await pool.query('SELECT * from ' + dbTable + ' where user_id = $1 ORDER BY user_id ASC', [user_id]);
     }
-
     debug('get %o', res);
 
     return res;
+  }catch(ex){
+    console.log('Enek seng salah iki ' + ex)
+  };
+    
+  }
+
+  async alldetail (user_id) {
+    try{
+    let res;
+    res = await pool.query('SELECT * from ' + dbTable + ' INNER JOIN ' + dbPemilik + ' ON ' + dbTable +'.username = ' + dbPemilik +'.username INNER JOIN ' + 
+                           dbUsaha + ' ON ' + dbTable +'.username = '+ dbUsaha + '.username ORDER BY user_id ASC')
+    debug('get %o', res);
+
+    return res;
+  }catch(ex){
+    console.log('Enek seng salah iki ' + ex)
+  };
     
   }
 
@@ -231,9 +249,9 @@ class UserModel {
     let res;
 
     if (user_id === undefined) {
-      res = await pool.query('SELECT username,email, phone, role, is_verified  from ' + dbTable + ' ORDER BY user_id ASC')
+      res = await pool.query('SELECT user_id, username,email, phone, role, is_verified  from ' + dbTable + ' ORDER BY user_id ASC')
     } else {
-      res = await pool.query('SELECT username,email, phone, role, is_verified from ' + dbTable + ' where user_id = $1 ORDER BY user_id ASC', [user_id]);
+      res = await pool.query('SELECT user_id, username,email, phone, role, is_verified from ' + dbTable + ' where user_id = $1 ORDER BY user_id ASC', [user_id]);
     }
 
     debug('get %o', res);

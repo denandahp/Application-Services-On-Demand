@@ -10,6 +10,7 @@ Router.post('/login', user.login)
       .post ('/rekeningbank',user.rekeningbank)
       .post('/delete', user.delete)
       .post('/edit', user.edit)
+      .get('/alldetail/:id', user.alldetail)
       .get('/detail/:id', user.detail)
       .get('/userstatus/:id', user.userstatus)
       .get('/alluser/:role/:status', user.showAllUser);

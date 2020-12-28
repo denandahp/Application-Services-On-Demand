@@ -27,9 +27,30 @@ class UserController {
     let callback = async() =>{
       try {
         res.locals.edit = true;
-        let id_user = req.params.id_user;
+        let id_user = req.params.id;
         debug('detail %o', id_user);
         let detail = (await user.get(id_user)).rows[0];
+
+        res.status(200).json({
+          detail
+        });
+      }catch (e) {
+        next(e.detail || e);
+      }
+    };
+    let fallback = (err) => {
+      next(err);
+    }
+    authUtils.processRequestWithJWT(req, callback, fallback);
+  }
+
+  async alldetail (req, res, next) {
+    let callback = async() =>{
+      try {
+        res.locals.edit = true;
+        let id_user = req.params.id;
+        debug('detail %o', id_user);
+        let detail = (await user.alldetail(id_user)).rows[0];
 
         res.status(200).json({
           detail
@@ -48,7 +69,7 @@ class UserController {
     let callback = async() =>{
       try {
         res.locals.edit = true;
-        let id_user = req.params.id_user;
+        let id_user = req.params.id;
         debug('detail %o', id_user);
         let detail = (await user.userstatus(id_user)).rows[0];
 
