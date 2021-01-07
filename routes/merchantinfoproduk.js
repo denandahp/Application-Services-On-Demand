@@ -6,6 +6,6 @@ Router.post('/register', merchantInfoproduk.register)
       .post('/delete', merchantInfoproduk.delete)
       .post('/kategoribaru', merchantInfoproduk.kategoribaru)
       .get('/byrestaurant_id/:restaurant_id', merchantInfoproduk.get)
-      .get('/kategori/:merchant_id', merchantInfoproduk.getkategori)
+      .get('/kategori/:merchant_id', merchantInfoproduk.getkategori);
       
 module.exports = Router;
