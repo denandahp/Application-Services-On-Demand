@@ -266,8 +266,6 @@ class UserController {
                 );
               }else{
                 let responsesms = await sendSMSUtils.sendSMSMessage(checkphone.phoneNumber,randomOTP,res);
-                console.log(result.user)
-                console.log(result.otp)
                 res.status(200).json(
                   {
                     pesan : "Registrasi Merchant selesai, menunggu verifikasi OTP", 

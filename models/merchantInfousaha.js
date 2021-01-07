@@ -13,10 +13,10 @@ class merchantInfousahaModel{
         var d = new Date(Date.now());
         let value =  [ data.user_id, data.name, data.penjualan_per_tahun, 
                       data.penjualan_per_hari, data.latitude, data.longitude, data.address, data.province, 
-                      data.city, data.patokan, d, d, data.infousaha_state]
+                      data.city, data.patokan, d, d, data.state_informasi_usaha]
         let res = await pool.query('INSERT INTO ' + dbTable + ' (user_id, name,' +
                                   'penjualan_per_tahun, penjualan_per_hari, latitude, longitude, address, province,'+
-                                  'city, patokan, created_at, updated_at, infousaha_state) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *;', value);
+                                  'city, patokan, created_at, updated_at, state_informasi_usaha) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *;', value);
         debug('register %o', res);
     
         return res;
@@ -31,10 +31,10 @@ class merchantInfousahaModel{
         var d = new Date(Date.now());
         let sets = [ data.user_id, data.name, data.penjualan_per_tahun, 
                      data.penjualan_per_hari, data.latitude, data.longitude, data.address, data.province, 
-                     data.city, data.patokan, d, data.infousaha_state]
+                     data.city, data.patokan, d, data.state_informasi_usaha]
         let res = await pool.query('UPDATE' + dbTable + 'SET (name,' +
                      'penjualan_per_tahun, penjualan_per_hari, latitude, longitude, address, province,'+
-                     'city, patokan, updated_at, infousaha_state) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)' +
+                     'city, patokan, updated_at, state_informasi_usaha) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)' +
                      'WHERE user_id = $1 RETURNING *', sets);
         debug('update %o', res);
         let result = res.rows[0];

@@ -9,8 +9,8 @@ class merchantInfopemilikModel{
     async register (data, datagambar) {
       try{
         var d = new Date(Date.now());
-        let value =  [data.id, data.name, datagambar.media_family, datagambar.media_identity, data.no_identity, data.birthday, d, data.infopemilik_state]
-        let res = await pool.query('UPDATE' + dbTable + ' SET (name, media_family, media_identity, no_identity, birthday, updated_at, infopemilik_state) = ($2, $3, $4, $5, $6, $7, $8)  WHERE id = $1 RETURNING *;', value);
+        let value =  [data.id, data.name, datagambar.media_family, datagambar.media_identity, data.no_identity, data.birthday, d, data.state_profil_pemilik]
+        let res = await pool.query('UPDATE' + dbTable + ' SET (name, media_family, media_identity, no_identity, birthday, updated_at, state_profil_pemilik) = ($2, $3, $4, $5, $6, $7, $8)  WHERE id = $1 RETURNING *;', value);
         debug('register %o', res);
     
         return res;
@@ -22,8 +22,8 @@ class merchantInfopemilikModel{
     async update (data, datagambar) {
       var d = new Date(Date.now());
         console.log(datagambar);
-        let sets = [data.id, data.name, datagambar.media_family, datagambar.media_identity, data.no_identity, data.birthday, d, data.infopemilik_state]
-        let res = await pool.query('UPDATE' + dbTable + 'SET (name, media_family, media_identity, no_identity, birthday, updated_at, infopemilik_state) = ($2, $3, $4, $5, $6, $7, $8) WHERE id = $1 RETURNING *;', sets);
+        let sets = [data.id, data.name, datagambar.media_family, datagambar.media_identity, data.no_identity, data.birthday, d, data.state_profil_pemilik]
+        let res = await pool.query('UPDATE' + dbTable + 'SET (name, media_family, media_identity, no_identity, birthday, updated_at, state_profil_pemilik) = ($2, $3, $4, $5, $6, $7, $8) WHERE id = $1 RETURNING *;', sets);
         debug('update %o', res);
         let result = res.rows[0];
         return result;

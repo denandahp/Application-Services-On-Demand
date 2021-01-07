@@ -137,13 +137,13 @@ class UserModel {
 
   async rekeningbank(data){
     try{
-      let user = [data.id, data.bank, data.no_account, data.is_owner_bank_account, d, data.rekening_state];
+      let user = [data.id, data.bank, data.no_account, data.is_owner_bank_account, d, data.state_informasi_rekening];
       var d = new Date(Date.now());
-      const res = await pool.query('SELECT id, username, bank, role, phone, no_account, is_owner_bank_account, rekening_state FROM' + dbTable + 'where id = $1 ',[data.id]);
+      const res = await pool.query('SELECT id, username, bank, role, phone, no_account, is_owner_bank_account, state_informasi_rekening FROM' + dbTable + 'where id = $1 ',[data.id]);
       if (res.rowCount <= 0) {
         throw new Error('id tidak ditemukan');
       } else {
-          const updaterekening = await pool.query('UPDATE' + dbTable + 'SET (bank, no_account, is_owner_bank_account, updated_at, rekening_state) = ($2, $3, $4, $5, $6) WHERE id = $1 RETURNING id, bank, no_account, is_owner_bank_account, rekening_state ',user);
+          const updaterekening = await pool.query('UPDATE' + dbTable + 'SET (bank, no_account, is_owner_bank_account, updated_at, state_informasi_rekening) = ($2, $3, $4, $5, $6) WHERE id = $1 RETURNING id, bank, no_account, is_owner_bank_account, state_informasi_rekening ',user);
           return updaterekening.rows[0];
       }
 
