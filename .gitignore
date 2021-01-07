@@ -82,3 +82,6 @@ docs
 # VS Code
 .vscode
 jsconfig.json
+
+# Ignore uploads
+uploads/**
