@@ -27,30 +27,9 @@ class UserController {
     let callback = async() =>{
       try {
         res.locals.edit = true;
-        let id_user = req.params.id;
+        let id_user = req.params.id_user;
         debug('detail %o', id_user);
         let detail = (await user.get(id_user)).rows[0];
-
-        res.status(200).json({
-          detail
-        });
-      }catch (e) {
-        next(e.detail || e);
-      }
-    };
-    let fallback = (err) => {
-      next(err);
-    }
-    authUtils.processRequestWithJWT(req, callback, fallback);
-  }
-
-  async alldetail (req, res, next) {
-    let callback = async() =>{
-      try {
-        res.locals.edit = true;
-        let username = req.params.username;
-        debug('detail %o', username);
-        let detail = (await user.alldetail(username)).rows[0];
 
         res.status(200).json({
           detail
@@ -69,7 +48,7 @@ class UserController {
     let callback = async() =>{
       try {
         res.locals.edit = true;
-        let id_user = req.params.id;
+        let id_user = req.params.id_user;
         debug('detail %o', id_user);
         let detail = (await user.userstatus(id_user)).rows[0];
 
@@ -156,15 +135,25 @@ class UserController {
   
   async verifikasiotp (req,res,next){
     let kodeOTP = req.body.otp;
-    let username = req.body.username;
+    let id = req.body.id;
+    let otp_id = req.body.otp_id;
     try{
-    let result = await user.verifikasiotp(kodeOTP,username);
-    res.status(200).json(
-      {
-        pesan : "OTP telah terverifikasi",
-        result
-      }
-    )
+    let result = await user.verifikasiotp(kodeOTP,id, otp_id);
+    if(result.status == "400"){
+      res.status(400).json(
+        {
+          pesan : "Registrasi Gagal ada error di system",
+          error : result.error
+        }
+      );
+    }else{
+      res.status(200).json(
+        {
+          pesan : "OTP telah terverifikasi",
+          result
+        }
+      )
+    }
   } catch (e) {
     next(e.detail);
   }
@@ -184,13 +173,24 @@ class UserController {
       else{
         var randomOTP = totp.now(); // => generate OTP
         let result = await user.resendotp(data,randomOTP);
-        let responsesms = await sendSMSUtils.sendSMSMessage(checkphone.phoneNumber,randomOTP,res);
-       res.status(200).json(
-         {
-           pesan : "OTP telah diperbaharui",
-           result
-         }
-       );
+        if(result.status == "400"){
+          res.status(400).json(
+            {
+              pesan : "Registrasi Gagal ada error di system",
+              error : result.error
+            }
+          );
+        }else{
+          let responsesms = await sendSMSUtils.sendSMSMessage(checkphone.phoneNumber,randomOTP,res);
+          res.status(200).json(
+            {
+              pesan : "OTP telah diperbaharui",
+              userData: result.user,
+              otpData: result.otp
+            }
+          );
+        }
+
       }
       } catch (e) {
         next(e.detail);
@@ -203,7 +203,9 @@ class UserController {
     let result = await user.verifikasiUser(statusUserUpdate);
     res.status(200).json(
       {
-        pesan : "User Merchant Telah Aktif"
+        pesan : "User Merchant Telah Aktif",
+        user : result.user,
+        restaurant : result.restaurant
       }
     )
   } catch (e) {
@@ -232,6 +234,7 @@ class UserController {
             {
               pesan : "User belum verifikasi OTP", 
               userData: checkregistrasi.data,
+              otp: checkregistrasi.otp
             }
           );
         }
@@ -254,13 +257,25 @@ class UserController {
             }
             else{
               let result = await user.register(data,randomOTP);
-              let responsesms = await sendSMSUtils.sendSMSMessage(checkphone.phoneNumber,randomOTP,res);
-              res.status(200).json(
-                {
-                  pesan : "Registrasi Merchant selesai, menunggu verifikasi OTP", 
-                  userData: result,
-                }
-              );
+              if(result.status == "400"){
+                res.status(400).json(
+                  {
+                    pesan : "Registrasi Gagal ada error di system",
+                    error : result.error
+                  }
+                );
+              }else{
+                let responsesms = await sendSMSUtils.sendSMSMessage(checkphone.phoneNumber,randomOTP,res);
+                console.log(result.user)
+                console.log(result.otp)
+                res.status(200).json(
+                  {
+                    pesan : "Registrasi Merchant selesai, menunggu verifikasi OTP", 
+                    userData: result.user,
+                    otpData: result.otp
+                  }
+                );
+              }
             }
           }
       }
@@ -270,7 +285,7 @@ class UserController {
       res.status(400).json('Registrasi Gagal !');
     }
   }
-  
+
   async rekeningbank (req,res,next){
     let data = req.body;
     try{
@@ -285,6 +300,46 @@ class UserController {
     next(e.detail);
   }
 }
+
+  async listbank (req, res, next) {
+    let callback = async() =>{
+      try {
+        res.locals.edit = true;
+        let detail = await user.listbank();
+
+        res.status(200).json({
+          detail
+        });
+      }catch (e) {
+        next(e.detail || e);
+      }
+    };
+    let fallback = (err) => {
+      next(err);
+    }
+    authUtils.processRequestWithJWT(req, callback, fallback);
+  }
+
+  async alldetail (req, res, next) {
+    let callback = async() =>{
+      try {
+        res.locals.edit = true;
+        let username = req.params.username;
+        debug('detail %o', username);
+        let detail = (await user.alldetail(username)).rows[0];
+
+        res.status(200).json({
+          detail
+        });
+      }catch (e) {
+        next(e.detail || e);
+      }
+    };
+    let fallback = (err) => {
+      next(err);
+    }
+    authUtils.processRequestWithJWT(req, callback, fallback);
+  }
 
 }
 
