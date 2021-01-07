@@ -17,7 +17,7 @@ const convertdata = (username ,base64raw, dataname, namedir) => {
 }
 exports.base64toimage = (userData) => {
     let namedir = 'driver';
-    const dir = './uploads/' + namedir +'/'+ userData.username + '/';
+    const dir = './uploads/' + namedir +'/'+ userData.user_id + '/';
     if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, {
             recursive: true
@@ -34,7 +34,7 @@ exports.base64toimage = (userData) => {
             urlpath[i] = 'kosong';
             continue;
          }else{
-            let result = convertdata(userData.username, data[i], dataname[i]);
+            let result = convertdata(userData.username, data[i], dataname[i],namedir);
             urlpath[i] = result;
         }
       }
@@ -42,6 +42,7 @@ exports.base64toimage = (userData) => {
         photo : urlpath[0], tampak_depan : urlpath[1], tampak_samping : urlpath[2],
         tampak_belakang : urlpath[3], foto_identitas : urlpath[4], foto_stnk : urlpath[5],
     }
+      
     return body;
 }
 
@@ -54,8 +55,8 @@ exports.convImagemerchantpemilik = (userData) => {
         });
     }
 
-    let data = [userData.infopemilik_kk, userData.infopemilik_ktp ];
-    let dataname = ['infopemilik_kk', 'infopemilik_ktp']
+    let data = [userData.media_family, userData.media_identity ];
+    let dataname = ['foto_kk', 'foto_ktp']
     let urlpath = [];
 
     for (var i = 0; i < data.length; i++) {
@@ -69,7 +70,65 @@ exports.convImagemerchantpemilik = (userData) => {
         }
       }
     const body={
-        infopemilik_kk : urlpath[0], infopemilik_ktp : urlpath[1]
+        media_family : urlpath[0], media_identity : urlpath[1]
+    }
+      
+    return body;
+}
+
+exports.convImagemerchantproduk = (userData) => {
+    let namedir = 'merchant';
+    const dir = './uploads/' + namedir +'/' + userData.restaurant_id + '/';
+    if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, {
+            recursive: true
+        });
+    }
+    let data = [userData.media_photo];
+    let dataname = [userData.name]
+    let urlpath = [];
+
+    for (var i = 0; i < data.length; i++) {
+        
+        if (data[i].length < 30){
+            urlpath[i] = 'kosong';
+            continue;
+         }else{
+            let result = convertdata(userData.restaurant_id, data[i], dataname[i],namedir);
+            urlpath[i] = result;
+        }
+      }
+    const body={
+        media_photo : urlpath[0]
+    }
+      
+    return body;
+}
+
+exports.convImagemerchantrestoran = (userData) => {
+    let namedir = 'merchant';
+    const dir = './uploads/' + namedir +'/' + userData.user_id + '/';
+    if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, {
+            recursive: true
+        });
+    }
+    let data = [userData.media_logo, userData.media_banner ];
+    let dataname = ['logo restoran', 'banner restoran']
+    let urlpath = [];
+
+    for (var i = 0; i < data.length; i++) {
+        
+        if (data[i].length < 30){
+            urlpath[i] = 'kosong';
+            continue;
+         }else{
+            let result = convertdata(userData.user_id, data[i], dataname[i],namedir);
+            urlpath[i] = result;
+        }
+      }
+    const body={
+        media_logo : urlpath[0], media_banner : urlpath[1]
     }
       
     return body;

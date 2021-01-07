@@ -63,26 +63,32 @@ app.use(function LocalsMiddleware (req, res, next) {
 });
 
 const index = require('./routes/index.js');
-const driver = require('./routes/user.js');
-const driverSchedule = require('./routes/schedule.js')
-const driverAtribut = require('./routes/atribut.js')
-const driverComment = require('./routes/comment.js')
-const customer = require('./routes/customerUser.js')
+const driverUser = require('./routes/user.js');
+const driverSchedule = require('./routes/schedule.js');
+const driverAtribut = require('./routes/atribut.js');
+const driverComment = require('./routes/comment.js');
+const customerUser = require('./routes/customerUser.js');
 const merchantUser = require('./routes/merchantUser.js');
 const merchantInfopemilik = require('./routes/merchantInfopemilik.js');
 const merchantInfousaha = require('./routes/merchantInfousaha.js');
-const warning = require('./routes/warning.js')
-const wilayah = require('./routes/wilayah.js')
+const merchantJambuka = require('./routes/merchantJambuka.js');
+const merchantInfoproduk = require('./routes/merchantInfoproduk.js');
+const merchantInforestoran = require('./routes/merchantInforestoran.js');
+const warning = require('./routes/warning.js');
+const wilayah = require('./routes/wilayah.js');
 
 app.use('/', index);
-app.use('/api/driver', driver);
+app.use('/api/driver', driverUser);
 app.use('/api/driver/comment', driverComment);
 app.use('/api/driver/schedule', driverSchedule);
 app.use('/api/driver/atribut', driverAtribut);
-app.use('/api/customer', customer);
+app.use('/api/customer', customerUser);
 app.use('/api/merchant', merchantUser);
 app.use('/api/merchant/infopemilik', merchantInfopemilik);
 app.use('/api/merchant/infousaha', merchantInfousaha);
+app.use('/api/merchant/jambuka', merchantJambuka);
+app.use('/api/merchant/infoproduk', merchantInfoproduk);
+app.use('/api/merchant/inforestoran', merchantInforestoran);
 app.use('/api/warning', warning);
 app.use('/api/wilayah', wilayah);
 

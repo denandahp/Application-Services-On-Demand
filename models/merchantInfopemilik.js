@@ -2,15 +2,15 @@ const debug = require('debug')('app:controller:merchantInfopemilik');
 const pool = require('../libs/db');
 
 const schema = '"merchant"';
-const table = '"infopemilik"';
+const table = '"user"';
 const dbTable = schema + '.' + table;
 
 class merchantInfopemilikModel{
     async register (data, datagambar) {
       try{
         var d = new Date(Date.now());
-        let value =  [ data.username, data.infopemilik_nama, datagambar.infopemilik_kk, datagambar.infopemilik_ktp, data.infopemilik_nomeridentitas, data.infopemilik_tanggallahir, d, d, data.infopemilik_state]
-        let res = await pool.query('INSERT INTO ' + dbTable + ' (username, infopemilik_nama, infopemilik_kk, infopemilik_ktp, infopemilik_nomeridentitas, infopemilik_tanggallahir, infopemilik_date, infopemilik_lastdate, infopemilik_state) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *;', value);
+        let value =  [data.id, data.name, datagambar.media_family, datagambar.media_identity, data.no_identity, data.birthday, d, data.infopemilik_state]
+        let res = await pool.query('UPDATE' + dbTable + ' SET (name, media_family, media_identity, no_identity, birthday, updated_at, infopemilik_state) = ($2, $3, $4, $5, $6, $7, $8)  WHERE id = $1 RETURNING *;', value);
         debug('register %o', res);
     
         return res;
@@ -22,20 +22,20 @@ class merchantInfopemilikModel{
     async update (data, datagambar) {
       var d = new Date(Date.now());
         console.log(datagambar);
-        let sets = [data.username, data.infopemilik_nama, datagambar.infopemilik_kk, datagambar.infopemilik_ktp, data.infopemilik_nomeridentitas, data.infopemilik_tanggallahir, d, data.infopemilik_state]
-        let res = await pool.query('UPDATE' + dbTable + 'SET (infopemilik_nama, infopemilik_kk, infopemilik_ktp, infopemilik_nomeridentitas, infopemilik_tanggallahir, infopemilik_lastdate) = ($2, $3, $4, $5, $6, $7, $8) WHERE username = $1 RETURNING *', sets);
+        let sets = [data.id, data.name, datagambar.media_family, datagambar.media_identity, data.no_identity, data.birthday, d, data.infopemilik_state]
+        let res = await pool.query('UPDATE' + dbTable + 'SET (name, media_family, media_identity, no_identity, birthday, updated_at, infopemilik_state) = ($2, $3, $4, $5, $6, $7, $8) WHERE id = $1 RETURNING *;', sets);
         debug('update %o', res);
         let result = res.rows[0];
         return result;
     }
 
-    async get(username) {
+    async get(id) {
 
       let res;
-      if(username == 'all'){
-        res = await pool.query(' SELECT * FROM ' + dbTable + 'ORDER BY username DESC')
+      if(id == 'all'){
+        res = await pool.query(' SELECT * FROM ' + dbTable + 'ORDER BY id DESC')
       }else {
-        res = await pool.query(' SELECT * FROM ' + dbTable + ' where username = $1 ORDER BY username DESC', [username])
+        res = await pool.query(' SELECT * FROM ' + dbTable + ' where id = $1 ORDER BY id DESC', [id])
       }
       
       debug('get %o', res);

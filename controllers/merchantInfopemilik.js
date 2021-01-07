@@ -59,32 +59,6 @@ class merchantInfopemilikController{
         authUtils.processRequestWithJWT(req, callback, fallback);
       }
 
-      async get(req, res, next) {
-        let callback = async () => {
-          let username = req.params.username;
-    
-          debug('detail %o', username)
-      
-          try {
-            let detail = (await merchantInfopemilik.get(username));
-      
-            res.status(200).json({detail})
-      
-          } catch (e) {
-            console.log(e);
-            let errorResponse = authUtils.processGETRequestError();
-            res.status(400).json(errorResponse);
-          }
-        }
-    
-        let fallback = (err) => {
-          console.log(err);
-          next(err);
-        }
-    
-        authUtils.processRequestWithJWT(req, callback, fallback);
-      }
-
 }
 
 module.exports = new merchantInfopemilikController();

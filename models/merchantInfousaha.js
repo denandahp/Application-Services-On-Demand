@@ -2,7 +2,7 @@ const debug = require('debug')('app:controller:merchantInfousaha');
 const pool = require('../libs/db');
 
 const schema = '"merchant"';
-const table = '"infousaha"';
+const table = '"restaurant"';
 const dbTable = schema + '.' + table;
 const dbinfopendapatan = schema + '.infopendapatan'
 
@@ -11,12 +11,12 @@ class merchantInfousahaModel{
       try{
 
         var d = new Date(Date.now());
-        let value =  [ data.username, data.infousaha_name, data.infousaha_bidangusaha, data.infousaha_penjualanpertahun, 
-                      data.infousaha_penjualanperhari, data.infousaha_lokasimaps, data.infousaha_alamat, data.infousaha_provinsi, 
-                      data.infousaha_kota_kab, data.infousaha_patokan, d, d, data.infousaha_state]
-        let res = await pool.query('INSERT INTO ' + dbTable + ' (username, infousaha_name, infousaha_bidangusaha,' +
-                                  'infousaha_penjualanpertahun, infousaha_penjualanperhari, infousaha_lokasimaps, infousaha_alamat, infousaha_provinsi,'+
-                                  'infousaha_kota_kab, infousaha_patokan, infousaha_date, infousaha_lastdate, infousaha_state) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *;', value);
+        let value =  [ data.user_id, data.name, data.penjualan_per_tahun, 
+                      data.penjualan_per_hari, data.latitude, data.longitude, data.address, data.province, 
+                      data.city, data.patokan, d, d, data.infousaha_state]
+        let res = await pool.query('INSERT INTO ' + dbTable + ' (user_id, name,' +
+                                  'penjualan_per_tahun, penjualan_per_hari, latitude, longitude, address, province,'+
+                                  'city, patokan, created_at, updated_at, infousaha_state) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *;', value);
         debug('register %o', res);
     
         return res;
@@ -29,13 +29,13 @@ class merchantInfousahaModel{
     async update (data) {
       try{
         var d = new Date(Date.now());
-        let sets = [ data.username, data.infousaha_name, data.infousaha_bidangusaha, data.infousaha_penjualanpertahun, 
-                     data.infousaha_penjualanperhari, data.infousaha_lokasimaps, data.infousaha_alamat, data.infousaha_provinsi, 
-                     data.infousaha_kota_kab, data.infousaha_patokan, d, data.infousaha_state]
-        let res = await pool.query('UPDATE' + dbTable + 'SET ( infousaha_name, infousaha_bidangusaha,' +
-                     'infousaha_penjualanpertahun, infousaha_penjualanperhari, infousaha_lokasimaps, infousaha_alamat, infousaha_provinsi,'+
-                     'infousaha_kota_kab, infousaha_patokan, infousaha_lastdate, infousaha_state) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)' +
-                     'WHERE username = $1 RETURNING *', sets);
+        let sets = [ data.user_id, data.name, data.penjualan_per_tahun, 
+                     data.penjualan_per_hari, data.latitude, data.longitude, data.address, data.province, 
+                     data.city, data.patokan, d, data.infousaha_state]
+        let res = await pool.query('UPDATE' + dbTable + 'SET (name,' +
+                     'penjualan_per_tahun, penjualan_per_hari, latitude, longitude, address, province,'+
+                     'city, patokan, updated_at, infousaha_state) = ($2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)' +
+                     'WHERE user_id = $1 RETURNING *', sets);
         debug('update %o', res);
         let result = res.rows[0];
         return result;
@@ -45,13 +45,13 @@ class merchantInfousahaModel{
       };
     }
 
-    async get(username) {
+    async get(user_id) {
 
       let res;
-      if(username == 'all'){
-        res = await pool.query(' SELECT * FROM ' + dbTable + 'ORDER BY username DESC')
+      if(user_id == 'all'){
+        res = await pool.query(' SELECT * FROM ' + dbTable + 'ORDER BY user_id DESC')
       }else {
-        res = await pool.query(' SELECT * FROM ' + dbTable + ' where username = $1 ORDER BY username DESC', [username])
+        res = await pool.query(' SELECT * FROM ' + dbTable + ' where user_id = $1 ORDER BY user_id DESC', [user_id])
       }
       
       debug('get %o', res);

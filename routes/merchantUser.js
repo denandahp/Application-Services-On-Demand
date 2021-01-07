@@ -10,9 +10,11 @@ Router.post('/login', user.login)
       .post ('/rekeningbank',user.rekeningbank)
       .post('/delete', user.delete)
       .post('/edit', user.edit)
-      .get('/alldetail/:username', user.alldetail)
       .get('/detail/:id', user.detail)
       .get('/userstatus/:id', user.userstatus)
-      .get('/alluser/:role/:status', user.showAllUser);
+      .get('/alluser/:role/:status', user.showAllUser)
+      .get('/alldetail/:id', user.alldetail)
+      .get('/listbank', user.listbank);
+
       
 module.exports = Router;

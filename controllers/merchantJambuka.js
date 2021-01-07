@@ -1,18 +1,19 @@
 const authUtils = require('./authUtils.js');
-const debug = require('debug')('app:controller:merchantInfousaha');
-const merchantInfousaha = require('../models/merchantInfousaha.js');
+const debug = require('debug')('app:controller:merchantJambuka');
+const merchantJambuka = require('../models/merchantJambuka.js');
+const convimage = require('./convimage.js');
 
 const config = require('../configs.json');
 
-class merchantInfousahaController{
+class merchantJambukaController{
     async register(req, res, next) {
         let callback = async () => {
      
          try {
             let data = req.body;
-            let result = await merchantInfousaha.register(data);
+            let result = await merchantJambuka.register(data);
             res.status(200).json({
-              pesan: "Infousaha Berhasil Disimpan",
+              pesan: "Jam Operasional Berhasil Disimpan",
               activityData: result.rows[0],
             })
           } catch (e) {
@@ -35,9 +36,34 @@ class merchantInfousahaController{
      
         try {
             let data = req.body;
-            let result = await merchantInfousaha.update(data);
+            let result = await merchantJambuka.update(data);
             res.status(200).json({
-              pesan: "Infousaha Berhasil diperbaharui",
+              pesan: "Jam Operasional Berhasil diperbaharui",
+              activityData: result,
+            })
+          } catch (e) {
+            console.log(e);
+            let errorResponse = authUtils.processPOSTRequestError();
+            res.status(400).json(errorResponse);
+          }
+        };
+    
+        let fallback = (err) => {
+          console.log(err);
+          next(err);
+        }
+    
+        authUtils.processRequestWithJWT(req, callback, fallback);
+      }
+
+      async closedresto(req, res, next) {
+        let callback = async () => {
+     
+        try {
+            let data = req.body;
+            let result = await merchantJambuka.closedresto(data);
+            res.status(200).json({
+              pesan: "Restaurant sedang tutup",
               activityData: result,
             })
           } catch (e) {
@@ -57,12 +83,12 @@ class merchantInfousahaController{
 
       async get(req, res, next) {
         let callback = async () => {
-          let user_id = req.params.user_id;
+          let username = req.params.username;
     
-          debug('detail %o', user_id)
+          debug('detail %o', username)
       
           try {
-            let detail = (await merchantInfousaha.get(user_id));
+            let detail = (await merchantJambuka.get(username));
       
             res.status(200).json({detail})
       
@@ -81,32 +107,6 @@ class merchantInfousahaController{
         authUtils.processRequestWithJWT(req, callback, fallback);
       }
 
-      
-      async pendapatan(req, res, next) {
-        let callback = async () => {
-          let peroption = req.params.peroption;
-    
-          debug('detail %o', peroption)
-      
-          try {
-            let detail = (await merchantInfousaha.pendapatan(peroption));
-      
-            res.status(200).json({detail})
-      
-          } catch (e) {
-            console.log(e);
-            let errorResponse = authUtils.processGETRequestError();
-            res.status(400).json(errorResponse);
-          }
-        }
-    
-        let fallback = (err) => {
-          console.log(err);
-          next(err);
-        }
-    
-        authUtils.processRequestWithJWT(req, callback, fallback);
-      }
 }
 
-module.exports = new merchantInfousahaController();
+module.exports = new merchantJambukaController();
