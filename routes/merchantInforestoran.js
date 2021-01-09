@@ -6,5 +6,7 @@ Router.post('/register', merchantInforestoran.register)
       .delete('/delete', merchantInforestoran.delete)
       .get('/byuser_id/:user_id', merchantInforestoran.get)
       .get('/kategoriresto', merchantInforestoran.getkategori)
+      .get('/waktupersiapan', merchantInforestoran.waktupersiapan)
+
       
 module.exports = Router;

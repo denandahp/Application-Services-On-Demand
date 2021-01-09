@@ -10,8 +10,8 @@ class merchantInfoprodukModel{
     async register (data,datagambar) {
       try{
         var d = new Date(Date.now());
-        let value =  [ data.restaurant_id, data.kategori_menu_id, datagambar.media_photo, data.name, data.description, data.price_merchant, 1, d, d, data.is_active];
-        let res = await pool.query('INSERT INTO ' + dbTable + ' (restaurant_id, kategori_menu_id, media_photo, name, description, price_merchant, stock, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *;', value);
+        let value =  [ data.restaurant_id, data.kategori_menu_id, datagambar.media_photo, data.name, data.description, data.price_merchant, data.is_available, d, d, data.is_active];
+        let res = await pool.query('INSERT INTO ' + dbTable + ' (restaurant_id, kategori_menu_id, media_photo, name, description, price_merchant, is_available, created_at, updated_at, is_active) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *;', value);
         debug('register %o', res);
     
         return res;
@@ -22,8 +22,8 @@ class merchantInfoprodukModel{
 
     async update (data,datagambar) {
       var d = new Date(Date.now());
-        let sets = [ data.id, data.restaurant_id, data.kategori_menu_id, datagambar.media_photo, data.name, data.description, data.price_merchant, data.stock, d, data.is_active];
-        let res = await pool.query('UPDATE' + dbTable + 'SET (kategori_menu_id, media_photo, name, description, price_merchant, stock, updated_at) = ($3, $4, $5, $6, $7, $8, $9, $10) WHERE restaurant_id = $2 AND id = $1 RETURNING *', sets);
+        let sets = [ data.id, data.restaurant_id, data.kategori_menu_id, datagambar.media_photo, data.name, data.description, data.price_merchant, data.is_available, d, data.is_active];
+        let res = await pool.query('UPDATE' + dbTable + 'SET (kategori_menu_id, media_photo, name, description, price_merchant, is_available, updated_at, is_active) = ($3, $4, $5, $6, $7, $8, $9, $10) WHERE restaurant_id = $2 AND id = $1 RETURNING *', sets);
         debug('update %o', res);
         let result = res.rows[0];
         return result;

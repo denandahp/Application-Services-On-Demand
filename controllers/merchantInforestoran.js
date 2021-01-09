@@ -109,6 +109,28 @@ class merchantInforestoranController{
         authUtils.processRequestWithJWT(req, callback, fallback);
       }
 
+      async waktupersiapan(req, res, next) {
+        let callback = async () => {          
+          try {
+            let detail = (await merchantInforestoran.waktupersiapan());
+      
+            res.status(200).json({detail})
+      
+          } catch (e) {
+            console.log(e);
+            let errorResponse = authUtils.processGETRequestError();
+            res.status(400).json(errorResponse);
+          }
+        }
+    
+        let fallback = (err) => {
+          console.log(err);
+          next(err);
+        }
+    
+        authUtils.processRequestWithJWT(req, callback, fallback);
+      }
+
       async delete (req, res, next) {
         let id = req.body.infoproduk_id;
     
