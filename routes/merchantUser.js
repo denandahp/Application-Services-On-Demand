@@ -10,10 +10,10 @@ Router.post('/login', user.login)
       .post ('/rekeningbank',user.rekeningbank)
       .post('/delete', user.delete)
       .post('/edit', user.edit)
-      .get('/detail/:id', user.detail)
-      .get('/userstatus/:id', user.userstatus)
+      .get('/detail/:id_user', user.detail)
+      .get('/userstatus/:id_user', user.userstatus)
       .get('/alluser/:role/:status', user.showAllUser)
-      .get('/alldetail/:id', user.alldetail)
+      .get('/alldetail/:id_user', user.alldetail)
       .get('/listbank', user.listbank);
 
       

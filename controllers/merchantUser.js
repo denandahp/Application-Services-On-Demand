@@ -101,7 +101,8 @@ class UserController {
       res.cookie('jwt', token, { httpOnly: true, maxAge: -1 });
       res.status(200).json({
         pesan: "Berhasil login",
-        userData: result,
+        userData: result.user,
+        restaurant : result.restaurant,
         token : token
       });
 
@@ -322,9 +323,9 @@ class UserController {
     let callback = async() =>{
       try {
         res.locals.edit = true;
-        let username = req.params.username;
-        debug('detail %o', username);
-        let detail = (await user.alldetail(username)).rows[0];
+        let user_id = req.params.user_id;
+        debug('detail %o', user_id);
+        let detail = (await user.alldetail(user_id)).rows[0];
 
         res.status(200).json({
           detail

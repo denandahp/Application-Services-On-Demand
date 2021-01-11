@@ -20,7 +20,8 @@ class UserModel {
   async login (username, password) {
     // password = encryptPassword(password, username);
 
-    const res = await pool.query('SELECT id, username, password, role, email, phone from ' + dbTable + ' where username = $1', [username]);
+    const res = await pool.query('SELECT id, username, password, role, email, phone ,verification_user_id from ' + dbTable + ' where username = $1', [username]);
+    const value = await pool.query(' SELECT id, user_id, name FROM ' + dbRestaurant + ' where user_id = $1 ORDER BY user_id DESC', [user_id])
     debug('login %o', res);
 
     if (res.rowCount <= 0) {
@@ -29,7 +30,7 @@ class UserModel {
       // if (await comparePassword(password, res.rows[0].password)) {
       if (await password == res.rows[0].password) {
         res.rows[0].password = undefined; //undefined gunanya buat ngilangin di res.rows[0]
-        return res.rows[0];
+        return {"user" : res.rows[0], "restaurant" : value.rows[0]};
       } else {
         throw new Error('Password salah.');
       }
@@ -270,9 +271,9 @@ class UserModel {
     let res;
 
     if (id === undefined) {
-      res = await pool.query('SELECT username,email, phone, role,  verification_user_id  from ' + dbTable + ' ORDER BY id ASC')
+      res = await pool.query('SELECT id, username,email, phone, role,  verification_user_id  from ' + dbTable + ' ORDER BY id ASC')
     } else {
-      res = await pool.query('SELECT username,email, phone, role,  verification_user_id from ' + dbTable + ' where id = $1 ORDER BY id ASC', [id]);
+      res = await pool.query('SELECT id, username,email, phone, role,  verification_user_id from ' + dbTable + ' where id = $1 ORDER BY id ASC', [id]);
     }
 
     debug('get %o', res);

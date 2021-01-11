@@ -90,12 +90,12 @@ class merchantInfoprodukController{
 
       async getkategori(req, res, next) {
         let callback = async () => {
-          let merchant_id = req.params.merchant_id;
+          let restaurant_id = req.params.restaurant_id;
     
-          debug('detail %o', merchant_id)
+          debug('detail %o', restaurant_id)
       
           try {
-            let detail = (await merchantInfoproduk.getkategori(merchant_id));
+            let detail = (await merchantInfoproduk.getkategori(restaurant_id));
       
             res.status(200).json({detail})
       
@@ -157,6 +157,57 @@ class merchantInfoprodukController{
         authUtils.processRequestWithJWT(req, callback, fallback);
       }
 
+      async stockbaru(req, res, next) {
+        let callback = async () => {
+     
+         try {
+            let data = req.body;
+            let result = await merchantInfoproduk.stockbaru(data);
+            let pesan = data.name + "Berhasil Ditambahkan"
+            res.status(200).json({
+              pesan: pesan,
+              activityData: result.rows[0],
+            })
+          } catch (e) {
+            console.log(e);
+            let errorResponse = authUtils.processPOSTRequestError();
+            res.status(400).json(errorResponse);
+          }
+        };
+    
+        let fallback = (err) => {
+          console.log(err);
+          next(err);
+        }
+    
+        authUtils.processRequestWithJWT(req, callback, fallback);
+      }
+
+      async getstock(req, res, next) {
+        let callback = async () => {
+          let id_product = req.params.id_product;
+    
+          debug('detail %o', id_product)
+      
+          try {
+            let detail = (await merchantInfoproduk.getstock(id_product));
+      
+            res.status(200).json({detail})
+      
+          } catch (e) {
+            console.log(e);
+            let errorResponse = authUtils.processGETRequestError();
+            res.status(400).json(errorResponse);
+          }
+        }
+    
+        let fallback = (err) => {
+          console.log(err);
+          next(err);
+        }
+    
+        authUtils.processRequestWithJWT(req, callback, fallback);
+      }
 }
 
 module.exports = new merchantInfoprodukController();
