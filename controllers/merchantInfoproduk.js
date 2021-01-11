@@ -163,10 +163,10 @@ class merchantInfoprodukController{
          try {
             let data = req.body;
             let result = await merchantInfoproduk.stockbaru(data);
-            let pesan = data.name + "Berhasil Ditambahkan"
+            let pesan = "stock " + data.name + "Berhasil Diubah"
             res.status(200).json({
               pesan: pesan,
-              activityData: result.rows[0],
+              activityData: result.rows,
             })
           } catch (e) {
             console.log(e);
