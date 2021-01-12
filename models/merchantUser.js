@@ -297,15 +297,18 @@ class UserModel {
     
   }
 
-  async alldetail (username) {
+  async alldetail (user_id) {
     try{
     let res;
-    if (username === 'all') {
-    res = await pool.query('SELECT * from ' + dbTable + ' INNER JOIN ' + dbRestaurant + ' ON ' + dbTable +'.username = ' + dbRestaurant +'.username INNER JOIN ' + 
-      dbUsaha + ' ON ' + dbTable +'.username = '+ dbUsaha + '.username ORDER BY user_id ASC')
+    if (user_id === 'all') {
+    res = await pool.query( 'SELECT *,merchant.user.name AS "name_pemilik", merchant.restaurant.name AS "name_restaurant", '+
+                            ' merchant.restaurant.id AS "restaurant_id"  FROM merchant.user ' + 
+                            ' INNER JOIN merchant.restaurant ON merchant.user.id = merchant.restaurant.user_id;');
     } else {
-      res = await pool.query('SELECT * from ' + dbTable + ' INNER JOIN ' + dbPemilik + ' ON ' + dbTable +'.username = ' + dbPemilik +'.username INNER JOIN ' + 
-      dbUsaha + ' ON ' + dbTable +'.username = '+ dbUsaha + '.username WHERE' + dbTable +'.username = $1 ORDER BY user_id ASC',[username])
+      res = await pool.query( 'SELECT *,merchant.user.name AS "name_pemilik", merchant.restaurant.name AS "name_restaurant", '+
+                              ' merchant.restaurant.id AS "restaurant_id"  FROM merchant.user ' + 
+                              ' INNER JOIN merchant.restaurant ON merchant.user.id = merchant.restaurant.user_id '+
+                              ' WHERE merchant.user.id = $1;',[user_id])
     }
 
     debug('get %o', res);

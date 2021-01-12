@@ -68,7 +68,7 @@ class merchantInfoprodukController{
           let id_product = req.params.id_product;
           let id_kategori = req.params.id_kategori;
     
-          debug('detail %o', restaurant_id,id_product, id_kategori)
+          //debug('detail %o', restaurant_id,id_product, id_kategori)
       
           try {
             let detail = (await merchantInfoproduk.get(restaurant_id,id_product,id_kategori));

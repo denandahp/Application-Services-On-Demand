@@ -325,7 +325,7 @@ class UserController {
         res.locals.edit = true;
         let user_id = req.params.user_id;
         debug('detail %o', user_id);
-        let detail = (await user.alldetail(user_id)).rows[0];
+        let detail = (await user.alldetail(user_id)).rows;
 
         res.status(200).json({
           detail

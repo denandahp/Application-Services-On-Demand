@@ -30,29 +30,32 @@ class merchantInfoprodukModel{
     }
 
     async get(restaurant_id,id_product,id_kategori) {
-
-      let res;
-      if(restaurant_id == 'all'){
-        res = await pool.query(' SELECT * FROM ' + dbTable + 'ORDER BY restaurant_id ASC')
-      }else {
-        if(id_kategori == 'all'){
-          res = await pool.query(' SELECT * FROM ' + dbTable + ' where restaurant_id = $1 ORDER BY id ASC', [restaurant_id])
-        }else{
-            if(id_product == 'all'){
-              res = await pool.query(' SELECT * FROM ' + dbTable + ' where restaurant_id = $1 AND kategori_menu_id = $2 ORDER BY id ASC', [restaurant_id, id_kategori])
-            }else{
-            res = await pool.query(' SELECT *, merchant.menu.id AS "id_menu", merchant.menu.name AS "name_menu",'+
-                                  ' merchant.kategori_menu.name AS "name_kategori" from merchant.menu'+
-                                  'INNER JOIN merchant.kategori_menu ON merchant.menu.kategori_menu_id = '+
-                                  'merchant.kategori_menu.id WHERE merchant.menu.id = $1;', [id_product])
+    try{
+        let res;
+        console.log(restaurant_id +"  "+id_product+"  "+ id_kategori);
+        if(restaurant_id == 'all'){
+          res = await pool.query(' SELECT * FROM ' + dbTable + 'ORDER BY restaurant_id ASC')
+        }else {
+          if(id_kategori == 'all'){
+            res = await pool.query(' SELECT * FROM ' + dbTable + ' where restaurant_id = $1 ORDER BY id ASC', [restaurant_id])
+          }else{
+              if(id_product == 'all'){
+                res = await pool.query(' SELECT * FROM ' + dbTable + ' where restaurant_id = $1 AND kategori_menu_id = $2 ORDER BY id ASC', [restaurant_id, id_kategori])
+              }else{
+              res = await pool.query(' SELECT *, merchant.menu.id AS "id_menu", merchant.menu.name AS "name_menu", '+
+                                    ' merchant.kategori_menu.name AS "name_kategori" from merchant.menu '+
+                                    ' INNER JOIN merchant.kategori_menu ON merchant.menu.kategori_menu_id = '+
+                                    ' merchant.kategori_menu.id WHERE merchant.menu.id = $1;', [id_product])
+            }
           }
         }
-      }
-      
-      debug('get %o', res);
+        
+        debug('get %o', res);
 
-      return res.rows;
-
+        return res.rows;
+      }catch(ex){
+        console.log('Enek seng salah iki ' + ex)
+      };
     }
 
     async getkategori(restaurant_id) {
