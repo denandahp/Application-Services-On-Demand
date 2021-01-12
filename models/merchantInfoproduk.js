@@ -29,13 +29,24 @@ class merchantInfoprodukModel{
         return result;
     }
 
-    async get(restaurant_id) {
+    async get(restaurant_id,id_product,id_kategori) {
 
       let res;
       if(restaurant_id == 'all'){
-        res = await pool.query(' SELECT * FROM ' + dbTable + 'ORDER BY restaurant_id DESC')
+        res = await pool.query(' SELECT * FROM ' + dbTable + 'ORDER BY restaurant_id ASC')
       }else {
-        res = await pool.query(' SELECT * FROM ' + dbTable + ' where restaurant_id = $1 ORDER BY restaurant_id DESC', [restaurant_id])
+        if(id_kategori == 'all'){
+          res = await pool.query(' SELECT * FROM ' + dbTable + ' where restaurant_id = $1 ORDER BY id ASC', [restaurant_id])
+        }else{
+            if(id_product == 'all'){
+              res = await pool.query(' SELECT * FROM ' + dbTable + ' where restaurant_id = $1 AND kategori_menu_id = $2 ORDER BY id ASC', [restaurant_id, id_kategori])
+            }else{
+            res = await pool.query(' SELECT *, merchant.menu.id AS "id_menu", merchant.menu.name AS "name_menu",'+
+                                  ' merchant.kategori_menu.name AS "name_kategori" from merchant.menu'+
+                                  'INNER JOIN merchant.kategori_menu ON merchant.menu.kategori_menu_id = '+
+                                  'merchant.kategori_menu.id WHERE merchant.menu.id = $1;', [id_product])
+          }
+        }
       }
       
       debug('get %o', res);
@@ -76,7 +87,7 @@ class merchantInfoprodukModel{
       try{
         var d = new Date(Date.now());
         let value =  [ data.id, data.name, data.is_available, d];
-        let res = await pool.query('UPDATE ' + dbTable + ' (name, is_available, updated_at) = ($2, $3, $4) WHERE id = $1 RETURNING *;', value);
+        let res = await pool.query('UPDATE ' + dbTable + ' SET (name, is_available, updated_at) = ($2, $3, $4) WHERE id = $1 RETURNING id, name, is_available, updated_at;', value);
         debug('register %o', res);
     
         return res;
@@ -86,22 +97,24 @@ class merchantInfoprodukModel{
     }
 
     async getstock(id_product) {
-      try{
-        let res;
+        try{
+          let res;
 
-        if(restaurant_id == 'all'){
-          res = await pool.query(' SELECT id, restaurant_id, name, is_available, updated_at FROM ' + dbTable + ' ORDER BY id ASC')
-        }else {
-          res = await pool.query(' SELECT id, restaurant_id, name, is_available, updated_at FROM ' + dbTable + ' WHERE id = $1 ORDER BY id ASC', [id_product])
-        }
+          if(id_product == 'all'){
+            res = await pool.query(' SELECT id, restaurant_id, name, is_available, updated_at FROM ' + dbTable + ' ORDER BY id ASC')
+          }else {
+            res = await pool.query(' SELECT id, restaurant_id, name, is_available, updated_at FROM ' + dbTable + ' WHERE id = $1 ORDER BY id ASC', [id_product])
+          }
 
-        debug('get %o', res);
-        return res.rows;
-    }catch(ex){
-      console.log('Enek seng salah iki ' + ex)
-    };
+          debug('get %o', res);
+          return res.rows;
+      }catch(ex){
+        console.log('Enek seng salah iki ' + ex)
+      };
 
     }
+
+
 
     async delete(data) {  
     try{

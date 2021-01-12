@@ -21,7 +21,7 @@ class UserModel {
     // password = encryptPassword(password, username);
 
     const res = await pool.query('SELECT id, username, password, role, email, phone ,verification_user_id from ' + dbTable + ' where username = $1', [username]);
-    const value = await pool.query(' SELECT id, user_id, name FROM ' + dbRestaurant + ' where user_id = $1 ORDER BY user_id DESC', [user_id])
+    const value = await pool.query(' SELECT id, user_id, name FROM ' + dbRestaurant + ' where user_id = $1 ORDER BY user_id DESC', [res.rows[0]])
     debug('login %o', res);
 
     if (res.rowCount <= 0) {
@@ -30,7 +30,12 @@ class UserModel {
       // if (await comparePassword(password, res.rows[0].password)) {
       if (await password == res.rows[0].password) {
         res.rows[0].password = undefined; //undefined gunanya buat ngilangin di res.rows[0]
-        return {"user" : res.rows[0], "restaurant" : value.rows[0]};
+          if(value.rows[0] == undefined){
+            return {"user" : res.rows[0], "restaurant" : [{"id" : 0 }]};
+          }else{
+            return {"user" : res.rows[0], "restaurant" : value.rows[0]};
+
+          }
       } else {
         throw new Error('Password salah.');
       }
@@ -118,7 +123,6 @@ class UserModel {
       console.log(res.rows[0].limit_otp);
       console.log(d);
       if (res.rowCount <= 0) {
-        console.log("cekcasa");
         throw new Error('OTP tidak ditemukan');
       } else {
         if (await kodeOTP == res.rows[0].otp && d <= res.rows[0].limit_otp) {

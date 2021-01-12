@@ -65,11 +65,13 @@ class merchantInfoprodukController{
       async get(req, res, next) {
         let callback = async () => {
           let restaurant_id = req.params.restaurant_id;
+          let id_product = req.params.id_product;
+          let id_kategori = req.params.id_kategori;
     
-          debug('detail %o', restaurant_id)
+          debug('detail %o', restaurant_id,id_product, id_kategori)
       
           try {
-            let detail = (await merchantInfoproduk.get(restaurant_id));
+            let detail = (await merchantInfoproduk.get(restaurant_id,id_product,id_kategori));
       
             res.status(200).json({detail})
       
