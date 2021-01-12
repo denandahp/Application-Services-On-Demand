@@ -84,4 +84,4 @@ docs
 jsconfig.json
 
 # Ignore uploads
-uploads/**
+uploads/
