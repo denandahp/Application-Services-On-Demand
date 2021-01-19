@@ -17,7 +17,8 @@ class merchantInforestoranController{
             let result = await merchantInforestoran.register(data,response);
             res.status(200).json({
               pesan: "Infousaha Berhasil Disimpan",
-              activityData: result.rows[0],
+              activityData: result.data,
+              state : result.state
             })
           } catch (e) {
             console.log(e);
@@ -146,6 +147,33 @@ class merchantInforestoranController{
             e
           })
         }
+      }
+
+      async infoRestosaya(req, res, next) {
+
+        let user_id = req.params.user_id;
+        debug('detail %o', user_id)
+
+
+        let callback = async () => {          
+          try {
+            let detail = (await merchantInforestoran.infoRestosaya(user_id));
+      
+            res.status(200).json({detail})
+      
+          } catch (e) {
+            console.log(e);
+            let errorResponse = authUtils.processGETRequestError();
+            res.status(400).json(errorResponse);
+          }
+        }
+    
+        let fallback = (err) => {
+          console.log(err);
+          next(err);
+        }
+    
+        authUtils.processRequestWithJWT(req, callback, fallback);
       }
 
 }

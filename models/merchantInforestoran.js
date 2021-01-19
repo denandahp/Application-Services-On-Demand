@@ -8,21 +8,24 @@ const dbkategori = schema + '.kategori_restaurant'
 const dbWaktupersiapan = schema +'.option_preparation_in_range'
 
 class merchantInforestoranModel{
-    async register (data,datagambar) {
-      try{
-        var d = new Date(Date.now());
-        let value =  [ data.user_id, datagambar.media_logo, datagambar.media_banner, data.kategori_restaurant_id, data.option_preparation_in_range_id , data.description, d]
-        let res = await pool.query('UPDATE ' + dbTable + ' SET (media_logo, media_banner, kategori_restaurant_id, option_preparation_in_range_id , description, updated_at) = ($2, $3, $4, $5, $6, $7) WHERE user_id = $1 RETURNING user_id, name, media_logo, media_banner, kategori_restaurant_id, option_preparation_in_range_id , description, updated_at;', value);
-        debug('register %o', res);
-    
-        return res;
-      }catch(ex){
-        console.log('Enek seng salah iki ' + ex)
-      };
-    }
+  async register (data,datagambar) {
+    try{
+      var d = new Date(Date.now());
+      d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
+      let value =  [ data.user_id, datagambar.media_logo, datagambar.media_banner, data.kategori_restaurant_id, data.option_preparation_in_range_id , data.description, d]
+      let res = await pool.query('UPDATE ' + dbTable + ' SET (media_logo, media_banner, kategori_restaurant_id, option_preparation_in_range_id , description, updated_at) = ($2, $3, $4, $5, $6, $7) WHERE user_id = $1 RETURNING user_id, name, media_logo, media_banner, kategori_restaurant_id, option_preparation_in_range_id , description, updated_at;', value);
+      let uploadJson = await pool.query('UPDATE ' + dbTable + ' SET state_informasi_merchant = state_informasi_merchant  || \'{"profil_restaurant":"varified"}\' WHERE user_id = $1 RETURNING state_informasi_merchant;',[data.user_id]);
+      debug('register %o', res);
+  
+      return {"Data" : res.rows[0], "state" : uploadJson.rows[0]};
+    }catch(ex){
+      console.log('Enek seng salah iki ' + ex)
+    };
+  }
 
     async update (data,datagambar) {
       var d = new Date(Date.now());
+      d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
         let sets = [ data.user_id, datagambar.media_logo, datagambar.media_banner, data.kategori_restaurant_id, data.option_preparation_in_range_id , data.description, d]
         let res = await pool.query('UPDATE ' + dbTable + ' SET (media_logo, media_banner, kategori_restaurant_id, option_preparation_in_range_id , description, updated_at) = ($2, $3, $4, $5, $6, $7) WHERE user_id = $1 RETURNING *;', sets);
         debug('update %o', res);
@@ -72,6 +75,22 @@ class merchantInforestoranModel{
       debug('delete %o', res);
   
       return res;
+    }
+
+    async infoRestosaya(user_id) {
+
+      let res;
+      res = await pool.query(' SELECT id, user_id, state_informasi_merchant FROM ' + dbTable + ' WHERE user_id =$1 ORDER BY id ASC', [user_id])
+      console.log (res.rows);
+      console.log (res.rows[0].state_informasi_merchant.profil_restaurant);
+      if (res.rows[0].state_informasi_merchant.profil_restaurant == 'kosong' || res.rows[0].state_informasi_merchant.jam_operasional == 'kosong'){
+        debug('get %o', res);
+        return {"id" : res.rows[0].id,"user_id" : res.rows[0].user_id, "data" : "kosong"};
+      }else{
+        debug('get %o', res);
+        return {"id" : res.rows[0].id, "user_id" : res.rows[0].user_id, "data" : "verified"};
+      }
+
     }
 
 }

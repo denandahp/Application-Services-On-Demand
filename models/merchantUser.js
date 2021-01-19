@@ -21,7 +21,7 @@ class UserModel {
     // password = encryptPassword(password, username);
 
     const res = await pool.query('SELECT id, username, password, role, email, phone ,verification_user_id from ' + dbTable + ' where username = $1', [username]);
-    const value = await pool.query(' SELECT id, user_id, name FROM ' + dbRestaurant + ' where user_id = $1 ORDER BY user_id DESC', [res.rows[0]])
+    const value = await pool.query(' SELECT id, user_id, name FROM ' + dbRestaurant + ' where user_id = $1 ORDER BY user_id DESC', [res.rows[0].id])
     debug('login %o', res);
 
     if (res.rowCount <= 0) {
@@ -31,8 +31,9 @@ class UserModel {
       if (await password == res.rows[0].password) {
         res.rows[0].password = undefined; //undefined gunanya buat ngilangin di res.rows[0]
           if(value.rows[0] == undefined){
-            return {"user" : res.rows[0], "restaurant" : [{"id" : 0 }]};
+            return {"user" : res.rows[0], "restaurant" : {"id" : 0 }};
           }else{
+            console.log("cek sini");
             return {"user" : res.rows[0], "restaurant" : value.rows[0]};
 
           }
@@ -46,6 +47,7 @@ class UserModel {
     try{
       let otplimit = 120; // in Second
       var d = new Date(Date.now());
+      d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
       d.setSeconds(d.getSeconds() + otplimit);
       var dd = d.getDate();var mm = d.getMonth() + 1;var y = d.getFullYear();var hour = d.getHours();var minute = d.getMinutes();var second = d.getSeconds();
       var FormattedDate = y + '-'+ mm + '-'+ dd + ' ' + hour+':'+minute+':'+second;
@@ -91,6 +93,7 @@ class UserModel {
     try{
     let otplimit = 120; // in Second
     var d = new Date(Date.now());
+    d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
     d.setSeconds(d.getSeconds() + otplimit);
     var dd = d.getDate();var mm = d.getMonth() + 1;var y = d.getFullYear();var hour = d.getHours();var minute = d.getMinutes();var second = d.getSeconds();
     var FormattedDate = y + '-'+ mm + '-'+ dd + ' ' + hour+':'+minute+':'+second;
@@ -117,6 +120,7 @@ class UserModel {
   async verifikasiotp(kodeOTP, id_user){
     try{
       var d = new Date(Date.now());
+      d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
       const res = await pool.query('SELECT ' + dbTable + '.id, username, password, role, phone, phone_otp_id, otp,' + dbOTP + '.limit_otp, ' + dbTable +'.updated_at FROM ' + dbTable + ' INNER JOIN '+
                                   dbOTP + ' ON '+ dbTable + '.phone_otp_id = ' + dbOTP +'.id where '+ dbTable +'.id = $1 AND ' + dbOTP + '.otp = $2',[id_user, kodeOTP]);
       console.log(kodeOTP + "    "+ id_user);
@@ -144,6 +148,7 @@ class UserModel {
     try{
       let user = [data.id, data.bank, data.no_account, data.is_owner_bank_account, d, data.state_informasi_rekening];
       var d = new Date(Date.now());
+      d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
       const res = await pool.query('SELECT id, username, bank, role, phone, no_account, is_owner_bank_account, state_informasi_rekening FROM' + dbTable + 'where id = $1 ',[data.id]);
       if (res.rowCount <= 0) {
         throw new Error('id tidak ditemukan');
@@ -161,6 +166,7 @@ class UserModel {
     try{
       let otplimit = 120; // in Second
       var d = new Date(Date.now());
+      d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
       d.setSeconds(d.getSeconds() + otplimit);
       var dd = d.getDate();var mm = d.getMonth() + 1;var y = d.getFullYear();var hour = d.getHours();var minute = d.getMinutes();var second = d.getSeconds();
       var FormattedDate = y + '-'+ mm + '-'+ dd + ' ' + hour+':'+minute+':'+second;
@@ -188,6 +194,7 @@ class UserModel {
     try{
       let updateVerif, updateResto;
       var d = new Date(Date.now());
+      d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
       const res1 = await pool.query('SELECT id, username, role,  verification_user_id FROM' + dbTable + 'where id = $1',[data.id]);
       const res2 = await pool.query('SELECT * FROM ' + dbRestaurant + ' where user_id = $1',[data.id]);
 
@@ -300,13 +307,13 @@ class UserModel {
   async alldetail (user_id) {
     try{
     let res;
-    if (user_id === 'all') {
-    res = await pool.query( 'SELECT *,merchant.user.name AS "name_pemilik", merchant.restaurant.name AS "name_restaurant", '+
-                            ' merchant.restaurant.id AS "restaurant_id"  FROM merchant.user ' + 
+    if (user_id == 'all') {
+    res = await pool.query( 'SELECT merchant.user.name AS "name_pemilik", merchant.restaurant.name AS "name_restaurant", '+
+                            ' merchant.restaurant.id AS "restaurant_id" ,*  FROM merchant.user ' + 
                             ' INNER JOIN merchant.restaurant ON merchant.user.id = merchant.restaurant.user_id;');
     } else {
-      res = await pool.query( 'SELECT *,merchant.user.name AS "name_pemilik", merchant.restaurant.name AS "name_restaurant", '+
-                              ' merchant.restaurant.id AS "restaurant_id"  FROM merchant.user ' + 
+      res = await pool.query( 'SELECT merchant.user.name AS "name_pemilik", merchant.restaurant.name AS "name_restaurant", '+
+                              ' merchant.restaurant.id AS "restaurant_id" ,*  FROM merchant.user ' + 
                               ' INNER JOIN merchant.restaurant ON merchant.user.id = merchant.restaurant.user_id '+
                               ' WHERE merchant.user.id = $1;',[user_id])
     }

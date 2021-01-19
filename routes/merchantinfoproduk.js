@@ -8,6 +8,7 @@ Router.post('/register', merchantInfoproduk.register)
       .post('/setstock', merchantInfoproduk.stockbaru)
       .get('/detailproduk/:restaurant_id/:id_kategori/:id_product', merchantInfoproduk.get)
       .get('/kategori/:restaurant_id', merchantInfoproduk.getkategori)
-      .get('/getstock/:id_product', merchantInfoproduk.getstock);
-      
+      .get('/getstock/:restaurant_id', merchantInfoproduk.getstock)
+      .get('/stateMenu/:user_id', merchantInfoproduk.stateMenu);
+
 module.exports = Router;

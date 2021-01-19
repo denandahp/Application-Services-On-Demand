@@ -14,7 +14,8 @@ class merchantJambukaController{
             let result = await merchantJambuka.register(data);
             res.status(200).json({
               pesan: "Jam Operasional Berhasil Disimpan",
-              activityData: result.rows[0],
+              activityData: result.data,
+              state : result.state
             })
           } catch (e) {
             console.log(e);
@@ -83,12 +84,39 @@ class merchantJambukaController{
 
       async get(req, res, next) {
         let callback = async () => {
-          let username = req.params.username;
+          let user_id = req.params.user_id;
     
-          debug('detail %o', username)
+          debug('detail %o', user_id)
       
           try {
-            let detail = (await merchantJambuka.get(username));
+            let detail = (await merchantJambuka.get(user_id));
+      
+            res.status(200).json({detail})
+      
+          } catch (e) {
+            console.log(e);
+            let errorResponse = authUtils.processGETRequestError();
+            res.status(400).json(errorResponse);
+          }
+        }
+    
+        let fallback = (err) => {
+          console.log(err);
+          next(err);
+        }
+    
+        authUtils.processRequestWithJWT(req, callback, fallback);
+      }
+
+      async stateJambuka(req, res, next) {
+
+        let user_id = req.params.user_id;
+        debug('detail %o', user_id)
+
+
+        let callback = async () => {          
+          try {
+            let detail = (await merchantInforestoran.stateJambuka(user_id));
       
             res.status(200).json({detail})
       

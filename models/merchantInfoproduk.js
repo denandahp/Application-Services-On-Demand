@@ -5,23 +5,28 @@ const schema = '"merchant"';
 const table = '"menu"';
 const dbTable = schema + '.' + table;
 const dbKategori = 'merchant.kategori_menu';
+const dbRestaurant = 'merchant.restaurant';
+
 
 class merchantInfoprodukModel{
-    async register (data,datagambar) {
-      try{
-        var d = new Date(Date.now());
-        let value =  [ data.restaurant_id, data.kategori_menu_id, datagambar.media_photo, data.name, data.description, data.price_merchant, d, d, data.is_active];
-        let res = await pool.query('INSERT INTO ' + dbTable + ' (restaurant_id, kategori_menu_id, media_photo, name, description, price_merchant, created_at, updated_at, is_active) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *;', value);
-        debug('register %o', res);
-    
-        return res;
-      }catch(ex){
-        console.log('Enek seng salah iki ' + ex)
-      };
-    }
+  async register (data,datagambar) {
+    try{
+      var d = new Date(Date.now());
+      d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
+      let value =  [ data.restaurant_id, data.kategori_menu_id, datagambar.media_photo, data.name, data.description, data.price_merchant, d, d, data.is_active];
+      let res = await pool.query('INSERT INTO ' + dbTable + ' (restaurant_id, kategori_menu_id, media_photo, name, description, price_merchant, created_at, updated_at, is_active) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *;', value);
+      let uploadJson = await pool.query('UPDATE ' + dbRestaurant + ' SET state_informasi_merchant = state_informasi_merchant  || \'{"menu":"varified"}\' WHERE user_id = $1 RETURNING state_informasi_merchant;',[data.user_id]);
+      debug('register %o', res);
+  
+      return {"Data" : res.rows[0], "state" : uploadJson.rows[0]};
+    }catch(ex){
+      console.log('Enek seng salah iki ' + ex)
+    };
+  }
 
     async update (data,datagambar) {
       var d = new Date(Date.now());
+      d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
         let sets = [ data.id, data.restaurant_id, data.kategori_menu_id, datagambar.media_photo, data.name, data.description, data.price_merchant, d, data.is_active];
         let res = await pool.query('UPDATE' + dbTable + 'SET (kategori_menu_id, media_photo, name, description, price_merchant, updated_at, is_active) = ($3, $4, $5, $6, $7, $8, $9) WHERE restaurant_id = $2 AND id = $1 RETURNING *', sets);
         debug('update %o', res);
@@ -76,6 +81,7 @@ class merchantInfoprodukModel{
     async kategoribaru (data) {
       try{
         var d = new Date(Date.now());
+        d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
         let value =  [ data.name, data.restaurant_id, "normal", d, d]
         let res = await pool.query('INSERT INTO ' + dbKategori + ' (name, restaurant_id ,created_at, type, updated_at) VALUES ($1, $2, $3, $4, $5) RETURNING *;', value);
         debug('register %o', res);
@@ -89,6 +95,7 @@ class merchantInfoprodukModel{
     async stockbaru (data) {
       try{
         var d = new Date(Date.now());
+        d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
         let value =  [ data.id, data.name, data.is_available, d];
         let res = await pool.query('UPDATE ' + dbTable + ' SET (name, is_available, updated_at) = ($2, $3, $4) WHERE id = $1 RETURNING id, name, is_available, updated_at;', value);
         debug('register %o', res);
@@ -99,25 +106,23 @@ class merchantInfoprodukModel{
       };
     }
 
-    async getstock(id_product) {
-        try{
-          let res;
+    async getstock(restaurant_id) {
+      try{
+        let res;
 
-          if(id_product == 'all'){
-            res = await pool.query(' SELECT id, restaurant_id, name, is_available, updated_at FROM ' + dbTable + ' ORDER BY id ASC')
-          }else {
-            res = await pool.query(' SELECT id, restaurant_id, name, is_available, updated_at FROM ' + dbTable + ' WHERE id = $1 ORDER BY id ASC', [id_product])
-          }
+        if(restaurant_id == 'all'){
+          res = await pool.query(' SELECT id, restaurant_id, name, is_available FROM ' + dbTable + ' ORDER BY id ASC')
+        }else {
+          res = await pool.query(' SELECT id, restaurant_id, name, is_available FROM ' + dbTable + ' WHERE restaurant_id = $1 ORDER BY id ASC', [restaurant_id])
+        }
 
-          debug('get %o', res);
-          return res.rows;
-      }catch(ex){
-        console.log('Enek seng salah iki ' + ex)
-      };
+        debug('get %o', res);
+        return res.rows;
+    }catch(ex){
+      console.log('Enek seng salah iki ' + ex)
+    };
 
-    }
-
-
+  }
 
     async delete(data) {  
     try{
@@ -128,6 +133,15 @@ class merchantInfoprodukModel{
     }catch(ex){
       console.log('Enek seng salah iki ' + ex)
     };
+  }
+
+  async stateMenu(user_id) {
+
+    let res;
+    res = await pool.query(' SELECT id, restaurant_id, state_informasi_merchant FROM ' + dbRestaurant + ' WHERE user_id =$1 ORDER BY id ASC', [user_id])
+      debug('get %o', res);
+      return {"id" : res.rows[0].id,"restaurant_id" : res.rows[0].user_id, "data" : res.rows[0].state_informasi_merchant.menu}
+
   }
 
 }

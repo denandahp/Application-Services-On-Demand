@@ -9,6 +9,7 @@ class merchantInfopemilikModel{
     async register (data, datagambar) {
       try{
         var d = new Date(Date.now());
+        d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
         let value =  [data.id, data.name, datagambar.media_family, datagambar.media_identity, data.no_identity, data.birthday, d, data.state_profil_pemilik]
         let res = await pool.query('UPDATE' + dbTable + ' SET (name, media_family, media_identity, no_identity, birthday, updated_at, state_profil_pemilik) = ($2, $3, $4, $5, $6, $7, $8)  WHERE id = $1 RETURNING *;', value);
         debug('register %o', res);
@@ -21,6 +22,7 @@ class merchantInfopemilikModel{
 
     async update (data, datagambar) {
       var d = new Date(Date.now());
+      d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
         console.log(datagambar);
         let sets = [data.id, data.name, datagambar.media_family, datagambar.media_identity, data.no_identity, data.birthday, d, data.state_profil_pemilik]
         let res = await pool.query('UPDATE' + dbTable + 'SET (name, media_family, media_identity, no_identity, birthday, updated_at, state_profil_pemilik) = ($2, $3, $4, $5, $6, $7, $8) WHERE id = $1 RETURNING *;', sets);

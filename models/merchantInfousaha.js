@@ -11,6 +11,7 @@ class merchantInfousahaModel{
       try{
 
         var d = new Date(Date.now());
+        d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
         let value =  [ data.user_id, data.name, data.penjualan_per_tahun, 
                       data.penjualan_per_hari, data.latitude, data.longitude, data.address, data.province, 
                       data.city, data.patokan, d, d, data.state_informasi_usaha]
@@ -29,6 +30,7 @@ class merchantInfousahaModel{
     async update (data) {
       try{
         var d = new Date(Date.now());
+        d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
         let sets = [ data.user_id, data.name, data.penjualan_per_tahun, 
                      data.penjualan_per_hari, data.latitude, data.longitude, data.address, data.province, 
                      data.city, data.patokan, d, data.state_informasi_usaha]

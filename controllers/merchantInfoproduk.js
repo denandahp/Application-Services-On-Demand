@@ -17,7 +17,8 @@ class merchantInfoprodukController{
             let pesan = data.name + "Berhasil Ditambahkan"
             res.status(200).json({
               pesan: pesan,
-              activityData: result.rows[0],
+              activityData: result.data,
+              state: result.state
             })
           } catch (e) {
             console.log(e);
@@ -193,6 +194,32 @@ class merchantInfoprodukController{
       
           try {
             let detail = (await merchantInfoproduk.getstock(id_product));
+      
+            res.status(200).json({detail})
+      
+          } catch (e) {
+            console.log(e);
+            let errorResponse = authUtils.processGETRequestError();
+            res.status(400).json(errorResponse);
+          }
+        }
+    
+        let fallback = (err) => {
+          console.log(err);
+          next(err);
+        }
+    
+        authUtils.processRequestWithJWT(req, callback, fallback);
+      }
+
+      async stateMenu(req, res, next) {
+        let callback = async () => {
+          let user_id = req.params.user_id;
+    
+          debug('detail %o', user_id)
+      
+          try {
+            let detail = (await merchantInfoproduk.stateMenu(user_id));
       
             res.status(200).json({detail})
       
