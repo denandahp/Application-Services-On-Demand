@@ -18,7 +18,7 @@ class merchantInfoprodukModel{
       let uploadJson = await pool.query('UPDATE ' + dbRestaurant + ' SET state_informasi_merchant = state_informasi_merchant  || \'{"menu":"varified"}\' WHERE user_id = $1 RETURNING state_informasi_merchant;',[data.user_id]);
       debug('register %o', res);
   
-      return {"Data" : res.rows[0], "state" : uploadJson.rows[0]};
+      return {"data" : res.rows[0], "state" : uploadJson.rows[0]};
     }catch(ex){
       console.log('Enek seng salah iki ' + ex)
     };
@@ -36,7 +36,7 @@ class merchantInfoprodukModel{
 
     async get(restaurant_id,id_product,id_kategori) {
     try{
-        let res;
+        let res,count;
         console.log(restaurant_id +"  "+id_product+"  "+ id_kategori);
         if(restaurant_id == 'all'){
           res = await pool.query(' SELECT * FROM ' + dbTable + 'ORDER BY restaurant_id ASC')
@@ -45,7 +45,9 @@ class merchantInfoprodukModel{
             res = await pool.query(' SELECT * FROM ' + dbTable + ' where restaurant_id = $1 ORDER BY id ASC', [restaurant_id])
           }else{
               if(id_product == 'all'){
-                res = await pool.query(' SELECT * FROM ' + dbTable + ' where restaurant_id = $1 AND kategori_menu_id = $2 ORDER BY id ASC', [restaurant_id, id_kategori])
+                res = await pool.query(' SELECT * FROM ' + dbTable + ' where restaurant_id = $1 AND kategori_menu_id = $2 ORDER BY id ASC', [restaurant_id, id_kategori]);
+                count = await pool.query(' SELECT restaurant_id, COUNT (restaurant_id) FROM ' + dbTable + ' where restaurant_id = $1 AND kategori_menu_id = $2 GROUP by restaurant_id;', [restaurant_id, id_kategori])
+
               }else{
               res = await pool.query(' SELECT *, merchant.menu.id AS "id_menu", merchant.menu.name AS "name_menu", '+
                                     ' merchant.kategori_menu.name AS "name_kategori" from merchant.menu '+
@@ -57,7 +59,7 @@ class merchantInfoprodukModel{
         
         debug('get %o', res);
 
-        return res.rows;
+        return {"data" : res.rows, "countMenu" : count.rows[0]};
       }catch(ex){
         console.log('Enek seng salah iki ' + ex)
       };
@@ -91,6 +93,20 @@ class merchantInfoprodukModel{
         console.log('Enek seng salah iki ' + ex)
       };
     }
+
+    async updateKategori (data) {
+      try{
+        var d = new Date(Date.now());d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
+        let value =  [data.id, data.name, data.restaurant_id, "normal", d, data.is_active];
+        let res = await pool.query('UPDATE ' + dbKategori + ' SET (name, restaurant_id ,type, updated_at, is_active) = ($2, $3, $4, $5, $6) WHERE id = $1 RETURNING *;', value);
+        debug('register %o', res);
+    
+        return res;
+      }catch(ex){
+        console.log('Enek seng salah iki ' + ex)
+      };
+    }
+
 
     async stockbaru (data) {
       try{

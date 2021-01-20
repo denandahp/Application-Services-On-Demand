@@ -14,7 +14,7 @@ class merchantJambukaModel{
         let res = await pool.query('UPDATE ' + dbTable + 'SET (is_open_' + data.day + ', open_time_'+ data.day +', close_time_'+ data.day +', updated_at) = ($2, $3, $4, $5) WHERE user_id = $1 RETURNING user_id, name, is_open_' + data.day + ', open_time_'+ data.day +', close_time_'+ data.day +', updated_at;', value);
         let uploadJson = await pool.query('UPDATE ' + dbTable + ' SET state_informasi_merchant = state_informasi_merchant  || \'{"jam_operasional":"varified"}\' WHERE user_id = $1 RETURNING state_informasi_merchant;',[data.user_id]);
         debug('register %o', res);
-        return {"Data" : res.rows[0], "state" : uploadJson.rows[0]};
+        return {"data" : res.rows[0], "state" : uploadJson.rows[0]};
 
       }catch(ex){
         console.log('Enek seng salah iki ' + ex)

@@ -62,7 +62,7 @@ class UserModel {
       let created = datafinal.rows[0];
       //console.log(created);
       debug('register %o', created);
-      return {"user" : created, "otp" : otpdb.rows[0]} ;
+      return {"user" : created, "otp" : otpdb.rows[0], "limit_otp" : FormattedDate} ;
 
     }catch(ex){
       console.log('Enek seng salah iki ' + ex);
@@ -182,7 +182,7 @@ class UserModel {
         let created = resdata.rows[0];
         
         debug('edit %o', created);
-        return {"user" : resdata.rows[0], "otp" : otpdb.rows[0]};
+        return {"user" : resdata.rows[0], "otp" : otpdb.rows[0], "limit_otp" : FormattedDate};
       }
     }catch(ex){
       console.log('Enek seng salah iki ' + ex);

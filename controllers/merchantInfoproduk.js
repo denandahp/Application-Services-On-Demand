@@ -14,7 +14,7 @@ class merchantInfoprodukController{
             let response = await convimage.convImagemerchantproduk(data);
             console.log(response);
             let result = await merchantInfoproduk.register(data,response);
-            let pesan = data.name + "Berhasil Ditambahkan"
+            let pesan = data.name + " Berhasil Ditambahkan"
             res.status(200).json({
               pesan: pesan,
               activityData: result.data,
@@ -74,7 +74,10 @@ class merchantInfoprodukController{
           try {
             let detail = (await merchantInfoproduk.get(restaurant_id,id_product,id_kategori));
       
-            res.status(200).json({detail})
+            res.status(200).json({
+              detail
+              
+            })
       
           } catch (e) {
             console.log(e);
@@ -140,7 +143,33 @@ class merchantInfoprodukController{
          try {
             let data = req.body;
             let result = await merchantInfoproduk.kategoribaru(data);
-            let pesan = data.name + "Berhasil Ditambahkan"
+            let pesan = data.name + " Berhasil Ditambahkan"
+            res.status(200).json({
+              pesan: pesan,
+              activityData: result.rows[0],
+            })
+          } catch (e) {
+            console.log(e);
+            let errorResponse = authUtils.processPOSTRequestError();
+            res.status(400).json(errorResponse);
+          }
+        };
+    
+        let fallback = (err) => {
+          console.log(err);
+          next(err);
+        }
+    
+        authUtils.processRequestWithJWT(req, callback, fallback);
+      }
+
+      async updateKategori(req, res, next) {
+        let callback = async () => {
+     
+         try {
+            let data = req.body;
+            let result = await merchantInfoproduk.updateKategori(data);
+            let pesan = data.name + " Berhasil diUpdate"
             res.status(200).json({
               pesan: pesan,
               activityData: result.rows[0],

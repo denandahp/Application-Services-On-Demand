@@ -17,7 +17,7 @@ class merchantInforestoranModel{
       let uploadJson = await pool.query('UPDATE ' + dbTable + ' SET state_informasi_merchant = state_informasi_merchant  || \'{"profil_restaurant":"varified"}\' WHERE user_id = $1 RETURNING state_informasi_merchant;',[data.user_id]);
       debug('register %o', res);
   
-      return {"Data" : res.rows[0], "state" : uploadJson.rows[0]};
+      return {"data" : res.rows[0], "state" : uploadJson.rows[0]};
     }catch(ex){
       console.log('Enek seng salah iki ' + ex)
     };

@@ -187,7 +187,8 @@ class UserController {
             {
               pesan : "OTP telah diperbaharui",
               userData: result.user,
-              otpData: result.otp
+              otpData: result.otp,
+              limitOtp: result.limit_otp
             }
           );
         }
@@ -271,7 +272,8 @@ class UserController {
                   {
                     pesan : "Registrasi Merchant selesai, menunggu verifikasi OTP", 
                     userData: result.user,
-                    otpData: result.otp
+                    otpData: result.otp,
+                    limitOtp: result.limit_otp
                   }
                 );
               }

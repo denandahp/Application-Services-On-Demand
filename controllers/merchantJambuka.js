@@ -116,7 +116,7 @@ class merchantJambukaController{
 
         let callback = async () => {          
           try {
-            let detail = (await merchantInforestoran.stateJambuka(user_id));
+            let detail = (await merchantJambuka.stateJambuka(user_id));
       
             res.status(200).json({detail})
       
