@@ -42,11 +42,11 @@ class merchantInfoprodukModel{
           res = await pool.query(' SELECT * FROM ' + dbTable + 'ORDER BY restaurant_id ASC')
         }else {
           if(id_kategori == 'all'){
-            res = await pool.query(' SELECT * FROM ' + dbTable + ' where restaurant_id = $1 ORDER BY id ASC', [restaurant_id])
+            res = await pool.query(' SELECT * FROM ' + dbTable + ' where restaurant_id = $1 ORDER BY id ASC', [restaurant_id]);
           }else{
               if(id_product == 'all'){
                 res = await pool.query(' SELECT * FROM ' + dbTable + ' where restaurant_id = $1 AND kategori_menu_id = $2 ORDER BY id ASC', [restaurant_id, id_kategori]);
-                count = await pool.query(' SELECT restaurant_id, COUNT (restaurant_id) FROM ' + dbTable + ' where restaurant_id = $1 AND kategori_menu_id = $2 GROUP by restaurant_id;', [restaurant_id, id_kategori])
+                count = await pool.query(' SELECT restaurant_id, COUNT (restaurant_id) FROM ' + dbTable + ' where restaurant_id = $1 AND kategori_menu_id = $2 GROUP by restaurant_id;', [restaurant_id, id_kategori]);
 
               }else{
               res = await pool.query(' SELECT *, merchant.menu.id AS "id_menu", merchant.menu.name AS "name_menu", '+
@@ -84,8 +84,8 @@ class merchantInfoprodukModel{
       try{
         var d = new Date(Date.now());
         d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
-        let value =  [ data.name, data.restaurant_id, "normal", d, d]
-        let res = await pool.query('INSERT INTO ' + dbKategori + ' (name, restaurant_id ,created_at, type, updated_at) VALUES ($1, $2, $3, $4, $5) RETURNING *;', value);
+        let value =  [ data.name, data.restaurant_id, "normal", d, d, data.is_active]
+        let res = await pool.query('INSERT INTO ' + dbKategori + ' (name, restaurant_id, type , created_at, updated_at, is_active) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *;', value);
         debug('register %o', res);
     
         return res;
@@ -156,8 +156,14 @@ class merchantInfoprodukModel{
     let res;
     res = await pool.query(' SELECT id, restaurant_id, state_informasi_merchant FROM ' + dbRestaurant + ' WHERE user_id =$1 ORDER BY id ASC', [user_id])
       debug('get %o', res);
-      return {"id" : res.rows[0].id,"restaurant_id" : res.rows[0].user_id, "data" : res.rows[0].state_informasi_merchant.menu}
 
+      if (res.rowCount <= 0) {
+        return {"data" :"kosong"};
+      } else {
+        return {"id" : res.rows[0].id,"restaurant_id" : res.rows[0].user_id, "data" : res.rows[0].state_informasi_merchant.menu};
+      };
+      
+    
   }
 
 }

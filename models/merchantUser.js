@@ -279,18 +279,19 @@ class UserModel {
 
   async userstatus (id) {
 
-    let res;
-
-    if (id === undefined) {
-      res = await pool.query('SELECT id, username,email, phone, role,  verification_user_id  from ' + dbTable + ' ORDER BY id ASC')
-    } else {
-      res = await pool.query('SELECT id, username,email, phone, role,  verification_user_id from ' + dbTable + ' where id = $1 ORDER BY id ASC', [id]);
-    }
-
-    debug('get %o', res);
-
-    return res;
-    
+    let res, value;
+    try{
+      if (id === undefined) {
+        res = await pool.query('SELECT id, username,email, phone, role,  verification_user_id  from ' + dbTable + ' ORDER BY id ASC')
+      } else {
+        res = await pool.query('SELECT id, username,email, phone, role,  verification_user_id from ' + dbTable + ' where id = $1 ORDER BY id ASC', [id]);
+        value = await pool.query(' SELECT id, user_id, name FROM ' + dbRestaurant + ' where user_id = $1 ORDER BY user_id DESC', [res.rows[0].id]);
+      }
+      debug('get %o', res);
+      return {"user" : res.rows[0], "restaurant" : value.rows[0]};
+    }catch(ex){
+      console.log('Enek seng salah iki ' + ex)
+    };
   }
 
   async listbank () {

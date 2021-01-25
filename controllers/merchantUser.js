@@ -50,10 +50,11 @@ class UserController {
         res.locals.edit = true;
         let id_user = req.params.id_user;
         debug('detail %o', id_user);
-        let detail = (await user.userstatus(id_user)).rows[0];
+        let detail = (await user.userstatus(id_user));
 
         res.status(200).json({
-          detail
+          userData: detail.user,
+          restaurant : detail.restaurant
         });
       }catch (e) {
         next(e.detail || e);
