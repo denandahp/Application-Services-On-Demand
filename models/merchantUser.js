@@ -286,9 +286,14 @@ class UserModel {
       } else {
         res = await pool.query('SELECT id, username,email, phone, role,  verification_user_id from ' + dbTable + ' where id = $1 ORDER BY id ASC', [id]);
         value = await pool.query(' SELECT id, user_id, name FROM ' + dbRestaurant + ' where user_id = $1 ORDER BY user_id DESC', [res.rows[0].id]);
+        if(value.rows[0] == undefined){
+          return {"user" : res.rows[0], "restaurant" : {"id" : 0 }};
+        }else{
+          console.log("cek sini");
+          debug('get %o', res);
+          return {"user" : res.rows[0], "restaurant" : value.rows[0]};
+        }
       }
-      debug('get %o', res);
-      return {"user" : res.rows[0], "restaurant" : value.rows[0]};
     }catch(ex){
       console.log('Enek seng salah iki ' + ex)
     };
@@ -313,7 +318,7 @@ class UserModel {
                             ' merchant.restaurant.id AS "restaurant_id" ,*  FROM merchant.user ' + 
                             ' INNER JOIN merchant.restaurant ON merchant.user.id = merchant.restaurant.user_id;');
     } else {
-      res = await pool.query( 'SELECT merchant.user.name AS "name_pemilik", merchant.restaurant.name AS "name_restaurant", '+
+      res = await pool.query( ' SELECT merchant.user.name AS "name_pemilik", merchant.restaurant.name AS "name_restaurant", '+
                               ' merchant.restaurant.id AS "restaurant_id" ,*  FROM merchant.user ' + 
                               ' INNER JOIN merchant.restaurant ON merchant.user.id = merchant.restaurant.user_id '+
                               ' WHERE merchant.user.id = $1;',[user_id])

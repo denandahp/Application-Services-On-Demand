@@ -11,10 +11,7 @@ class merchantInforestoranController{
      
          try {
             let data = req.body;
-            console.log("response");
-            let response = await convimage.convImagemerchantrestoran(data);
-            console.log(response);
-            let result = await merchantInforestoran.register(data,response);
+            let result = await merchantInforestoran.register(data );
             res.status(200).json({
               pesan: "Infousaha Berhasil Disimpan",
               activityData: result.data,
@@ -40,9 +37,8 @@ class merchantInforestoranController{
      
         try {
             let data = req.body;
-            let response = await convimage.convImagemerchantrestoran(data);
-            console.log(response);
-            let result = await merchantInforestoran.update(data,response);
+ 
+            let result = await merchantInforestoran.update(data );
             res.status(200).json({
               pesan: "Infousaha Berhasil diperbaharui",
               activityData: result,

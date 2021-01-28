@@ -8,11 +8,11 @@ const dbkategori = schema + '.kategori_restaurant'
 const dbWaktupersiapan = schema +'.option_preparation_in_range'
 
 class merchantInforestoranModel{
-  async register (data,datagambar) {
+  async register (data) {
     try{
       var d = new Date(Date.now());
       d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
-      let value =  [ data.user_id, datagambar.media_logo, datagambar.media_banner, data.kategori_restaurant_id, data.option_preparation_in_range_id , data.description, d]
+      let value =  [ data.user_id,  data.media_logo,  data.media_banner, data.kategori_restaurant_id, data.option_preparation_in_range_id , data.description, d]
       let res = await pool.query('UPDATE ' + dbTable + ' SET (media_logo, media_banner, kategori_restaurant_id, option_preparation_in_range_id , description, updated_at) = ($2, $3, $4, $5, $6, $7) WHERE user_id = $1 RETURNING user_id, name, media_logo, media_banner, kategori_restaurant_id, option_preparation_in_range_id , description, updated_at;', value);
       let uploadJson = await pool.query('UPDATE ' + dbTable + ' SET state_informasi_merchant = state_informasi_merchant  || \'{"profil_restaurant":"varified"}\' WHERE user_id = $1 RETURNING state_informasi_merchant;',[data.user_id]);
       debug('register %o', res);
@@ -23,10 +23,10 @@ class merchantInforestoranModel{
     };
   }
 
-    async update (data,datagambar) {
+    async update (data, data) {
       var d = new Date(Date.now());
       d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
-        let sets = [ data.user_id, datagambar.media_logo, datagambar.media_banner, data.kategori_restaurant_id, data.option_preparation_in_range_id , data.description, d]
+        let sets = [ data.user_id,  data.media_logo,  data.media_banner, data.kategori_restaurant_id, data.option_preparation_in_range_id , data.description, d]
         let res = await pool.query('UPDATE ' + dbTable + ' SET (media_logo, media_banner, kategori_restaurant_id, option_preparation_in_range_id , description, updated_at) = ($2, $3, $4, $5, $6, $7) WHERE user_id = $1 RETURNING *;', sets);
         debug('update %o', res);
         let result = res.rows[0];

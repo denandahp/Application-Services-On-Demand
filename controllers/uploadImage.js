@@ -1,21 +1,16 @@
 const authUtils = require('./authUtils.js');
-const debug = require('debug')('app:controller:merchantInfopemilik');
-const merchantInfopemilik = require('../models/merchantInfopemilik.js');
+const debug = require('debug')('app:controller:uploadImage');
+const uploadImage = require('../models/uploadImage.js');
 const convimage = require('./convimage.js');
 
 const config = require('../configs.json');
 
-class merchantInfopemilikController{
-    async register(req, res, next) {
+class uploadImageController{
+    async post(req, res, next) {
         let callback = async () => {
-     
          try {
-            let data = req.body;
-            let result = await merchantInfopemilik.register(data);
-            res.status(200).json({
-              pesan: "Infousaha Berhasil Disimpan",
-              activityData: result.rows[0],
-            })
+            let result = await uploadImage.post(req, res);
+
           } catch (e) {
             console.log(e);
             let errorResponse = authUtils.processPOSTRequestError();
@@ -31,12 +26,11 @@ class merchantInfopemilikController{
         authUtils.processRequestWithJWT(req, callback, fallback);
       }
 
-      async update(req, res, next) {
+      async delete(req, res, next) {
         let callback = async () => {
      
         try {
-            let data = req.body;
-            let result = await merchantInfopemilik.update(data);
+            let result = await uploadImage.update(data,response);
             res.status(200).json({
               pesan: "Infousaha Berhasil diperbaharui",
               activityData: result,
@@ -58,4 +52,4 @@ class merchantInfopemilikController{
 
 }
 
-module.exports = new merchantInfopemilikController();
+module.exports = new uploadImageController();

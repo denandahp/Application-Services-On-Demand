@@ -13,7 +13,7 @@ Router.post('/login', user.login)
       .get('/detail/:id_user', user.detail)
       .get('/userstatus/:id_user', user.userstatus)
       .get('/alluser/:role/:status', user.showAllUser)
-      .get('/alldetail/:user_id', user.alldetail)
+      .get('/alldetail/:id_user', user.alldetail)
       .get('/listbank', user.listbank);
 
       

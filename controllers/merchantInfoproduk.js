@@ -11,9 +11,7 @@ class merchantInfoprodukController{
      
          try {
             let data = req.body;
-            let response = await convimage.convImagemerchantproduk(data);
-            console.log(response);
-            let result = await merchantInfoproduk.register(data,response);
+            let result = await merchantInfoproduk.register(data);
             let pesan = data.name + " Berhasil Ditambahkan"
             res.status(200).json({
               pesan: pesan,
@@ -40,9 +38,7 @@ class merchantInfoprodukController{
      
         try {
             let data = req.body;
-            let response = await convimage.convImagemerchantproduk(data);
-            console.log(response);
-            let result = await merchantInfoproduk.update(data,response);
+            let result = await merchantInfoproduk.update(data);
             let pesan = data.name + "berhasil diperbaharui"
             res.status(200).json({
               pesan: pesan,
@@ -121,12 +117,14 @@ class merchantInfoprodukController{
       }
 
       async delete (req, res, next) {
-        let id = req.body.infoproduk_id;
+        let data = req.body;
     
         try {
-          let result = (await merchantInfoproduk.delete(id));
+          let nama = data.name + ' Berhasil dihapus';
+          let result = await merchantInfoproduk.delete(data);
+
           res.status(200).json({
-            pesan : "Produk Berhasil dihapus",
+            pesan : nama,
             result
           });
         } catch (e) {
@@ -217,12 +215,12 @@ class merchantInfoprodukController{
 
       async getstock(req, res, next) {
         let callback = async () => {
-          let id_product = req.params.id_product;
+          let restaurant_id = req.params.restaurant_id;
     
           debug('detail %o', id_product)
       
           try {
-            let detail = (await merchantInfoproduk.getstock(id_product));
+            let detail = (await merchantInfoproduk.getstock(restaurant_id));
       
             res.status(200).json({detail})
       

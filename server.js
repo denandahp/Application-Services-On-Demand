@@ -76,7 +76,7 @@ const merchantInfoproduk = require('./routes/merchantInfoproduk.js');
 const merchantInforestoran = require('./routes/merchantInforestoran.js');
 const warning = require('./routes/warning.js');
 const wilayah = require('./routes/wilayah.js');
-const fileRoutes = require('./routes/imageUpload.js');
+const uploadImage = require('./routes/uploadImage.js');
 
 app.use('/', index);
 app.use('/api/driver', driverUser);
@@ -92,7 +92,7 @@ app.use('/api/merchant/infoproduk', merchantInfoproduk);
 app.use('/api/merchant/inforestoran', merchantInforestoran);
 app.use('/api/warning', warning);
 app.use('/api/wilayah', wilayah);
-app.use('/api/imageUpload', fileRoutes);
+app.use('/api/uploadImage', uploadImage);
 
 
 

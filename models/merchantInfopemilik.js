@@ -6,11 +6,11 @@ const table = '"user"';
 const dbTable = schema + '.' + table;
 
 class merchantInfopemilikModel{
-    async register (data, datagambar) {
+    async register (data) {
       try{
         var d = new Date(Date.now());
         d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
-        let value =  [data.id, data.name, datagambar.media_family, datagambar.media_identity, data.no_identity, data.birthday, d, data.state_profil_pemilik]
+        let value =  [data.id, data.name,  data.media_family,  data.media_identity, data.no_identity, data.birthday, d, data.state_profil_pemilik]
         let res = await pool.query('UPDATE' + dbTable + ' SET (name, media_family, media_identity, no_identity, birthday, updated_at, state_profil_pemilik) = ($2, $3, $4, $5, $6, $7, $8)  WHERE id = $1 RETURNING *;', value);
         debug('register %o', res);
     
@@ -20,11 +20,11 @@ class merchantInfopemilikModel{
       };
     }
 
-    async update (data, datagambar) {
+    async update (data,  data) {
       var d = new Date(Date.now());
       d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
-        console.log(datagambar);
-        let sets = [data.id, data.name, datagambar.media_family, datagambar.media_identity, data.no_identity, data.birthday, d, data.state_profil_pemilik]
+        console.log( data);
+        let sets = [data.id, data.name,  data.media_family,  data.media_identity, data.no_identity, data.birthday, d, data.state_profil_pemilik]
         let res = await pool.query('UPDATE' + dbTable + 'SET (name, media_family, media_identity, no_identity, birthday, updated_at, state_profil_pemilik) = ($2, $3, $4, $5, $6, $7, $8) WHERE id = $1 RETURNING *;', sets);
         debug('update %o', res);
         let result = res.rows[0];
