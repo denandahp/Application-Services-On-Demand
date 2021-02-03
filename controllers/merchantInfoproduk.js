@@ -217,7 +217,7 @@ class merchantInfoprodukController{
         let callback = async () => {
           let restaurant_id = req.params.restaurant_id;
     
-          debug('detail %o', id_product)
+          debug('detail %o', restaurant_id)
       
           try {
             let detail = (await merchantInfoproduk.getstock(restaurant_id));

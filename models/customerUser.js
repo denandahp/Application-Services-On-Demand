@@ -120,7 +120,7 @@ class UserModel {
   }
 
   async verifikasiotp(kodeOTP,username){
-    var d = new Date(Date.now());
+    var d = new Date(Date.now());d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
     const res = await pool.query('SELECT id, username, password, role, phone, otp, limit_otp FROM' + dbTable + 'where username = $1 AND otp = $2',[username,kodeOTP]);
     if (res.rowCount <= 0) {
       throw new Error('OTP tidak ditemukan');
@@ -136,10 +136,9 @@ class UserModel {
     }
   }
 
-
   async resendotp (data) {
     let otplimit = 120; // in Second
-    var d = new Date(Date.now());
+    var d = new Date(Date.now());d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
     d.setSeconds(d.getSeconds() + otplimit);
     var dd = d.getDate();var mm = d.getMonth() + 1;var y = d.getFullYear();var hour = d.getHours();var minute = d.getMinutes();var second = d.getSeconds();
     var FormattedDate = y + '-'+ mm + '-'+ dd + ' ' + hour+':'+minute+':'+second;
@@ -153,10 +152,9 @@ class UserModel {
 
       let sets = [data.username, data.phone, randomOTP, d, FormattedDate];
       let resdata = await pool.query('UPDATE' + dbTable + 'SET otp = $3, user_lastdate = $4 , limit_otp = $5 WHERE username =$1 AND phone = $2 RETURNING id,username,phone,otp,user_lastdate,limit_otp', sets);
-      let created = resdata.rows[0];
       
       debug('edit %o', res);
-      return created;
+      return {"user" : resdata.rows[0], "limit_otp" : FormattedDate};
     }
   }
 

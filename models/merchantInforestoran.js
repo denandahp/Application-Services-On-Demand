@@ -23,7 +23,7 @@ class merchantInforestoranModel{
     };
   }
 
-    async update (data, data) {
+    async update (data) {
       var d = new Date(Date.now());
       d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
         let sets = [ data.user_id,  data.media_logo,  data.media_banner, data.kategori_restaurant_id, data.option_preparation_in_range_id , data.description, d]

@@ -186,17 +186,36 @@ class UserController {
   async resendotp (req,res,next){
     let data = req.body;
     try{
-    var randomOTP = totp.now(); // => generate OTP
-    let result = await user.resendotp(data);
-     let responsesms = await sendSMSUtils.sendSMSMessage(data,randomOTP,res);
-    // let response = await sendWAUtils.sendWAMessage(result);
-    // if (response.status == 200){
-    res.status(200).json(
-      {
-        pesan : "OTP telah diperbaharui",
-        result
+      let checkphone = await sendSMSUtils.checkphone(data);
+      console.log(checkphone.status);
+      if(checkphone.status == 404){
+        console.log("checkphone.status");
+        res.status(400).json({
+          status : 'Coba periksa kembali nomor handphone yang dimasukkan. Sepertinya ada yg keliru.'
+        });
       }
-    );
+      else{
+        var randomOTP = totp.now(); // => generate OTP
+        let result = await user.resendotp(data,randomOTP);
+        if(result.status == "400"){
+          res.status(400).json(
+            {
+              pesan : "Registrasi Gagal ada error di system",
+              error : result.error
+            }
+          );
+        }else{
+          let responsesms = await sendSMSUtils.sendSMSMessage(checkphone.phoneNumber,randomOTP,res);
+          res.status(200).json(
+            {
+              pesan : "OTP telah diperbaharui",
+              userData: result.user,
+              limitOtp: result.limit_otp
+            }
+          );
+        }
+
+      }
     // }
       } catch (e) {
         next(e.detail);

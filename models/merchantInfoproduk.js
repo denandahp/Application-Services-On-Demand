@@ -6,6 +6,7 @@ const table = '"menu"';
 const dbTable = schema + '.' + table;
 const dbKategori = 'merchant.kategori_menu';
 const dbRestaurant = 'merchant.restaurant';
+const viewKategori = 'merchant.view_kategori_menu';
 
 
 class merchantInfoprodukModel{
@@ -24,7 +25,7 @@ class merchantInfoprodukModel{
     };
   }
 
-    async update (data, data) {
+    async update (data) {
       var d = new Date(Date.now());
       d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
         let sets = [ data.id, data.restaurant_id, data.kategori_menu_id,  data.media_photo, data.name, data.description, data.price_merchant, d, data.is_active];
@@ -69,9 +70,9 @@ class merchantInfoprodukModel{
 
       let res;
       if(restaurant_id == 'all'){
-        res = await pool.query(' SELECT * FROM ' + dbKategori + ' ORDER BY id ASC')
+        res = await pool.query(' SELECT * FROM ' + viewKategori + ' ORDER BY id ASC')
       }else {
-        res = await pool.query(' SELECT id, name, is_active FROM ' + dbKategori + ' where restaurant_id = $1  ORDER BY id ASC', [restaurant_id])
+        res = await pool.query(' SELECT id, name, is_active, total_menu FROM ' + viewKategori + ' where restaurant_id = $1  ORDER BY id ASC', [restaurant_id])
       }
       
       debug('get %o', res);
@@ -127,9 +128,9 @@ class merchantInfoprodukModel{
         let res;
 
         if(restaurant_id == 'all'){
-          res = await pool.query(' SELECT id, restaurant_id, name, is_available FROM ' + dbTable + ' ORDER BY id ASC')
+          res = await pool.query(' SELECT id, restaurant_id, name, price_merchant, is_available FROM ' + dbTable + ' ORDER BY id ASC')
         }else {
-          res = await pool.query(' SELECT id, restaurant_id, name, is_available FROM ' + dbTable + ' WHERE restaurant_id = $1 ORDER BY id ASC', [restaurant_id])
+          res = await pool.query(' SELECT id, restaurant_id, name, price_merchant, is_available FROM ' + dbTable + ' WHERE restaurant_id = $1 ORDER BY id ASC', [restaurant_id])
         }
 
         debug('get %o', res);

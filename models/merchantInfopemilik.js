@@ -20,7 +20,7 @@ class merchantInfopemilikModel{
       };
     }
 
-    async update (data,  data) {
+    async update (data) {
       var d = new Date(Date.now());
       d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
         console.log( data);
