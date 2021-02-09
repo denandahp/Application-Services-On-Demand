@@ -172,12 +172,21 @@ class UserController {
     let username = req.body.username;
     try{
     let result = await user.verifikasiotp(kodeOTP,username);
-    res.status(200).json(
-      {
-        pesan : "OTP telah terverifikasi",
-        result
-      }
-    )
+    if(result.status == "400"){
+      res.status(400).json(
+        {
+          pesan : "Registrasi Gagal ada error di system",
+          result : result.error
+        }
+      );
+    }else{
+      res.status(200).json(
+        {
+          pesan : "OTP telah terverifikasi",
+          result : result.data
+        }
+      )
+    }
   } catch (e) {
     next(e.detail);
   }

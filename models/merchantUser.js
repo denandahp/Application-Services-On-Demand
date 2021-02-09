@@ -31,7 +31,7 @@ class UserModel {
       if (await password == res.rows[0].password) {
         res.rows[0].password = undefined; //undefined gunanya buat ngilangin di res.rows[0]
           if(value.rows[0] == undefined){
-            return {"user" : res.rows[0], "restaurant" : {"id" : 0 }};
+            return {"user" : res.rows[0], "restaurant" : {"id" : 1 }};
           }else{
             console.log("cek sini");
             return {"user" : res.rows[0], "restaurant" : value.rows[0]};

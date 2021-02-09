@@ -72,7 +72,7 @@ class merchantInfoprodukModel{
       if(restaurant_id == 'all'){
         res = await pool.query(' SELECT * FROM ' + viewKategori + ' ORDER BY id ASC')
       }else {
-        res = await pool.query(' SELECT id, name, is_active, total_menu FROM ' + viewKategori + ' where restaurant_id = $1  ORDER BY id ASC', [restaurant_id])
+        res = await pool.query(' SELECT id, name, is_active, total_menu , total_menu_aktif, total_menu_tidak_aktif FROM ' + viewKategori + ' where restaurant_id = $1  ORDER BY id ASC', [restaurant_id])
       }
       
       debug('get %o', res);

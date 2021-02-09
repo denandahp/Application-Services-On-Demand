@@ -120,20 +120,26 @@ class UserModel {
   }
 
   async verifikasiotp(kodeOTP,username){
-    var d = new Date(Date.now());d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
-    const res = await pool.query('SELECT id, username, password, role, phone, otp, limit_otp FROM' + dbTable + 'where username = $1 AND otp = $2',[username,kodeOTP]);
-    if (res.rowCount <= 0) {
-      throw new Error('OTP tidak ditemukan');
-      
-    } else {
-      if (await kodeOTP == res.rows[0].otp && d <= res.rows[0].limit_otp) {
-        const updateVerif = await pool.query('UPDATE' + dbTable + 'SET is_verified = $1 WHERE otp = $2 ',[2,kodeOTP]);
-        return updateVerif.rows[0];
+    try{
+      var d = new Date(Date.now());d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
+      const res = await pool.query('SELECT id, username, password, role, phone, otp, limit_otp FROM' + dbTable + 'where username = $1 AND otp = $2',[username,kodeOTP]);
+      //console.log(d + " = " + res.rows[0].limit_otp);
+      if (res.rowCount <= 0) {
+        throw new Error('OTP tidak ditemukan');
+        
       } else {
-        throw new Error('OTP salah.');
-        // console.log(FormattedDate);
+        if (await kodeOTP == res.rows[0].otp && d <= res.rows[0].limit_otp) {
+          const updateVerif = await pool.query('UPDATE' + dbTable + 'SET is_verified = $1 WHERE otp = $2 ',[2,kodeOTP]);
+          return {"status": "200", "data": updateVerif.rows[0]} ;
+        } else {
+          throw new Error('OTP salah.');
+          // console.log(FormattedDate);
+        }
       }
-    }
+    }catch(ex){
+      console.log('Enek seng salah iki ' + ex);
+      return{"status": "400", "error" : 'data '+ ex};
+    };
   }
 
   async resendotp (data) {
