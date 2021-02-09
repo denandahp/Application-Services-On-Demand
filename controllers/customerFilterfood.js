@@ -59,6 +59,30 @@ class customerFilterfoodController{
         authUtils.processRequestWithJWT(req, callback, fallback);
       }
 
+      
+      async jFoodlist(req, res, next) {
+        let callback = async () => {
+     
+         try {
+            let result = await customerFilterfood.jFoodlist();
+            res.status(200).json({
+              result: result,
+            })
+          } catch (e) {
+            console.log(e);
+            let errorResponse = authUtils.processPOSTRequestError();
+            res.status(400).json(errorResponse);
+          }
+        };
+    
+        let fallback = (err) => {
+          console.log(err);
+          next(err);
+        }
+    
+        authUtils.processRequestWithJWT(req, callback, fallback);
+      }
+
 
 }
 

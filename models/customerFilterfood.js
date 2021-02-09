@@ -4,6 +4,7 @@ const pool = require('../libs/db');
 const schema = '"merchant"';
 const table = '"restaurant"';
 const dbTable = schema + '.' + table;
+const dbKategoriresto = "merchant.kategori_restaurant";
 
 class customerFilterfoodModel{
     async searchbyName (page, limit, filterName) {
@@ -18,7 +19,7 @@ class customerFilterfoodModel{
         }else{
           counts = await pool.query('SELECT COUNT (*) FILTER(WHERE name LIKE $1 ) FROM ' + dbTable, [filterName +'%']);
         };
-        console.log(filterName, startIndex, limit, typeof endIndex, typeof counts.rows[0].count);
+        console.log(filterName, startIndex, limit, endIndex, counts.rows[0].count);
         if (endIndex <= counts.rows[0].count) {
           results.next = {
             page: page + 1,
@@ -32,12 +33,12 @@ class customerFilterfoodModel{
             limit: limit
           }
         }else{results.previous ={ page : 0, limit: limit} };
-
+        results.countResto = counts.rows[0].count;
         if(filterName == "all"){
-          res = await pool.query('SELECT id, name, city, kategori_restaurant_id FROM' + dbTable + ' ORDER BY created_at OFFSET $1 LIMIT $2', [startIndex, limit]);
+          res = await pool.query('SELECT id, name, media_logo, city, kategori_restaurant_id FROM' + dbTable + ' ORDER BY created_at OFFSET $1 LIMIT $2', [startIndex, limit]);
           results.res = res.rows;
         }else{
-          res = await pool.query('SELECT id, name,  city, kategori_restaurant_id FROM' + dbTable + ' WHERE name LIKE $1 ORDER BY created_at OFFSET $2 LIMIT $3', [filterName +'%', startIndex, limit]);
+          res = await pool.query('SELECT id, name, media_logo  city, kategori_restaurant_id FROM' + dbTable + ' WHERE name LIKE $1 ORDER BY created_at OFFSET $2 LIMIT $3', [filterName +'%', startIndex, limit]);
           results.res = res.rows;
         }
         results.date = d;
@@ -76,12 +77,12 @@ class customerFilterfoodModel{
             limit: limit
           }
         }else{results.previous ={ page : 0, limit: limit} };
-
+        results.countResto = counts.rows[0].count;
         if(data.idKategori == "all"){
-          res = await pool.query('SELECT id, name, city, kategori_restaurant_id FROM' + dbTable + ' ORDER BY created_at OFFSET $1 LIMIT $2', [startIndex, limit]);
+          res = await pool.query('SELECT id, name, media_logo, city, kategori_restaurant_id FROM' + dbTable + ' ORDER BY created_at OFFSET $1 LIMIT $2', [startIndex, limit]);
           results.res = res.rows;
         }else{
-          res = await pool.query('SELECT id, name,  city, kategori_restaurant_id FROM' + dbTable + ' WHERE kategori_restaurant_id = $1 ORDER BY created_at OFFSET $2 LIMIT $3', [data.idKategori, startIndex, limit]);
+          res = await pool.query('SELECT id, name, media_logo,  city, kategori_restaurant_id FROM' + dbTable + ' WHERE kategori_restaurant_id = $1 ORDER BY created_at OFFSET $2 LIMIT $3', [data.idKategori, startIndex, limit]);
           results.res = res.rows;
         }
         results.date = d;
@@ -94,6 +95,20 @@ class customerFilterfoodModel{
       };
     }
 
+    async jFoodlist() {
+        try{
+            let res;
+            res = await pool.query(' SELECT id, type, name FROM ' + dbKategoriresto + ' ORDER BY id ASC')
+
+            debug('get %o', res);
+            return res.rows;
+
+        }catch(ex){
+            console.log('Enek seng salah iki ' + ex);
+            return "data " + ex;
+        };
+      }
+  
 
     async get(id) {
 
