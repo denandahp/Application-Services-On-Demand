@@ -15,7 +15,7 @@ class customerMenujfoodModel{
             
             let result = {};
             let menu = await pool.query(' SELECT id, kategori_menu_id, name, media_photo, description, price_customer, is_active FROM ' + dbTable + ' WHERE restaurant_id = $1 ORDER BY kategori_menu_id ASC', [restaurant_id])
-            let kategoriMenu = await pool.query(' SELECT id, name, type, is_active FROM ' + dbKategorimenu + ' WHERE restaurant_id = $1 ORDER BY kategori_menu_id ASC', [restaurant_id])
+            let kategoriMenu = await pool.query(' SELECT id, name, type, is_active FROM ' + dbKategorimenu + ' WHERE restaurant_id = $1 ORDER BY id ASC', [restaurant_id])
             let infoResto = await pool.query(' SELECT id, name, media_logo,  city, kategori_restaurant_id FROM ' + dbResto + ' WHERE id = $1 ;', [restaurant_id])
             result.menu = menu.rows; result.kategoriMenu = kategoriMenu.rows; result.infoResto = infoResto.rows;
             debug('get %o', result);

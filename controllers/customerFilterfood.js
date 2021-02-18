@@ -10,10 +10,9 @@ class customerFilterfoodController{
         let callback = async () => {
      
          try {
-          let page = parseInt(req.query.page);
-          let limit = parseInt(req.query.limit);
-          let filterName = req.query.filterName;
-            let result = await customerFilterfood.searchbyName(page, limit, filterName);
+  
+          let data = req.query;
+            let result = await customerFilterfood.searchbyName(data);
             res.status(200).json({
               pesan: "Hasil Filter",
               result: result,
@@ -38,7 +37,7 @@ class customerFilterfoodController{
      
          try {
             let data = req.query;
-            //let data = {page, limit, idKategori, hargaMin, hargaMax, jenisMakanan, penilaian, sortBy, data};
+            //let data = {page, limit, idKategori, latitude, longitude};
             let result = await customerFilterfood.searchBycategory(data);
             res.status(200).json({
               pesan: "Hasil Filter kategori",

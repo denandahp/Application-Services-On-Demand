@@ -5,9 +5,14 @@ const schema = '"merchant"';
 const table = '"restaurant"';
 const dbTable = schema + '.' + table;
 const dbKategoriresto = "merchant.kategori_restaurant";
+const dbFilterkategori = "merchant.search_restaurant_by_category";
+const dbFiltermenu = "merchant.search_restaurant_by_menu";
+
+
 
 class customerFilterfoodModel{
-    async searchbyName (page, limit, filterName) {
+    async searchbyName (data) {
+      let page = parseInt(data.page);let limit = parseInt(data.limit); let filterName = data.filterName;
       const startIndex = (page - 1) * limit;
       const endIndex = page * limit;
       let counts, res;
@@ -17,7 +22,7 @@ class customerFilterfoodModel{
         if(filterName == "all"){
           counts= await pool.query('SELECT COUNT (*)  FROM ' + dbTable);
         }else{
-          counts = await pool.query('SELECT COUNT (*) FILTER(WHERE name LIKE $1 ) FROM ' + dbTable, [filterName +'%']);
+          counts = await pool.query('SELECT COUNT (*)  FROM ' + dbFiltermenu + '($1, $2, $3)', [filterName, data.latitude, data.longitude]);
         };
         console.log(filterName, startIndex, limit, endIndex, counts.rows[0].count);
         if (endIndex <= counts.rows[0].count) {
@@ -38,7 +43,8 @@ class customerFilterfoodModel{
           res = await pool.query('SELECT id, name, media_logo, city, kategori_restaurant_id FROM' + dbTable + ' ORDER BY created_at OFFSET $1 LIMIT $2', [startIndex, limit]);
           results.res = res.rows;
         }else{
-          res = await pool.query('SELECT id, name, media_logo  city, kategori_restaurant_id FROM' + dbTable + ' WHERE name LIKE $1 ORDER BY created_at OFFSET $2 LIMIT $3', [filterName +'%', startIndex, limit]);
+          let sets = [filterName, data.latitude, data.longitude, startIndex, limit]
+          res = await pool.query('SELECT * FROM' + dbFiltermenu + '($1, $2, $3) ORDER BY created_at OFFSET $4 LIMIT $5;', sets);
           results.res = res.rows;
         }
         results.date = d;
@@ -61,7 +67,7 @@ class customerFilterfoodModel{
         if(data.idKategori == "all"){
           counts= await pool.query('SELECT COUNT (*)  FROM ' + dbTable);
         }else{
-          counts = await pool.query('SELECT COUNT (*) FILTER(WHERE kategori_restaurant_id = $1 ) FROM ' + dbTable, [data.idKategori]);
+          counts = await pool.query('SELECT COUNT (*)  FROM ' + dbFilterkategori + '($1, $2, $3)', [data.idKategori, data.latitude, data.longitude]);
         };
         console.log(data.idKategori, startIndex, limit, endIndex, counts.rows[0].count);
         if (endIndex <= counts.rows[0].count) {
@@ -82,7 +88,8 @@ class customerFilterfoodModel{
           res = await pool.query('SELECT id, name, media_logo, city, kategori_restaurant_id FROM' + dbTable + ' ORDER BY created_at OFFSET $1 LIMIT $2', [startIndex, limit]);
           results.res = res.rows;
         }else{
-          res = await pool.query('SELECT id, name, media_logo,  city, kategori_restaurant_id FROM' + dbTable + ' WHERE kategori_restaurant_id = $1 ORDER BY created_at OFFSET $2 LIMIT $3', [data.idKategori, startIndex, limit]);
+          let sets = [data.idKategori, data.latitude, data.longitude, startIndex, limit]
+          res = await pool.query('SELECT * FROM' + dbFilterkategori + '($1, $2, $3) ORDER BY created_at OFFSET $4 LIMIT $5;', sets);
           results.res = res.rows;
         }
         results.date = d;
