@@ -40,11 +40,11 @@ class customerFilterfoodModel{
         }else{results.previous ={ page : 0, limit: limit} };
         results.countResto = counts.rows[0].count;
         if(filterName == "all"){
-          res = await pool.query('SELECT id, name, media_logo, city, kategori_restaurant_id FROM' + dbTable + ' ORDER BY created_at OFFSET $1 LIMIT $2', [startIndex, limit]);
+          res = await pool.query('SELECT id, name, media_logo, city, kategori_restaurant_id FROM' + dbTable + ' ORDER BY distance ASC OFFSET $1 LIMIT $2', [startIndex, limit]);
           results.res = res.rows;
         }else{
           let sets = [filterName, data.latitude, data.longitude, startIndex, limit]
-          res = await pool.query('SELECT * FROM' + dbFiltermenu + '($1, $2, $3) ORDER BY created_at OFFSET $4 LIMIT $5;', sets);
+          res = await pool.query('SELECT * FROM ' + dbFiltermenu + '($1, $2, $3) ORDER BY distance ASC OFFSET $4 LIMIT $5;', sets);
           results.res = res.rows;
         }
         results.date = d;
@@ -85,11 +85,11 @@ class customerFilterfoodModel{
         }else{results.previous ={ page : 0, limit: limit} };
         results.countResto = counts.rows[0].count;
         if(data.idKategori == "all"){
-          res = await pool.query('SELECT id, name, media_logo, city, kategori_restaurant_id FROM' + dbTable + ' ORDER BY created_at OFFSET $1 LIMIT $2', [startIndex, limit]);
+          res = await pool.query('SELECT id, name, media_logo, city, kategori_restaurant_id FROM' + dbTable + ' ORDER BY distance ASC OFFSET $1 LIMIT $2', [startIndex, limit]);
           results.res = res.rows;
         }else{
           let sets = [data.idKategori, data.latitude, data.longitude, startIndex, limit]
-          res = await pool.query('SELECT * FROM' + dbFilterkategori + '($1, $2, $3) ORDER BY created_at OFFSET $4 LIMIT $5;', sets);
+          res = await pool.query('SELECT * FROM ' + dbFilterkategori + '($1, $2, $3) ORDER BY distance ASC OFFSET $4 LIMIT $5;', sets);
           results.res = res.rows;
         }
         results.date = d;
@@ -113,6 +113,50 @@ class customerFilterfoodModel{
         }catch(ex){
             console.log('Enek seng salah iki ' + ex);
             return "data " + ex;
+        };
+      }
+
+      async filterinname (data) {
+        let page = parseInt(data.page); let limit = parseInt(data.limit);
+        let value = [data.keyword, data.latitude, data.longitude, 
+                    data.harga_1, data.harga_2, data.harga_3, data.harga_4, 
+                    data.jenis_menu_1, data.jenis_menu_2, data.jenis_menu_3, data.jenis_menu_4, 
+                    data.rating_minimal, data.order_by]
+        const startIndex = (page - 1) * limit;
+        const endIndex = page * limit;
+        let counts, res;
+        let results = {};
+        var d = new Date(Date.now()); d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
+        try{
+          counts = await pool.query('SELECT COUNT (*)  FROM ' + dbFiltermenu + '($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', value);
+          console.log(data.keyword, startIndex, limit, endIndex, counts.rows[0].count);
+          if (endIndex <= counts.rows[0].count) {
+            results.next = {
+              page: page + 1,
+              limit: limit
+            }
+          }else{ throw new Error('Syntax salah');};
+  
+          if (startIndex > 0) {
+            results.previous = {
+              page: page - 1,
+              limit: limit
+            }
+          }else{results.previous ={ page : 0, limit: limit} };
+          results.countResto = counts.rows[0].count;
+          let sets = [data.keyword, data.latitude, data.longitude, 
+                    data.harga_1, data.harga_2, data.harga_3, data.harga_4, 
+                    data.jenis_menu_1, data.jenis_menu_2, data.jenis_menu_3, data.jenis_menu_4, 
+                    data.rating_minimal, data.order_by, startIndex, limit]
+          res = await pool.query('SELECT * FROM ' + dbFiltermenu + '($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) ORDER BY distance ASC OFFSET $14 LIMIT $15;', sets);
+          results.res = res.rows;
+          results.date = d;
+          console.log(d);
+          debug('register %o', results);
+          return results;
+        }catch(ex){
+          console.log('Enek seng salah iki ' + ex);
+          return "data " + ex;
         };
       }
   
