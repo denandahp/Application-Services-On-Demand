@@ -58,7 +58,7 @@ class customerFilterfoodModel{
     }
 
     async searchBycategory (data) {
-      let page = parseInt(data.page); let limit = parseInt(data.limit);
+      let page = parseInt(data.page); let limit = parseInt(data.limit);let idKategori = parseInt(data.idKategori);
       const startIndex = (page - 1) * limit;
       const endIndex = page * limit;
       let counts, res, results = {};
@@ -67,8 +67,10 @@ class customerFilterfoodModel{
         if(data.idKategori == "all"){
           counts= await pool.query('SELECT COUNT (*)  FROM ' + dbTable);
         }else{
-          counts = await pool.query('SELECT COUNT (*)  FROM ' + dbFilterkategori + '($1, $2, $3)', [data.idKategori, data.latitude, data.longitude]);
+          console.log(data.idKategori, data.latitude, data.longitude, startIndex, limit, endIndex);
+          counts = await pool.query('SELECT COUNT (*)  FROM ' + dbFilterkategori + ' ($1, $2, $3)', [idKategori, data.latitude, data.longitude]);
         };
+        console.log("cek sini");
         console.log(data.idKategori, startIndex, limit, endIndex, counts.rows[0].count);
         if (endIndex <= counts.rows[0].count) {
           results.next = {
@@ -116,18 +118,20 @@ class customerFilterfoodModel{
         };
       }
 
-      async filterinname (data) {
+    async filterinname (data) {
         let page = parseInt(data.page); let limit = parseInt(data.limit);
         let value = [data.keyword, data.latitude, data.longitude, 
                     data.harga_1, data.harga_2, data.harga_3, data.harga_4, 
                     data.jenis_menu_1, data.jenis_menu_2, data.jenis_menu_3, data.jenis_menu_4, 
-                    data.rating_minimal, data.order_by]
+                    data.rating_minimal, data.order_by];
+        
         const startIndex = (page - 1) * limit;
         const endIndex = page * limit;
         let counts, res;
         let results = {};
         var d = new Date(Date.now()); d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
         try{
+          console.log(value);
           counts = await pool.query('SELECT COUNT (*)  FROM ' + dbFiltermenu + '($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', value);
           console.log(data.keyword, startIndex, limit, endIndex, counts.rows[0].count);
           if (endIndex <= counts.rows[0].count) {
