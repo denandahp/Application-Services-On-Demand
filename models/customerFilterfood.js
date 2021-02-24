@@ -16,7 +16,7 @@ class customerFilterfoodModel{
       const startIndex = (page - 1) * limit;
       const endIndex = page * limit;
       let counts, res;
-      let results = {};
+      let results = {}, err = [];
       var d = new Date(Date.now()); d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
       try{
         if(filterName == "all"){
@@ -30,7 +30,7 @@ class customerFilterfoodModel{
             page: page + 1,
             limit: limit
           }
-        }else{ throw new Error('Syntax salah');};
+        }else{ throw new Error('data kosong');};
 
         if (startIndex > 0) {
           results.previous = {
@@ -53,7 +53,7 @@ class customerFilterfoodModel{
         return results;
       }catch(ex){
         console.log('Enek seng salah iki ' + ex);
-        return "data " + ex;
+        return {"error": "data" + ex, "data " : err};
       };
     }
 
@@ -61,7 +61,7 @@ class customerFilterfoodModel{
       let page = parseInt(data.page); let limit = parseInt(data.limit);let idKategori = parseInt(data.idKategori);
       const startIndex = (page - 1) * limit;
       const endIndex = page * limit;
-      let counts, res, results = {};
+      let counts, res, results = {}, err = [];
       var d = new Date(Date.now()); d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
       try{
         if(data.idKategori == "all"){
@@ -77,7 +77,7 @@ class customerFilterfoodModel{
             page: page + 1,
             limit: limit
           }
-        }else{ throw new Error('Syntax salah');};
+        }else{ throw new Error('data kosong');};
 
         if (startIndex > 0) {
           results.previous = {
@@ -100,7 +100,7 @@ class customerFilterfoodModel{
         return results;
       }catch(ex){
         console.log('Enek seng salah iki ' + ex);
-        return "data " + ex;
+        return {"error": "data" + ex, "data " : err};
       };
     }
 
@@ -114,7 +114,7 @@ class customerFilterfoodModel{
 
         }catch(ex){
             console.log('Enek seng salah iki ' + ex);
-            return "data " + ex;
+            return {"error": "data" + ex, "data " : err};
         };
       }
 
@@ -128,7 +128,7 @@ class customerFilterfoodModel{
         const startIndex = (page - 1) * limit;
         const endIndex = page * limit;
         let counts, res;
-        let results = {};
+        let results = {}, err = [];
         var d = new Date(Date.now()); d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
         try{
           console.log(value);
@@ -139,7 +139,7 @@ class customerFilterfoodModel{
               page: page + 1,
               limit: limit
             }
-          }else{ throw new Error('Syntax salah');};
+          }else{ throw new Error('data kosong');};
   
           if (startIndex > 0) {
             results.previous = {
@@ -160,7 +160,7 @@ class customerFilterfoodModel{
           return results;
         }catch(ex){
           console.log('Enek seng salah iki ' + ex);
-          return "data " + ex;
+          return {"error": "data" + ex, "data " : err};
         };
       }
   
