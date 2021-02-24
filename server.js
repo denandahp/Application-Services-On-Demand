@@ -27,11 +27,17 @@ app.use(logger('dev'));
 // app.use(bodyParser.urlencoded({ extended: true }));
 
 //Limit JSON
-app.use(bodyParser.json({limit: '50mb'}));
-app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
+app.use(bodyParser.json({
+  limit: '50mb'
+}));
+app.use(bodyParser.urlencoded({
+  limit: "50mb",
+  extended: true,
+  parameterLimit: 50000
+}));
 
 //Static image
-app.use(express.static(path.join(__dirname,'uploads')));
+app.use(express.static(path.join(__dirname, 'uploads')));
 
 //Simple Usage (Enable All CORS Requests)
 app.use(cors())
@@ -48,13 +54,13 @@ app.set('trust proxy', 1); // trust first proxy
 app.use(session(config.cookies));
 
 // MaxAge
-app.use(function SessionMaxAgeMiddleware (req, res, next) {
+app.use(function SessionMaxAgeMiddleware(req, res, next) {
   req.sessionOptions.maxAge = req.session.maxAge || req.sessionOptions.maxAge;
   next();
 });
 
 // locals.
-app.use(function LocalsMiddleware (req, res, next) {
+app.use(function LocalsMiddleware(req, res, next) {
 
   res.locals.edit = false;
   res.locals.user = req.session.user || false;
