@@ -429,6 +429,36 @@ class UserController {
     }
   }
 
+  async isactive(req, res, next) {
+
+    let id = req.user.data.id
+    console.log(id);
+    try {
+      let result = await user.isactive(id);
+      res.status(200).send({
+        status: res.statusCode,
+        data: result
+      })
+    } catch (e) {
+      next(e.detail);
+    }
+  }
+
+  async autobid(req, res, next) {
+
+    let id = req.user.data.id
+    console.log(id);
+    try {
+      let result = await user.autobid(id);
+      res.status(200).send({
+        status: res.statusCode,
+        data: result
+      })
+    } catch (e) {
+      next(e.detail);
+    }
+  }
+
 }
 
 module.exports = new UserController();

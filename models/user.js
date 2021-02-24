@@ -438,10 +438,29 @@ class UserModel {
         if (error) {
           return reject(error);
         }
-        // console.log(results);
         return resolve(results.rows[0].get_jumlah_orderan_masuk_driver);
       })
     })
+  }
+
+  async isactive(id) {
+    let res = await pool.query('SELECT is_active FROM ' + dbTable + ' WHERE id = ' + id);
+    debug('edit %o', res);
+    if (res.rowCount <= 0) {
+      throw 'Edit fail';
+    } else {
+      return res.rows[0].is_active
+    }
+  }
+
+  async autobid(id) {
+    let res = await pool.query('SELECT is_bid_active FROM ' + dbTable + ' WHERE id = ' + id);
+    debug('edit %o', res);
+    if (res.rowCount <= 0) {
+      throw 'Edit fail';
+    } else {
+      return res.rows[0].is_bid_active
+    }
   }
 
 }
