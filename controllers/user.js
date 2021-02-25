@@ -362,7 +362,6 @@ class UserController {
   async homealt(req, res, next) {
 
     let id = req.user.data.id
-    console.log(id);
     try {
       let result = await user.homealt(id);
       res.status(200).send({
@@ -393,6 +392,20 @@ class UserController {
     let id = req.user.data.id
     try {
       let result = await user.lastorder(id);
+      res.status(200).send({
+        status: res.statusCode,
+        data: result
+      })
+    } catch (e) {
+      next(e.detail);
+    }
+  }
+
+  async orderan(req, res, next) {
+
+    let kode = req.params.kode
+    try {
+      let result = await user.orderan(kode);
       res.status(200).send({
         status: res.statusCode,
         data: result

@@ -23,6 +23,8 @@ Router.post('/login', user.login)
       .put('/activeautobid', auth, user.activeautobid)
       .put('/nonactiveautobid', auth, user.nonactiveautobid)
       .get('/homealt', auth, user.homealt)
+      .get('/orderan/:kode', auth, user.orderan)
+// .post('/terima/:kode', auth, user.orderan)
 // .get('/allorderhistory', auth, user.allorderhistory);
 // .get('/lastorder', auth, user.lastorder);
 
