@@ -363,63 +363,6 @@ class UserModel {
     };
   }
 
-  async drivername(id) {
-    return new Promise((resolve, reject) => {
-      pool.query('SELECT get_nama_driver(' + id + ')', (error, results) => {
-        if (error) {
-          return reject(error);
-        }
-        return resolve(results.rows[0].get_nama_driver);
-      })
-    })
-  }
-
-  async driverphoto(id) {
-    return new Promise((resolve, reject) => {
-      pool.query('SELECT get_photo_driver(' + id + ')', (error, results) => {
-        if (error) {
-          return reject(error);
-        }
-        return resolve(results.rows[0].get_photo_driver);
-      })
-    })
-  }
-
-  async driverperformance(id) {
-    return new Promise((resolve, reject) => {
-      pool.query('SELECT get_peforma_driver(' + id + ')', (error, results) => {
-        if (error) {
-          return reject(error);
-        }
-        return resolve(results.rows[0].get_peforma_driver);
-      })
-    })
-  }
-
-  async driverestimate(id) {
-    return new Promise((resolve, reject) => {
-      pool.query('SELECT get_estimasi_pendapatan_driver(' + id + ')', (error, results) => {
-        if (error) {
-          return reject(error);
-        }
-        // console.log(results);
-        return resolve(results.rows[0].get_estimasi_pendapatan_driver);
-      })
-    })
-  }
-
-  async incomingorder(id) {
-    return new Promise((resolve, reject) => {
-      pool.query('SELECT get_jumlah_orderan_masuk_driver(' + id + ')', (error, results) => {
-        if (error) {
-          return reject(error);
-        }
-        // console.log(results);
-        return resolve(results.rows[0].get_jumlah_orderan_masuk_driver);
-      })
-    })
-  }
-
   async allorderhistory(id) {
     return new Promise((resolve, reject) => {
       pool.query('SELECT get_jumlah_orderan_masuk_driver(' + id + ')', (error, results) => {
@@ -443,24 +386,19 @@ class UserModel {
     })
   }
 
-  async isactive(id) {
-    let res = await pool.query('SELECT is_active FROM ' + dbTable + ' WHERE id = ' + id);
-    debug('edit %o', res);
-    if (res.rowCount <= 0) {
-      throw 'Edit fail';
-    } else {
-      return res.rows[0].is_active
-    }
-  }
+  async homealt(id) {
+    let users = await pool.query('SELECT photo, is_active, namadepan, namabelakang, is_bid_active, perform, estimasi_pendapatan, jumlah_orderan_masuk  FROM ' + dbTable + ' WHERE id = ' + id);
 
-  async autobid(id) {
-    let res = await pool.query('SELECT is_bid_active FROM ' + dbTable + ' WHERE id = ' + id);
-    debug('edit %o', res);
-    if (res.rowCount <= 0) {
-      throw 'Edit fail';
-    } else {
-      return res.rows[0].is_bid_active
+    return {
+      "photo": users.rows[0].photo,
+      "isactive": users.rows[0].is_active,
+      "name": users.rows[0].namadepan + users.rows[0].namabelakang,
+      "autobid": users.rows[0].is_bid_active,
+      "perform": users.rows[0].perform,
+      "estimasi_pendapatan": users.rows[0].estimasi_pendapatan,
+      "jumlah_orderan_masuk": users.rows[0].jumlah_orderan_masuk,
     }
+
   }
 
 }

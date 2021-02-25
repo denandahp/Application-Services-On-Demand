@@ -16,17 +16,11 @@ Router.post('/login', user.login)
       .post('/logout', user.logout)
       .get('/alluser/:role/:status', user.showAllUser)
       .get('/alluserbyschedule/:username', user.userbyschedule)
-      .get('/isactive', auth, user.isactive)
-      .get('/autobid', auth, user.autobid)
       .put('/active', auth, user.active)
       .put('/nonactive', auth, user.nonactive)
       .put('/activeautobid', auth, user.activeautobid)
       .put('/nonactiveautobid', auth, user.nonactiveautobid)
-      .get('/drivername', auth, user.drivername)
-      .get('/driverphoto', auth, user.driverphoto)
-      .get('/driverperformance', auth, user.driverperformance)
-      .get('/driverestimate', auth, user.driverestimate)
-      .get('/incomingorder', auth, user.incomingorder)
+      .get('/homealt', auth, user.homealt)
 // .get('/allorderhistory', auth, user.allorderhistory);
 // .get('/lastorder', auth, user.lastorder);
 

@@ -331,76 +331,6 @@ class UserController {
     }
   }
 
-  async drivername(req, res, next) {
-
-    let id = req.user.data.id
-    try {
-      let result = await user.drivername(id);
-      res.status(200).send({
-        status: res.statusCode,
-        data: result
-      })
-    } catch (e) {
-      next(e.detail);
-    }
-  }
-
-  async driverphoto(req, res, next) {
-
-    let id = req.user.data.id
-    try {
-      let result = await user.driverphoto(id);
-      res.status(200).send({
-        status: res.statusCode,
-        data: result
-      })
-    } catch (e) {
-      next(e.detail);
-    }
-  }
-
-  async driverperformance(req, res, next) {
-
-    let id = req.user.data.id
-    try {
-      let result = await user.driverperformance(id);
-      res.status(200).send({
-        status: res.statusCode,
-        data: result
-      })
-    } catch (e) {
-      next(e.detail);
-    }
-  }
-
-  async driverestimate(req, res, next) {
-
-    let id = req.user.data.id
-    try {
-      let result = await user.driverestimate(id);
-      res.status(200).send({
-        status: res.statusCode,
-        data: result
-      })
-    } catch (e) {
-      next(e.detail);
-    }
-  }
-
-  async incomingorder(req, res, next) {
-
-    let id = req.user.data.id
-    try {
-      let result = await user.incomingorder(id);
-      res.status(200).send({
-        status: res.statusCode,
-        data: result
-      })
-    } catch (e) {
-      next(e.detail);
-    }
-  }
-
   async allorderhistory(req, res, next) {
 
     let id = req.user.data.id
@@ -429,27 +359,12 @@ class UserController {
     }
   }
 
-  async isactive(req, res, next) {
+  async homealt(req, res, next) {
 
     let id = req.user.data.id
     console.log(id);
     try {
-      let result = await user.isactive(id);
-      res.status(200).send({
-        status: res.statusCode,
-        data: result
-      })
-    } catch (e) {
-      next(e.detail);
-    }
-  }
-
-  async autobid(req, res, next) {
-
-    let id = req.user.data.id
-    console.log(id);
-    try {
-      let result = await user.autobid(id);
+      let result = await user.homealt(id);
       res.status(200).send({
         status: res.statusCode,
         data: result
