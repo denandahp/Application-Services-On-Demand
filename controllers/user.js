@@ -275,6 +275,20 @@ class UserController {
     }
   }
 
+  async is_active(req, res, next) {
+
+    let id = req.user.data.id
+    try {
+      await user.is_active(id);
+      res.status(200).send({
+        status: res.statusCode,
+        message: "success"
+      })
+    } catch (e) {
+      next(e.detail);
+    }
+  }
+
   async active(req, res, next) {
 
     let id = req.user.data.id
@@ -282,7 +296,7 @@ class UserController {
       await user.active(id);
       res.status(200).send({
         status: res.statusCode,
-        message: "success",
+        message: "active",
       })
     } catch (e) {
       next(e.detail);
@@ -296,7 +310,21 @@ class UserController {
       await user.nonactive(id);
       res.status(200).send({
         status: res.statusCode,
-        message: "success",
+        message: "non active",
+      })
+    } catch (e) {
+      next(e.detail);
+    }
+  }
+
+  async autobid(req, res, next) {
+
+    let id = req.user.data.id
+    try {
+      await user.autobid(id);
+      res.status(200).send({
+        status: res.statusCode,
+        message: "success"
       })
     } catch (e) {
       next(e.detail);
@@ -310,7 +338,7 @@ class UserController {
       await user.activeautobid(id);
       res.status(200).send({
         status: res.statusCode,
-        message: "success",
+        message: "active",
       })
     } catch (e) {
       next(e.detail);
@@ -324,7 +352,22 @@ class UserController {
       await user.nonactiveautobid(id);
       res.status(200).send({
         status: res.statusCode,
-        message: "success",
+        message: "non active",
+      })
+    } catch (e) {
+      next(e.detail);
+    }
+  }
+
+  async homealt(req, res, next) {
+
+    let id = req.user.data.id
+    console.log(id);
+    try {
+      let result = await user.homealt(id);
+      res.status(200).send({
+        status: res.statusCode,
+        data: result
       })
     } catch (e) {
       next(e.detail);
@@ -350,21 +393,6 @@ class UserController {
     let id = req.user.data.id
     try {
       let result = await user.lastorder(id);
-      res.status(200).send({
-        status: res.statusCode,
-        data: result
-      })
-    } catch (e) {
-      next(e.detail);
-    }
-  }
-
-  async homealt(req, res, next) {
-
-    let id = req.user.data.id
-    console.log(id);
-    try {
-      let result = await user.homealt(id);
       res.status(200).send({
         status: res.statusCode,
         data: result
