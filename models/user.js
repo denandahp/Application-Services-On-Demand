@@ -14,7 +14,7 @@ const table = '"users"'
 const dbTable = schema + '.' + table;
 const scheduledb = 'public.schedule';
 const modaldb = 'public.modal';
-const restaurantdb = 'customer.cart_restaurant';
+const jfoodviews = 'orders.jfood';
 const orderdb = 'public.order';
 
 class UserModel {
@@ -461,11 +461,12 @@ class UserModel {
   async incomingorder(kode) {
 
     try {
-      let res = await pool.query(`SELECT * FROM ${restaurantdb} WHERE "kode" = '${kode}'`);
+      let res = await pool.query(`SELECT * FROM ${jfoodviews} WHERE "kode" = '${kode}'`);
       debug('edit %o', res);
       if (res.rowCount <= 0) {
         throw 'Edit fail';
       } else {
+        // console.log(res.rows[0]);
         return res.rows[0];
       }
     } catch (ex) {
