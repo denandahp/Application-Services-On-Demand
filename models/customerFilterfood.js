@@ -53,7 +53,7 @@ class customerFilterfoodModel{
         return results;
       }catch(ex){
         console.log('Enek seng salah iki ' + ex);
-        return {"error": "data" + ex, "data " : err};
+        return {"error": "data" + ex, "res" : err};
       };
     }
 
@@ -100,7 +100,7 @@ class customerFilterfoodModel{
         return results;
       }catch(ex){
         console.log('Enek seng salah iki ' + ex);
-        return {"error": "data" + ex, "data " : err};
+        return {"error": "data" + ex, "res" : err};
       };
     }
 
@@ -160,7 +160,7 @@ class customerFilterfoodModel{
           return results;
         }catch(ex){
           console.log('Enek seng salah iki ' + ex);
-          return {"error": "data" + ex, "data " : err};
+          return {"error": "data" + ex, "res" : err};
         };
       }
   
@@ -206,7 +206,7 @@ class customerFilterfoodModel{
           return results;
         }catch(ex){
           console.log('Enek seng salah iki ' + ex);
-          return {"error": "data" + ex, "data " : err};
+          return {"error": "data" + ex, "res" : err};
         };
       }
 

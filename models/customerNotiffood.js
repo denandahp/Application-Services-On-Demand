@@ -16,7 +16,7 @@ class customerNotiffoodModel{
       try{
         let body = await notifbody.orderfoodtodriver(data);
         
-        await admin.messaging().sendToDevice(data.token, body.payload, body.options)
+        await admin.messaging().send(body.payload)
             .then(function(response) {
               console.log('Successfully sent message:', response);
               res.status(200).json({
