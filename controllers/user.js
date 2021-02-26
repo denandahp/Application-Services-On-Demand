@@ -401,11 +401,11 @@ class UserController {
     }
   }
 
-  async orderan(req, res, next) {
+  async incomingorder(req, res, next) {
 
     let kode = req.params.kode
     try {
-      let result = await user.orderan(kode);
+      let result = await user.incomingorder(kode);
       res.status(200).send({
         status: res.statusCode,
         data: result
@@ -414,6 +414,8 @@ class UserController {
       next(e.detail);
     }
   }
+
+
 
 }
 
