@@ -14,6 +14,8 @@ const table = '"users"'
 const dbTable = schema + '.' + table;
 const scheduledb = 'public.schedule';
 const modaldb = 'public.modal';
+const restaurantdb = 'customer.cart_restaurant';
+const orderdb = 'public.order';
 
 class UserModel {
 
@@ -311,6 +313,34 @@ class UserModel {
 
   }
 
+  async is_active(id) {
+
+    let check = await pool.query('SELECT is_active FROM ' + dbTable + ' WHERE id = ' + id);
+
+    // console.log(check.rows[0].is_active);
+    if (check.rows[0].is_active == false) {
+      try {
+        pool.query('call public.sp_modal_set_active(' + id + ')', (error, results) => {
+          if (error) {
+            return console.error(error.message);
+          }
+        });
+      } catch (ex) {
+        console.log('Error : ' + ex);
+      };
+    } else {
+      try {
+        pool.query('call public.sp_modal_set_deactive(' + id + ')', (error, results) => {
+          if (error) {
+            return console.error(error.message);
+          }
+        });
+      } catch (ex) {
+        console.log('Error : ' + ex);
+      };
+    }
+  }
+
   async active(id) {
 
     try {
@@ -335,6 +365,34 @@ class UserModel {
     } catch (ex) {
       console.log('Error : ' + ex);
     };
+  }
+
+  async autobid(id) {
+
+    let check = await pool.query('SELECT is_bid_active FROM ' + dbTable + ' WHERE id = ' + id);
+
+    // console.log(check.rows[0].is_bid_active);
+    if (check.rows[0].is_bid_active == false) {
+      try {
+        pool.query('call public.sp_bid_set_active(' + id + ')', (error, results) => {
+          if (error) {
+            return console.error(error.message);
+          }
+        });
+      } catch (ex) {
+        console.log('Error : ' + ex);
+      };
+    } else {
+      try {
+        pool.query('call public.sp_bid_set_deactive(' + id + ')', (error, results) => {
+          if (error) {
+            return console.error(error.message);
+          }
+        });
+      } catch (ex) {
+        console.log('Error : ' + ex);
+      };
+    }
   }
 
   async activeautobid(id) {
@@ -363,61 +421,18 @@ class UserModel {
     };
   }
 
-  async drivername(id) {
-    return new Promise((resolve, reject) => {
-      pool.query('SELECT get_nama_driver(' + id + ')', (error, results) => {
-        if (error) {
-          return reject(error);
-        }
-        return resolve(results.rows[0].get_nama_driver);
-      })
-    })
-  }
+  async homealt(id) {
+    let users = await pool.query('SELECT photo, is_active, namadepan, namabelakang, is_bid_active, perform, estimasi_pendapatan, jumlah_orderan_masuk  FROM ' + dbTable + ' WHERE id = ' + id);
 
-  async driverphoto(id) {
-    return new Promise((resolve, reject) => {
-      pool.query('SELECT get_photo_driver(' + id + ')', (error, results) => {
-        if (error) {
-          return reject(error);
-        }
-        return resolve(results.rows[0].get_photo_driver);
-      })
-    })
-  }
-
-  async driverperformance(id) {
-    return new Promise((resolve, reject) => {
-      pool.query('SELECT get_peforma_driver(' + id + ')', (error, results) => {
-        if (error) {
-          return reject(error);
-        }
-        return resolve(results.rows[0].get_peforma_driver);
-      })
-    })
-  }
-
-  async driverestimate(id) {
-    return new Promise((resolve, reject) => {
-      pool.query('SELECT get_estimasi_pendapatan_driver(' + id + ')', (error, results) => {
-        if (error) {
-          return reject(error);
-        }
-        // console.log(results);
-        return resolve(results.rows[0].get_estimasi_pendapatan_driver);
-      })
-    })
-  }
-
-  async incomingorder(id) {
-    return new Promise((resolve, reject) => {
-      pool.query('SELECT get_jumlah_orderan_masuk_driver(' + id + ')', (error, results) => {
-        if (error) {
-          return reject(error);
-        }
-        // console.log(results);
-        return resolve(results.rows[0].get_jumlah_orderan_masuk_driver);
-      })
-    })
+    return {
+      "photo": users.rows[0].photo,
+      "isactive": users.rows[0].is_active,
+      "name": users.rows[0].namadepan + users.rows[0].namabelakang,
+      "autobid": users.rows[0].is_bid_active,
+      "perform": users.rows[0].perform,
+      "estimasi_pendapatan": users.rows[0].estimasi_pendapatan,
+      "jumlah_orderan_masuk": users.rows[0].jumlah_orderan_masuk,
+    }
   }
 
   async allorderhistory(id) {
@@ -443,24 +458,34 @@ class UserModel {
     })
   }
 
-  async isactive(id) {
-    let res = await pool.query('SELECT is_active FROM ' + dbTable + ' WHERE id = ' + id);
-    debug('edit %o', res);
-    if (res.rowCount <= 0) {
-      throw 'Edit fail';
-    } else {
-      return res.rows[0].is_active
-    }
+  async orderan(kode) {
+
+    try {
+      let res = await pool.query('SELECT * FROM ' + restaurantdb + ' WHERE kode = ' + kode);
+      debug('edit %o', res);
+      if (res.rowCount <= 0) {
+        throw 'Edit fail';
+      } else {
+        return res;
+      }
+    } catch (ex) {
+      console.log('Error : ' + ex);
+    };
   }
 
-  async autobid(id) {
-    let res = await pool.query('SELECT is_bid_active FROM ' + dbTable + ' WHERE id = ' + id);
-    debug('edit %o', res);
-    if (res.rowCount <= 0) {
-      throw 'Edit fail';
-    } else {
-      return res.rows[0].is_bid_active
-    }
+  async terimaorderan(kode) {
+
+    try {
+      let res = await pool.query('INSERT INTO ' + orderdb + '(kode, customer_id, driver_id, status, latitude_location_driver_start, longitude_location_driver_start, latitude_location_pickup, longitude_location_pickup, landmark_pickup, address_pickup, latitude_location_destination, longitude_location_destination, landmark_destination, address_destination, patokan_destination, estimasi_minute, time_driver_accepted, time_driver_at_pickup, time_driver_pickup_depart, time_driver_at_detination, send_minute, ongkir, price_merchant, price_customer ) VALUES ()', order);
+      debug('edit %o', res);
+      if (res.rowCount <= 0) {
+        throw 'Edit fail';
+      } else {
+        return res;
+      }
+    } catch (ex) {
+      console.log('Error : ' + ex);
+    };
   }
 
 }
