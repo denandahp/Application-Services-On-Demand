@@ -458,25 +458,10 @@ class UserModel {
     })
   }
 
-  async orderan(kode) {
+  async incomingorder(kode) {
 
     try {
-      let res = await pool.query('SELECT * FROM ' + restaurantdb + ' WHERE kode = ' + kode);
-      debug('edit %o', res);
-      if (res.rowCount <= 0) {
-        throw 'Edit fail';
-      } else {
-        return res;
-      }
-    } catch (ex) {
-      console.log('Error : ' + ex);
-    };
-  }
-
-  async terimaorderan(kode) {
-
-    try {
-      let res = await pool.query('INSERT INTO ' + orderdb + '(kode, customer_id, driver_id, status, latitude_location_driver_start, longitude_location_driver_start, latitude_location_pickup, longitude_location_pickup, landmark_pickup, address_pickup, latitude_location_destination, longitude_location_destination, landmark_destination, address_destination, patokan_destination, estimasi_minute, time_driver_accepted, time_driver_at_pickup, time_driver_pickup_depart, time_driver_at_detination, send_minute, ongkir, price_merchant, price_customer ) VALUES ()', order);
+      let res = await pool.query(`SELECT * FROM ${restaurantdb} WHERE "kode" = '${kode}'`);
       debug('edit %o', res);
       if (res.rowCount <= 0) {
         throw 'Edit fail';
