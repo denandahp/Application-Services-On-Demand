@@ -466,7 +466,7 @@ class UserModel {
       if (res.rowCount <= 0) {
         throw 'Edit fail';
       } else {
-        return res;
+        return res.rows[0];
       }
     } catch (ex) {
       console.log('Error : ' + ex);
