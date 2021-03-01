@@ -474,6 +474,30 @@ class UserModel {
     };
   }
 
+  async acceptorder(kode, id) {
+    try {
+      pool.query("call orders.order_jfood_accepted_by_driver('" + kode + "', _driver_id => " + id + ")", (error, results) => {
+        if (error) {
+          return console.error(error.message);
+        }
+      });
+    } catch (ex) {
+      console.log('Error : ' + ex);
+    };
+  }
+
+  async rejectorder(kode, id) {
+    try {
+      pool.query("call orders.order_jfood_rejected_by_driver('" + kode + "', _driver_id => " + id + ")", (error, results) => {
+        if (error) {
+          return console.error(error.message);
+        }
+      });
+    } catch (ex) {
+      console.log('Error : ' + ex);
+    };
+  }
+
 }
 
 module.exports = new UserModel();
