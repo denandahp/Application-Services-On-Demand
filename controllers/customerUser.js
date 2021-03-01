@@ -94,9 +94,23 @@ class UserController {
           }
         );
       }
-  } catch (e) {
-    next(e.detail);
+    } catch (e) {
+      next(e.detail);
+    }
   }
+
+  async updatetokenfcm (req, res, next) {
+    let data = req.body;
+      try{
+      let result = await user.updatetokenfcm(data);
+      res.status(200).json(
+        {
+          result
+        }
+      )
+    } catch (e) {
+      next(e.detail);
+    }
   }
 
   async edit (req, res, next) {

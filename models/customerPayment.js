@@ -5,7 +5,7 @@ const notifbody = require('./notificationBody.js');
 const schema = '"order"';
 const table = '"jfood_cart"';
 const dbTable = schema + '.' + table;
-const dbMenuorder = 'customer.cart_menu';
+const dbMenuorder = schema + '.' + "jfood_cart_menu";
 
 class customerPaymentModel{
 
@@ -39,8 +39,8 @@ class customerPaymentModel{
     async paymentMenu (data) {
       try{
         var d = new Date(Date.now());;d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
-        let sets = [data.jfood_cart_uuid, data.menu_id, data.price_merchant, data.price_customer, data.quantity, data.catatan, d, d, jfood_cart_kode]
-        let res = await pool.query('INSERT INTO ' + dbMenuorder + ' (cart_restaurant_id, menu_id, price_merchant, price_customer, quantity, catatan, created_at, updated_at, jfood_cart_kode)' + 
+        let sets = [data.jfood_cart_uuid, data.menu_id, data.price_merchant, data.price_customer, data.quantity, data.catatan, d, d, data.jfood_cart_kode]
+        let res = await pool.query('INSERT INTO ' + dbMenuorder + ' (jfood_cart_uuid, menu_id, price_merchant, price_customer, quantity, catatan, created_at, updated_at, jfood_cart_kode)' + 
                                   ' VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *;', sets);
         debug('update %o', res);
         let result = res.rows[0];

@@ -4,7 +4,8 @@ exports.orderfoodtodriver = (data) => {
   var message = {
     data: {
       kodePemesanan: data.kode,
-      id: {'user_id' : data.user_id, 'restaurant_id' : data.restaurant_id}
+      user_id: data.user_id,
+      restaurant_id: data.restaurant_id
     },
     notification: {
       title: 'Orderan Masuk',
@@ -12,7 +13,8 @@ exports.orderfoodtodriver = (data) => {
     },
     android: {
       notification: {
-        click_action: 'OPEN_ACTIVITY_1'
+        click_action: 'OPEN_ACTIVITY_1',
+        icon : 'https://jatstorage.s3.us-east-2.amazonaws.com/Master-Logo-with-Text.png'
       }
     },
     token: data.token

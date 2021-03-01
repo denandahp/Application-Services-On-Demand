@@ -259,6 +259,23 @@ class UserModel {
     return res;
     
   }
+
+  async updatetokenfcm (data) {
+    try{
+      let res;
+      res = await pool.query('UPDATE ' + dbTable + ' SET token_notification = $2 WHERE id = $1',[data.token_notification, data.id]);
+      debug('get %o', res);
+  
+      if (res.rowCount <= 0) {
+        return 'User tidak ditemukan';
+      } else {
+        return res;
+      } 
+    }catch(ex){
+      console.log('Enek seng salah iki ' + ex)
+    }; 
+  }
+  
 }
 
 module.exports = new UserModel();
