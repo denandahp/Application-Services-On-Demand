@@ -474,6 +474,45 @@ class UserModel {
     };
   }
 
+  async acceptorder(kode, id) {
+    try {
+      pool.query("call orders.order_jfood_accepted_by_driver('" + kode + "', _driver_id => " + id + ")", (error, results) => {
+        if (error) {
+          return console.error(error.message);
+        }
+      });
+    } catch (ex) {
+      console.log('Error : ' + ex);
+    };
+  }
+
+  async rejectorder(kode, id) {
+    try {
+      pool.query("call orders.order_jfood_rejected_by_driver('" + kode + "', _driver_id => " + id + ")", (error, results) => {
+        if (error) {
+          return console.error(error.message);
+        }
+      });
+    } catch (ex) {
+      console.log('Error : ' + ex);
+    };
+  }
+
+  async updatetokenfcm(data) {
+    try {
+      let res;
+      res = await pool.query('UPDATE ' + dbTable + ' SET token_notification = $2 WHERE id = $1 RETURNING id, token_notification', [data.id, data.token_notification]);
+      debug('get %o', res);
+      if (res.rowCount <= 0) {
+        return 'User tidak ditemukan';
+      } else {
+        return res.rows;
+      }
+    } catch (ex) {
+      console.log('Enek seng salah iki ' + ex)
+    };
+  }
+
 }
 
 module.exports = new UserModel();

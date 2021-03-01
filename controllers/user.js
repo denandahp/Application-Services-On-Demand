@@ -415,7 +415,45 @@ class UserController {
     }
   }
 
+  async acceptorder(req, res, next) {
 
+    let id = req.user.data.id
+    let kode = req.params.kode
+    try {
+      await user.acceptorder(kode, id);
+      res.status(200).send({
+        status: res.statusCode,
+      })
+    } catch (e) {
+      next(e.detail);
+    }
+  }
+
+  async rejectorder(req, res, next) {
+
+    let id = req.user.data.id
+    let kode = req.params.kode
+    try {
+      await user.rejectorder(kode, id);
+      res.status(200).send({
+        status: res.statusCode,
+      })
+    } catch (e) {
+      next(e.detail);
+    }
+  }
+
+  async updatetokenfcm(req, res, next) {
+    let data = req.body;
+    try {
+      let result = await user.updatetokenfcm(data);
+      res.status(200).json({
+        result
+      })
+    } catch (e) {
+      next(e.detail);
+    }
+  }
 
 }
 
