@@ -513,6 +513,20 @@ class UserModel {
     };
   }
 
+  async latlong(id, lat, long) {
+    try {
+      let res = await pool.query("UPDATE " + dbTable + " SET latitude_position = " + lat + ", longitude_position= " + long + " WHERE id = " + id + "RETURNING latitude_position, longitude_position");
+      debug('edit %o', res);
+      if (res.rowCount <= 0) {
+        throw 'Edit fail';
+      } else {
+        return res.rows[0]
+      }
+    } catch (ex) {
+      console.log('Enek seng salah iki ' + ex)
+    };
+  }
+
 }
 
 module.exports = new UserModel();
