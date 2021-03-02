@@ -429,6 +429,21 @@ class UserController {
     }
   }
 
+  async dataorder(req, res, next) {
+
+    let id = req.user.data.id
+    let kode = req.params.kode
+    try {
+      let result = await user.dataorder(kode, id);
+      res.status(200).send({
+        status: res.statusCode,
+        data: result
+      })
+    } catch (e) {
+      next(e.detail);
+    }
+  }
+
   async rejectorder(req, res, next) {
 
     let id = req.user.data.id
@@ -443,24 +458,15 @@ class UserController {
     }
   }
 
-  async updatetokenfcm(req, res, next) {
-    let data = req.body;
-    try {
-      let result = await user.updatetokenfcm(data);
-      res.status(200).json({
-        result
-      })
-    } catch (e) {
-      next(e.detail);
-    }
-  }
+  async updatedatadriver(req, res, next) {
 
-  async latlong(req, res, next) {
     let id = req.user.data.id
     let lat = req.body.latitude
     let long = req.body.longitude
+    let token = req.body.token
+
     try {
-      let result = await user.latlong(id, lat, long);
+      let result = await user.updatedatadriver(id, lat, long, token);
       res.status(200).send({
         status: res.statusCode,
         data: result

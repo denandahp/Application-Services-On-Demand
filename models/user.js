@@ -486,6 +486,22 @@ class UserModel {
     };
   }
 
+  async dataorder(kode) {
+
+    try {
+      let res = await pool.query(`SELECT latitude_location_pickup, longitude_location_pickup, latitude_location_driver_start, longitude_location_driver_start, customer_id, landmark_pickup, address_pickup FROM ${orderstb} WHERE "kode" = '${kode}'`);
+      debug('edit %o', res);
+      if (res.rowCount <= 0) {
+        throw 'Edit fail';
+      } else {
+        console.log(res.rows[0]);
+        return res.rows[0];
+      }
+    } catch (ex) {
+      console.log('Error : ' + ex);
+    };
+  }
+
   async rejectorder(kode, id) {
     try {
       pool.query("call orders.order_jfood_rejected_by_driver('" + kode + "', _driver_id => " + id + ")", (error, results) => {
@@ -498,24 +514,10 @@ class UserModel {
     };
   }
 
-  async updatetokenfcm(data) {
-    try {
-      let res;
-      res = await pool.query('UPDATE ' + dbTable + ' SET token_notification = $2 WHERE id = $1 RETURNING id, token_notification', [data.id, data.token_notification]);
-      debug('get %o', res);
-      if (res.rowCount <= 0) {
-        return 'User tidak ditemukan';
-      } else {
-        return res.rows;
-      }
-    } catch (ex) {
-      console.log('Enek seng salah iki ' + ex)
-    };
-  }
+  async updatedatadriver(id, lat, long, token) {
 
-  async latlong(id, lat, long) {
     try {
-      let res = await pool.query("UPDATE " + dbTable + " SET latitude_position = " + lat + ", longitude_position= " + long + " WHERE id = " + id + "RETURNING latitude_position, longitude_position");
+      let res = await pool.query("UPDATE " + dbTable + " SET latitude_position = " + lat + ", longitude_position = " + long + ", token_notification = " + token + " WHERE id = " + id + "RETURNING latitude_position, longitude_position, token_notification");
       debug('edit %o', res);
       if (res.rowCount <= 0) {
         throw 'Edit fail';
