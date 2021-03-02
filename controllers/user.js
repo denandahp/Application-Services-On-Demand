@@ -455,6 +455,21 @@ class UserController {
     }
   }
 
+  async latlong(req, res, next) {
+    let id = req.user.data.id
+    let lat = req.body.latitude
+    let long = req.body.longitude
+    try {
+      let result = await user.latlong(id, lat, long);
+      res.status(200).send({
+        status: res.statusCode,
+        data: result
+      })
+    } catch (e) {
+      next(e.detail);
+    }
+  }
+
 }
 
 module.exports = new UserController();
