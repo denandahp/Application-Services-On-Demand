@@ -486,6 +486,22 @@ class UserModel {
     };
   }
 
+  async dataorder(kode) {
+
+    try {
+      let res = await pool.query(`SELECT latitude_location_pickup, longitude_location_pickup, latitude_location_driver_start, longitude_location_driver_start, customer_id, landmark_pickup, address_pickup FROM ${orderstb} WHERE "kode" = '${kode}'`);
+      debug('edit %o', res);
+      if (res.rowCount <= 0) {
+        throw 'Edit fail';
+      } else {
+        console.log(res.rows[0]);
+        return res.rows[0];
+      }
+    } catch (ex) {
+      console.log('Error : ' + ex);
+    };
+  }
+
   async rejectorder(kode, id) {
     try {
       pool.query("call orders.order_jfood_rejected_by_driver('" + kode + "', _driver_id => " + id + ")", (error, results) => {

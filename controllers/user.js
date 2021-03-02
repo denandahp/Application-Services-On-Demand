@@ -429,6 +429,21 @@ class UserController {
     }
   }
 
+  async dataorder(req, res, next) {
+
+    let id = req.user.data.id
+    let kode = req.params.kode
+    try {
+      let result = await user.dataorder(kode, id);
+      res.status(200).send({
+        status: res.statusCode,
+        data: result
+      })
+    } catch (e) {
+      next(e.detail);
+    }
+  }
+
   async rejectorder(req, res, next) {
 
     let id = req.user.data.id
