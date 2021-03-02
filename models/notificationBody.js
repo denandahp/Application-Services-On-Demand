@@ -1,5 +1,5 @@
 
-exports.orderfoodtodriver = (data) => {
+exports.orderfoodtodriver = (data, result) => {
   
   var message = {
     data: {
@@ -17,7 +17,7 @@ exports.orderfoodtodriver = (data) => {
         icon : 'https://jatstorage.s3.us-east-2.amazonaws.com/Master-Logo-with-Text.png'
       }
     },
-    token: data.token
+    token: result.rows[0].token_notification
   };
       
     return {"payload" : message};

@@ -14,7 +14,9 @@ const table = '"user"';
 class customerNotiffoodModel{
     async orderfoodtodriver (data, res) {
       try{
-        let body = await notifbody.orderfoodtodriver(data);
+        let result = await pool.query('SELECT * FROM' + dbTable + '($1, $2) RETURNING *;', [data.latitude, data.longitude]);
+        console.log(result.rows[0]);
+        let body = await notifbody.orderfoodtodriver(data,result);
         
         await admin.messaging().send(body.payload)
             .then(function(response) {
@@ -22,6 +24,7 @@ class customerNotiffoodModel{
               res.status(200).json({
                 pesan: "notifikasi terkirim",
                 result: response.results,
+                driver: result.rows[0]
               })
             })
             .catch(function(error) {
