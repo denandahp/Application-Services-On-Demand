@@ -3,6 +3,7 @@ const auth = require('../middleware/auth.js');
 const user = require('../controllers/user.js');
 
 Router.post('/login', user.login)
+      .post('/renewAccessToken', user.renewAccessToken)
       .post('/register', user.register)
       .post('/register/registerlanjut', user.registerlanjut)
       .post('/register/verifikasiotp', user.verifikasiotp)
