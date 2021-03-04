@@ -16,6 +16,7 @@ const scheduledb = 'public.schedule';
 const modaldb = 'public.modal';
 const jfoodviews = 'orders.jfood';
 const orderdb = 'public.order';
+const orderstb = 'orders.orders';
 
 class UserModel {
 
