@@ -25,9 +25,9 @@ Router.post('/login', user.login)
       .get('/homealt', auth, user.homealt)
       .get('/incomingorder/:kode', auth, user.incomingorder)
       .post('/acceptorder/:kode', auth, user.acceptorder)
+      .get('/dataorder/:kode', auth, user.dataorder)
       .post('/rejectorder/:kode', auth, user.rejectorder)
-      .put('/updatetokenfcm', user.updatetokenfcm)
-      .put('/latlong', auth, user.latlong)
+      .put('/updatedatadriver', auth, user.updatedatadriver)
 // .post('/terima/:kode', auth, user.orderan)
 // .get('/allorderhistory', auth, user.allorderhistory);
 // .get('/lastorder', auth, user.lastorder);
