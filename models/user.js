@@ -15,6 +15,7 @@ const dbTable = schema + '.' + table;
 const scheduledb = 'public.schedule';
 const modaldb = 'public.modal';
 const jfoodviews = 'orders.jfood';
+const orderstb = 'orders.orders';
 const orderdb = 'public.order';
 const orderstb = 'orders.orders';
 
@@ -518,7 +519,7 @@ class UserModel {
   async updatedatadriver(id, lat, long, token) {
 
     try {
-      let res = await pool.query("UPDATE " + dbTable + " SET latitude_position = " + lat + ", longitude_position = " + long + ", token_notification = " + token + " WHERE id = " + id + "RETURNING latitude_position, longitude_position, token_notification");
+      let res = await pool.query("UPDATE " + dbTable + " SET (latitude_position, longitude_position, token_notification) = ($1, $2, $3) WHERE id = " + id + " RETURNING latitude_position, longitude_position, token_notification", [lat, long, token]);
       debug('edit %o', res);
       if (res.rowCount <= 0) {
         throw 'Edit fail';
