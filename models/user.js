@@ -17,7 +17,6 @@ const modaldb = 'public.modal';
 const jfoodviews = 'orders.jfood';
 const orderstb = 'orders.orders';
 const orderdb = 'public.order';
-const orderstb = 'orders.orders';
 
 class UserModel {
 
