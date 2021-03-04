@@ -13,6 +13,7 @@ const dbTable = schema + '.' + table;
 const dbRestaurant = 'merchant.restaurant';
 const dbOTP = 'utility.otp';
 const dbBank = 'utility.bank';
+const viewUser = 'merchant.view_user_restaurant';
 
 
 class UserModel {
@@ -261,12 +262,12 @@ class UserModel {
     let res;
     
     if (role === 'all') {
-      res = await pool.query('SELECT * from ' + dbTable + ' ORDER BY id ASC')
+      res = await pool.query('SELECT * from ' + viewUser + ' ORDER BY user_id ASC')
     } else {
       if(status == 'all'){
-        res = await pool.query('SELECT * from ' + dbTable + ' where role = $1 ORDER BY id ASC', [role]);
+        res = await pool.query('SELECT * from ' + viewUser + ' where role = $1 ORDER BY user_id ASC', [role]);
       }else {
-        res = await pool.query('SELECT * from ' + dbTable + ' where role = $1 AND  verification_user_id = $2 ORDER BY id ASC', [role, status]);
+        res = await pool.query('SELECT * from ' + viewUser + ' where role = $1 AND  verification_user_id = $2 ORDER BY user_id ASC', [role, status]);
       }
     }
     
