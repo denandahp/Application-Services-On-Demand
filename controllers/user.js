@@ -113,7 +113,7 @@ class UserController {
       let refreshToken = jwt.sign({
         data: result
       }, config.secret2, {
-        expiresIn: '7d'
+        expiresIn: 604800
       });
       refreshTokens.push(refreshToken);
       res.cookie('jwt', accessToken, {
@@ -135,7 +135,7 @@ class UserController {
     const refreshToken = req.body.token;
     if (!refreshToken || !refreshTokens.includes(refreshToken)) {
       return res.status(403).json({
-        message: "User not authenticated"
+        message: "failed not authenticated"
       });
     }
     jwt.verify(refreshToken, config.secret2, async function (err, decoded) {
