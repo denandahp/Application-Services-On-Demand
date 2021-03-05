@@ -490,13 +490,16 @@ class UserModel {
   async dataorder(kode) {
 
     try {
-      let res = await pool.query(`SELECT latitude_location_pickup, longitude_location_pickup, latitude_location_driver_start, longitude_location_driver_start, customer_id, landmark_pickup, address_pickup FROM ${orderstb} WHERE "kode" = '${kode}'`);
+      let driver = await pool.query(`SELECT latitude_location_driver_start, longitude_location_driver_start FROM ${orderstb} WHERE "kode" = '${kode}'`);
+      let res = await pool.query(`SELECT latitude_restaurant, longitude_restaurant, customer_name, landmark_restaurant, address_restaurant FROM ${jfoodviews} WHERE "kode" = '${kode}'`);
       debug('edit %o', res);
       if (res.rowCount <= 0) {
         throw 'Edit fail';
       } else {
-        console.log(res.rows[0]);
-        return res.rows[0];
+        return {
+          driver: driver.rows[0],
+          order: res.rows[0]
+        }
       }
     } catch (ex) {
       console.log('Error : ' + ex);
