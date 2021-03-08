@@ -318,7 +318,6 @@ class UserModel {
 
     let check = await pool.query('SELECT is_active FROM ' + dbTable + ' WHERE id = ' + id);
 
-    // console.log(check.rows[0].is_active);
     if (check.rows[0].is_active == false) {
       try {
         pool.query('call public.sp_modal_set_active(' + id + ')', (error, results) => {
@@ -372,7 +371,6 @@ class UserModel {
 
     let check = await pool.query('SELECT is_bid_active FROM ' + dbTable + ' WHERE id = ' + id);
 
-    // console.log(check.rows[0].is_bid_active);
     if (check.rows[0].is_bid_active == false) {
       try {
         pool.query('call public.sp_bid_set_active(' + id + ')', (error, results) => {
@@ -424,6 +422,7 @@ class UserModel {
 
   async homealt(id) {
     let users = await pool.query('SELECT photo, is_active, namadepan, namabelakang, is_bid_active, perform, estimasi_pendapatan, jumlah_orderan_masuk  FROM ' + dbTable + ' WHERE id = ' + id);
+    debug('homealt %o', users);
 
     return {
       "photo": users.rows[0].photo,
@@ -442,7 +441,6 @@ class UserModel {
         if (error) {
           return reject(error);
         }
-        // console.log(results);
         return resolve(results.rows[0].get_jumlah_orderan_masuk_driver);
       })
     })
@@ -463,11 +461,14 @@ class UserModel {
 
     try {
       let res = await pool.query(`SELECT * FROM ${jfoodviews} WHERE "kode" = '${kode}'`);
-      debug('edit %o', res);
+      debug('incomingorder %o', res);
       if (res.rowCount <= 0) {
-        throw 'Edit fail';
+        console.log("Kode Tidak Tersedia");
+        return {
+          "status": "404",
+          "errors": "Kode " + kode + " tidak terdaftar"
+        }
       } else {
-        // console.log(res.rows[0]);
         return res.rows[0];
       }
     } catch (ex) {
@@ -492,10 +493,13 @@ class UserModel {
     try {
       let driver = await pool.query(`SELECT latitude_location_driver_start, longitude_location_driver_start FROM ${orderstb} WHERE "kode" = '${kode}'`);
       let res = await pool.query(`SELECT latitude_restaurant, longitude_restaurant, customer_name, landmark_restaurant, address_restaurant FROM ${jfoodviews} WHERE "kode" = '${kode}'`);
-      debug('edit %o', res);
+      debug('dataorder %o', res);
       if (res.rowCount <= 0) {
         console.log("Kode Tidak Tersedia");
-        return 0
+        return {
+          "status": "404",
+          "errors": "Kode " + kode + " tidak terdaftar"
+        }
       } else {
         return {
           driver: driver.rows[0],
@@ -523,7 +527,7 @@ class UserModel {
 
     try {
       let res = await pool.query("UPDATE " + dbTable + " SET (latitude_position, longitude_position, token_notification) = ($1, $2, $3) WHERE id = " + id + " RETURNING latitude_position, longitude_position, token_notification", [lat, long, token]);
-      debug('edit %o', res);
+      debug('updatedatadriver %o', res);
       if (res.rowCount <= 0) {
         throw 'Edit fail';
       } else {
