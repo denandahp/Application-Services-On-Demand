@@ -108,7 +108,7 @@ class UserController {
       let accessToken = jwt.sign({
         data: result
       }, config.secret, {
-        expiresIn: '30s'
+        expiresIn: 86400
       });
       let refreshToken = jwt.sign({
         data: result
@@ -144,7 +144,7 @@ class UserController {
         const accessToken = jwt.sign({
           data: result
         }, config.secret, {
-          expiresIn: '30s'
+          expiresIn: 86400
         });
         return res.status(201).json({
           status: res.statusCode,
