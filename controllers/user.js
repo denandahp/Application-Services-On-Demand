@@ -470,10 +470,17 @@ class UserController {
     let kode = req.params.kode
     try {
       let result = await user.dataorder(kode, id);
-      res.status(200).send({
-        status: res.statusCode,
-        data: result
-      })
+      if (result == 0) {
+        res.status(404).send({
+          status: res.statusCode,
+          message: "Kode tidak tersedia"
+        })
+      } else {
+        res.status(200).send({
+          status: res.statusCode,
+          data: result
+        })
+      }
     } catch (e) {
       next(e.detail);
     }

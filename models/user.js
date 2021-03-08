@@ -494,7 +494,8 @@ class UserModel {
       let res = await pool.query(`SELECT latitude_restaurant, longitude_restaurant, customer_name, landmark_restaurant, address_restaurant FROM ${jfoodviews} WHERE "kode" = '${kode}'`);
       debug('edit %o', res);
       if (res.rowCount <= 0) {
-        throw 'Edit fail';
+        console.log("Kode Tidak Tersedia");
+        return 0
       } else {
         return {
           driver: driver.rows[0],
