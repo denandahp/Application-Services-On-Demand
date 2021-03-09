@@ -1,4 +1,4 @@
-const user = require('../models/homealtdriver.js');
+const user = require('../models/driverHomealt.js');
 
 class HomeAltDriverController {
 

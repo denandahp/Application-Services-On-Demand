@@ -1,8 +1,8 @@
 const Router = require('express').Router();
 const auth = require('../middleware/auth.js');
 const user = require('../controllers/user.js');
-const home = require('../controllers/homealtdriver.js');
-const order = require('../controllers/driverorder.js');
+const home = require('../controllers/driverHomealt.js');
+const order = require('../controllers/driverOrder.js');
 
 Router.post('/login', user.login)
       .post('/renewAccessToken', user.renewAccessToken)
@@ -32,5 +32,10 @@ Router.post('/login', user.login)
       .get('/dataorder/:kode', auth, order.dataorder)
       .post('/rejectorder/:kode', auth, order.rejectorder)
       .put('/updatedatadriver', auth, order.updatedatadriver)
+// .put('/latlong', auth, user.latlong)
+// .get('/ruteantar', auth, user.ruteantar)
+// .get('/lihatpesanan', auth, user.lihatpesanan)
+// .get('/allorderhistory', auth, user.allorderhistory);
+// .get('/lastorder', auth, user.lastorder);
 
 module.exports = Router;
