@@ -11,15 +11,7 @@ const schema = '"public"';
 const table = '"users"'
 const dbTable = schema + '.' + table;
 const scheduledb = 'public.schedule';
-<<<<<<< HEAD
-=======
-const modaldb = 'public.modal';
-const jfoodviews = 'orders.jfood';
-const orderstb = 'orders.orders';
 const dbOTP = 'utility.otp';
-
-const orderdb = 'public.order';
->>>>>>> 7fe0afb6ad366678932d1f1da6ff2a67f898c115
 
 class UserModel {
 
@@ -45,28 +37,40 @@ class UserModel {
   }
 
   async register(data, randomOTP) {
-    try{
+    try {
       let otplimit = 120; // in Second
       var d = new Date(Date.now());
       d.setSeconds(d.getSeconds() + otplimit);
-      var dd = d.getDate();var mm = d.getMonth() + 1;var y = d.getFullYear();var hour = d.getHours();var minute = d.getMinutes();var second = d.getSeconds();
-      var FormattedDate = y + '-'+ mm + '-'+ dd + ' ' + hour+':'+minute+':'+second;
+      var dd = d.getDate();
+      var mm = d.getMonth() + 1;
+      var y = d.getFullYear();
+      var hour = d.getHours();
+      var minute = d.getMinutes();
+      var second = d.getSeconds();
+      var FormattedDate = y + '-' + mm + '-' + dd + ' ' + hour + ':' + minute + ':' + second;
       console.log(FormattedDate);
       let user = [data.namadepan, data.namabelakang, data.username, data.password, data.email, data.phone, data.provinsi_penempatan, data.kota_penempatan, data.role, 1, d, d];
-      let res =  await pool.query('INSERT INTO ' + dbTable + ' (namadepan, namabelakang, username, password, email, phone, provinsi_penempatan, kota_penempatan, role, is_verified, created_at, updated_at )'+
-                                  'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING username, id, phone, email, role, created_at, updated_at;', user);
+      let res = await pool.query('INSERT INTO ' + dbTable + ' (namadepan, namabelakang, username, password, email, phone, provinsi_penempatan, kota_penempatan, role, is_verified, created_at, updated_at )' +
+        'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING username, id, phone, email, role, created_at, updated_at;', user);
       let otpdata = ['driver', 'user', res.rows[0].id, 'registrasi user driver', randomOTP, FormattedDate, d, d, d];
-      let otpdb =  await pool.query('INSERT INTO ' + dbOTP + ' (schema, table_name, table_id, verification_task, otp, limit_otp, the_day, created_at, updated_at)VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING schema, table_name, table_id, verification_task, otp, the_day, updated_at', otpdata);
+      let otpdb = await pool.query('INSERT INTO ' + dbOTP + ' (schema, table_name, table_id, verification_task, otp, limit_otp, the_day, created_at, updated_at)VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING schema, table_name, table_id, verification_task, otp, the_day, updated_at', otpdata);
       console.log('Cek sini ');
-      let datafinal =  await pool.query('UPDATE ' + dbTable + ' SET phone_otp_id = $1 WHERE id = $2 RETURNING *;', [otpdb.rows[0].id, res.rows[0].id]);
+      let datafinal = await pool.query('UPDATE ' + dbTable + ' SET phone_otp_id = $1 WHERE id = $2 RETURNING *;', [otpdb.rows[0].id, res.rows[0].id]);
       let created = datafinal.rows[0];
       //console.log(created);
       debug('register %o', created);
-      return {"user" : created, "otp" : otpdb.rows[0], "limit_otp" : FormattedDate };
+      return {
+        "user": created,
+        "otp": otpdb.rows[0],
+        "limit_otp": FormattedDate
+      };
 
-    }catch(ex){
+    } catch (ex) {
       console.log('Enek seng salah iki ' + ex);
-      return{"status" : "400", "error" : ex };
+      return {
+        "status": "400",
+        "error": ex
+      };
     };
   }
 
@@ -142,85 +146,113 @@ class UserModel {
 
   }
 
-  async verifikasiotp(kodeOTP,id_user) {
-    try{
+  async verifikasiotp(kodeOTP, id_user) {
+    try {
       var d = new Date(Date.now());
-      const res = await pool.query('SELECT ' + dbTable + '.id, username, password, role, phone, phone_otp_id, otp,' + dbOTP + '.limit_otp  FROM ' + dbTable + ' INNER JOIN '+
-                                  dbOTP + ' ON '+ dbTable + '.phone_otp_id = ' + dbOTP +'.id where '+ dbTable +'.id = $1 AND ' + dbOTP + '.otp = $2',[id_user, kodeOTP]);
-      console.log(kodeOTP + "    "+ id_user + " limit_otp: " + res.rows[0].limit_otp);
+      const res = await pool.query('SELECT ' + dbTable + '.id, username, password, role, phone, phone_otp_id, otp,' + dbOTP + '.limit_otp  FROM ' + dbTable + ' INNER JOIN ' +
+        dbOTP + ' ON ' + dbTable + '.phone_otp_id = ' + dbOTP + '.id where ' + dbTable + '.id = $1 AND ' + dbOTP + '.otp = $2', [id_user, kodeOTP]);
+      console.log(kodeOTP + "    " + id_user + " limit_otp: " + res.rows[0].limit_otp);
       console.log(d);
       if (res.rowCount <= 0) {
         throw new Error('OTP tidak ditemukan');
       } else {
         if (await kodeOTP == res.rows[0].otp && d <= res.rows[0].limit_otp) {
-          const updateVerif = await pool.query('UPDATE' + dbTable + 'SET  is_verified = $1 WHERE phone_otp_id = $2 RETURNING id, username, is_verified, phone',[2,res.rows[0].phone_otp_id]);
+          const updateVerif = await pool.query('UPDATE' + dbTable + 'SET  is_verified = $1 WHERE phone_otp_id = $2 RETURNING id, username, is_verified, phone', [2, res.rows[0].phone_otp_id]);
           return updateVerif.rows[0];
         } else {
           throw new Error('OTP salah.');
           // console.log(FormattedDate);
         }
       }
-    }catch(ex){
+    } catch (ex) {
       console.log('Enek seng salah iki ' + ex)
-      return{"status": "400", "error": ex};
+      return {
+        "status": "400",
+        "error": ex
+      };
     };
   }
 
   async resendotp(data, randomOTP) {
-    try{
+    try {
       let otplimit = 120; // in Second
       var d = new Date(Date.now());
-      d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
+      d.toLocaleString('en-GB', {
+        timeZone: 'Asia/Jakarta'
+      });
       d.setSeconds(d.getSeconds() + otplimit);
-      var dd = d.getDate();var mm = d.getMonth() + 1;var y = d.getFullYear();var hour = d.getHours();var minute = d.getMinutes();var second = d.getSeconds();
-      var FormattedDate = y + '-'+ mm + '-'+ dd + ' ' + hour+':'+minute+':'+second;
+      var dd = d.getDate();
+      var mm = d.getMonth() + 1;
+      var y = d.getFullYear();
+      var hour = d.getHours();
+      var minute = d.getMinutes();
+      var second = d.getSeconds();
+      var FormattedDate = y + '-' + mm + '-' + dd + ' ' + hour + ':' + minute + ':' + second;
       console.log(FormattedDate);
       console.log(d);
-      const res = await pool.query('SELECT id, username, password, role, phone, updated_at, phone_otp_id FROM' + dbTable + 'where id = $1 AND phone = $2',[data.id, data.phone]);
+      const res = await pool.query('SELECT id, username, password, role, phone, updated_at, phone_otp_id FROM' + dbTable + 'where id = $1 AND phone = $2', [data.id, data.phone]);
       if (res.rowCount <= 0) {
         throw new Error('User tidak ditemukan');
       } else {
         let otpdata = ['driver', 'user', res.rows[0].id, 'registrasi user driver resend OTP', randomOTP, FormattedDate, d, d];
-        let otpdb =  await pool.query('INSERT INTO ' + dbOTP + '(schema, table_name, table_id, verification_task, otp, limit_otp, the_day, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *', otpdata);  
+        let otpdb = await pool.query('INSERT INTO ' + dbOTP + '(schema, table_name, table_id, verification_task, otp, limit_otp, the_day, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *', otpdata);
         let sets = [data.id, data.phone, otpdb.rows[0].id, d, d];
         let resdata = await pool.query('UPDATE' + dbTable + 'SET (phone_otp_id,created_at, updated_at) = ($3, $4, $5)  WHERE id =$1 AND phone = $2 RETURNING id,username, phone, phone_otp_id, updated_at', sets);
         let created = resdata.rows[0];
 
         debug('edit %o', created);
-        return {"user" : resdata.rows[0], "otp" : otpdb.rows[0], "limit_otp" : FormattedDate};
+        return {
+          "user": resdata.rows[0],
+          "otp": otpdb.rows[0],
+          "limit_otp": FormattedDate
+        };
       }
-    }catch(ex){
+    } catch (ex) {
       console.log('Enek seng salah iki ' + ex);
-      return{"status": "400", "error": ex};
+      return {
+        "status": "400",
+        "error": ex
+      };
     };
   }
 
   async checkregistrasi(data, randomOTP) {
-    try{
-        let otplimit = 120; // in Second
-        var d = new Date(Date.now());
-        d.setSeconds(d.getSeconds() + otplimit);
-        var dd = d.getDate();var mm = d.getMonth() + 1;var y = d.getFullYear();var hour = d.getHours();var minute = d.getMinutes();var second = d.getSeconds();
-        var FormattedDate = y + '-'+ mm + '-'+ dd + ' ' + hour+':'+minute+':'+second;
-        let user = [data.username, data.email, data.phone, randomOTP, 1, d, FormattedDate];
-        const res = await pool.query('SELECT * FROM' + dbTable + 'where username = $1 AND email = $2 AND phone = $3 AND  is_verified = $4 ',[data.username, data.email, data.phone, 1]);
-        if (res.rowCount > 0) {
-            let otpdata = ['driver', 'user', res.rows[0].id, 'registrasi user driver belum verifikasi OTP', randomOTP, FormattedDate, d, d, d];
-            let otpdb =  await pool.query('INSERT INTO ' + dbOTP + ' (schema, table_name, table_id, verification_task, otp, limit_otp, the_day, created_at, updated_at)VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *', otpdata);
-            let value = [data.username, data.email, data.phone, otpdb.rows[0].id, 1, d];
-            const updateregistrasi = await pool.query('UPDATE' + dbTable + 'SET (username, email, phone, phone_otp_id,  is_verified, updated_at) = ($1, $2, $3, $4, $5, $6) WHERE username = $1 RETURNING id, username, email, phone,  is_verified, phone_otp_id, updated_at',value);
-            let created = updateregistrasi.rows[0];
-            console.log(user.length);
-            debug('register %o', updateregistrasi);
-            return {"data" : created,"otp" : otpdb.rows[0], "status" : '200'};
+    try {
+      let otplimit = 120; // in Second
+      var d = new Date(Date.now());
+      d.setSeconds(d.getSeconds() + otplimit);
+      var dd = d.getDate();
+      var mm = d.getMonth() + 1;
+      var y = d.getFullYear();
+      var hour = d.getHours();
+      var minute = d.getMinutes();
+      var second = d.getSeconds();
+      var FormattedDate = y + '-' + mm + '-' + dd + ' ' + hour + ':' + minute + ':' + second;
+      let user = [data.username, data.email, data.phone, randomOTP, 1, d, FormattedDate];
+      const res = await pool.query('SELECT * FROM' + dbTable + 'where username = $1 AND email = $2 AND phone = $3 AND  is_verified = $4 ', [data.username, data.email, data.phone, 1]);
+      if (res.rowCount > 0) {
+        let otpdata = ['driver', 'user', res.rows[0].id, 'registrasi user driver belum verifikasi OTP', randomOTP, FormattedDate, d, d, d];
+        let otpdb = await pool.query('INSERT INTO ' + dbOTP + ' (schema, table_name, table_id, verification_task, otp, limit_otp, the_day, created_at, updated_at)VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *', otpdata);
+        let value = [data.username, data.email, data.phone, otpdb.rows[0].id, 1, d];
+        const updateregistrasi = await pool.query('UPDATE' + dbTable + 'SET (username, email, phone, phone_otp_id,  is_verified, updated_at) = ($1, $2, $3, $4, $5, $6) WHERE username = $1 RETURNING id, username, email, phone,  is_verified, phone_otp_id, updated_at', value);
+        let created = updateregistrasi.rows[0];
+        console.log(user.length);
+        debug('register %o', updateregistrasi);
+        return {
+          "data": created,
+          "otp": otpdb.rows[0],
+          "status": '200'
+        };
       } else {
-        return { "status" : '400'};;
+        return {
+          "status": '400'
+        };;
       }
-  
-      }catch(ex){
-        console.log('Enek seng salah iki ' + ex)
-      };
-    }
+
+    } catch (ex) {
+      console.log('Enek seng salah iki ' + ex)
+    };
+  }
 
   async verifikasiUser(statusUserUpdate) {
     const res = await pool.query('SELECT id, username, role, is_verified FROM' + dbTable + 'where username = $1', [statusUserUpdate.username]);
