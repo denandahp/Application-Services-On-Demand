@@ -20,6 +20,7 @@ Router.post('/login', user.login)
       .delete('/logout', user.logout)
       .get('/alluser/:role/:status', user.showAllUser)
       .get('/alluserbyschedule/:username', user.userbyschedule)
+<<<<<<< HEAD
       .put('/isactive', auth, home.is_active)
       .put('/active', auth, home.active)
       .put('/nonactive', auth, home.nonactive)
@@ -32,5 +33,22 @@ Router.post('/login', user.login)
       .get('/dataorder/:kode', auth, order.dataorder)
       .post('/rejectorder/:kode', auth, order.rejectorder)
       .put('/updatedatadriver', auth, order.updatedatadriver)
+=======
+      .put('/isactive', auth, user.is_active)
+      .put('/active', auth, user.active)
+      .put('/nonactive', auth, user.nonactive)
+      .put('/autobid', auth, user.autobid)
+      .put('/activeautobid', auth, user.activeautobid)
+      .put('/nonactiveautobid', auth, user.nonactiveautobid)
+      .get('/homealt', auth, user.homealt)
+      .get('/incomingorder/:kode', auth, user.incomingorder)
+      .post('/acceptorder/:kode', auth, user.acceptorder)
+      .get('/dataorder/:kode', auth, user.dataorder)
+      .post('/rejectorder/:kode', auth, user.rejectorder)
+      .put('/updatedatadriver', auth, user.updatedatadriver)
+// .post('/terima/:kode', auth, user.orderan)
+// .get('/allorderhistory', auth, user.allorderhistory);
+// .get('/lastorder', auth, user.lastorder);
+>>>>>>> 7fe0afb6ad366678932d1f1da6ff2a67f898c115
 
 module.exports = Router;

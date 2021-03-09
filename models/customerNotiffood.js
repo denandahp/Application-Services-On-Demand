@@ -8,20 +8,25 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
 
-const schema = '"merchant"';
-const table = '"user"';
+const schema = '"orders"';
+const table = '"search_driver"';
+const dbTable = schema + '.' + table;
 
 class customerNotiffoodModel{
     async orderfoodtodriver (data, res) {
       try{
-        let body = await notifbody.orderfoodtodriver(data);
+        let result = await pool.query('SELECT * FROM' + dbTable + '($1, $2);', [data.latitude, data.longitude]);
+        console.log(result.rows[0]);
+        let body = await notifbody.orderfoodtodriver(data,result);
         
-        await admin.messaging().sendToDevice(data.token, body.payload, body.options)
+        await admin.messaging().send(body.payload)
             .then(function(response) {
               console.log('Successfully sent message:', response);
               res.status(200).json({
                 pesan: "notifikasi terkirim",
-                result: response.results,
+                respone : response,
+                result: data,
+                driver: result.rows[0]
               })
             })
             .catch(function(error) {

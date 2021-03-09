@@ -53,7 +53,7 @@ class customerFilterfoodModel{
         return results;
       }catch(ex){
         console.log('Enek seng salah iki ' + ex);
-        return {"error": "data" + ex, "data " : err};
+        return {"error": "data" + ex, "res" : err};
       };
     }
 
@@ -100,7 +100,7 @@ class customerFilterfoodModel{
         return results;
       }catch(ex){
         console.log('Enek seng salah iki ' + ex);
-        return {"error": "data" + ex, "data " : err};
+        return {"error": "data" + ex, "res" : err};
       };
     }
 
@@ -160,10 +160,55 @@ class customerFilterfoodModel{
           return results;
         }catch(ex){
           console.log('Enek seng salah iki ' + ex);
-          return {"error": "data" + ex, "data " : err};
+          return {"error": "data" + ex, "res" : err};
         };
       }
   
+      async filterincategory (data) {
+        let page = parseInt(data.page); let limit = parseInt(data.limit); let idKategori = parseInt(data.idKategori)
+        let value = [idKategori, data.latitude, data.longitude, 
+                    data.harga_1, data.harga_2, data.harga_3, data.harga_4, 
+                    data.jenis_menu_1, data.jenis_menu_2, data.jenis_menu_3, data.jenis_menu_4, 
+                    data.rating_minimal, data.order_by];
+        
+        const startIndex = (page - 1) * limit;
+        const endIndex = page * limit;
+        let counts, res;
+        let results = {}, err = [];
+        var d = new Date(Date.now()); d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
+        try{
+          console.log(value);
+          counts = await pool.query('SELECT COUNT (*)  FROM ' + dbFilterkategori + '($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', value);
+          console.log(idKategori, startIndex, limit, endIndex, counts.rows[0].count);
+          if (endIndex <= counts.rows[0].count) {
+            results.next = {
+              page: page + 1,
+              limit: limit
+            }
+          }else{ throw new Error('data kosong');};
+  
+          if (startIndex > 0) {
+            results.previous = {
+              page: page - 1,
+              limit: limit
+            }
+          }else{results.previous ={ page : 0, limit: limit} };
+          results.countResto = counts.rows[0].count;
+          let sets = [idKategori, data.latitude, data.longitude, 
+                    data.harga_1, data.harga_2, data.harga_3, data.harga_4, 
+                    data.jenis_menu_1, data.jenis_menu_2, data.jenis_menu_3, data.jenis_menu_4, 
+                    data.rating_minimal, data.order_by, startIndex, limit]
+          res = await pool.query('SELECT * FROM ' + dbFilterkategori + '($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) ORDER BY distance ASC OFFSET $14 LIMIT $15;', sets);
+          results.res = res.rows;
+          results.date = d;
+          console.log(d);
+          debug('register %o', results);
+          return results;
+        }catch(ex){
+          console.log('Enek seng salah iki ' + ex);
+          return {"error": "data" + ex, "res" : err};
+        };
+      }
 
     async get(id) {
 

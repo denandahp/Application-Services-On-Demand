@@ -94,9 +94,23 @@ class UserController {
           }
         );
       }
-  } catch (e) {
-    next(e.detail);
+    } catch (e) {
+      next(e.detail);
+    }
   }
+
+  async updatetokenfcm (req, res, next) {
+    let data = req.body;
+      try{
+      let result = await user.updatetokenfcm(data);
+      res.status(200).json(
+        {
+          result
+        }
+      )
+    } catch (e) {
+      next(e.detail);
+    }
   }
 
   async edit (req, res, next) {
@@ -308,9 +322,7 @@ class UserController {
 
     let data = req.body;
     try {
-      
-      let response = await convimage.base64toimage(data);
-      let result = await user.registerlanjut(data,response);
+            let result = await user.registerlanjut(data);
 
 
         res.status(200).json(

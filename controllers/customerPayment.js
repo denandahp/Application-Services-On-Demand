@@ -39,7 +39,7 @@ class customerPaymentController{
             let data = req.body;
             //let data = {page, limit, idKategori, hargaMin, hargaMax, jenisMakanan, penilaian, sortBy, data};
             let result = await customerPayment.paymentOrdernumber(data);
-            let pesan = "Orderan sudah didaftarkan dengan nomor" + result.id;
+            let pesan = "Orderan sudah didaftarkan dengan nomor " + result.kode;
             res.status(200).json({
               pesan: pesan,
               result: result,

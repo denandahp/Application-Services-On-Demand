@@ -343,6 +343,20 @@ class UserController {
     authUtils.processRequestWithJWT(req, callback, fallback);
   }
 
+  async updatetokenfcm (req, res, next) {
+    let data = req.body;
+      try{
+      let result = await user.updatetokenfcm(data);
+      res.status(200).json(
+        {
+          result
+        }
+      )
+    } catch (e) {
+      next(e.detail);
+    }
+  }
+
 }
 
 module.exports = new UserController();

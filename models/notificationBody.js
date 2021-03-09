@@ -1,18 +1,23 @@
 
-exports.orderfoodtodriver = (data) => {
-    var payload = {
-        notification: {
-          title: 'ORDER MAKANAN!',
-          body: 'pesanan anda dengan nomor pesanan ' + data.id
-        }
-      };
+exports.orderfoodtodriver = (data, result) => {
+  
+  var message = {
+    data: {
+      kodePemesanan: data.kode,
+      user_id: data.user_id,
+      restaurant_id: data.restaurant_id
+    },
+    notification: {
+      title: 'Orderan Masuk',
+      body: 'Pesanan JFOOD dibuat atas nama ' + data.name,
+    },
+    android: {
+      notification: {
+        click_action: 'ORDER_IN'      }
+    },
+    token: result.rows[0].token_notification
+  };
       
-      // Set the message as high priority and have it expire after 24 hours.
-      var options = {
-        priority: 'high',
-        timeToLive: 60 * 60 * 24
-      };
-      
-    return {"payload" : payload, "options" : options};
+    return {"payload" : message};
 }
 

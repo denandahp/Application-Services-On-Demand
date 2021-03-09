@@ -54,11 +54,11 @@ class UserModel {
 
   }
 
-  async registerlanjut (data, datagambar) {
+  async registerlanjut (data) {
     try{
       var d = new Date(Date.now());
       //console.log(created);
-      let user = [data.id, data.username, data.phone, datagambar.photo, data.alamat_identitas, d];
+      let user = [data.id, data.username, data.phone, data.photo, data.alamat_identitas, d];
       let res = await pool.query('UPDATE' + dbTable + 
               'SET (photo, alamat_identitas, user_lastdate) = ' +
               '($4, $5, $6) WHERE id = $1 AND username = $2 AND phone = $3 RETURNING *',
@@ -259,6 +259,24 @@ class UserModel {
     return res;
     
   }
+
+  async updatetokenfcm (data) {
+    try{
+      let res,sets;
+      sets = [data.id, data.token_notification, data.latitude_position, data.longitude_position]
+      res = await pool.query('UPDATE ' + dbTable + ' SET (token_notification, latitude_position, longitude_position) = ($2, $3, $4) WHERE id = $1 RETURNING id, token_notification, latitude_position, longitude_position',sets);
+      debug('get %o', res);
+  
+      if (res.rowCount <= 0) {
+        return 'User tidak ditemukan';
+      } else {
+        return res.rows;
+      } 
+    }catch(ex){
+      console.log('Enek seng salah iki ' + ex)
+    }; 
+  }
+  
 }
 
 module.exports = new UserModel();

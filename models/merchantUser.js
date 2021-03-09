@@ -13,6 +13,7 @@ const dbTable = schema + '.' + table;
 const dbRestaurant = 'merchant.restaurant';
 const dbOTP = 'utility.otp';
 const dbBank = 'utility.bank';
+const viewUser = 'merchant.view_user_restaurant';
 
 
 class UserModel {
@@ -261,12 +262,12 @@ class UserModel {
     let res;
     
     if (role === 'all') {
-      res = await pool.query('SELECT * from ' + dbTable + ' ORDER BY id ASC')
+      res = await pool.query('SELECT * from ' + viewUser + ' ORDER BY user_id ASC')
     } else {
       if(status == 'all'){
-        res = await pool.query('SELECT * from ' + dbTable + ' where role = $1 ORDER BY id ASC', [role]);
+        res = await pool.query('SELECT * from ' + viewUser + ' where role = $1 ORDER BY user_id ASC', [role]);
       }else {
-        res = await pool.query('SELECT * from ' + dbTable + ' where role = $1 AND  verification_user_id = $2 ORDER BY id ASC', [role, status]);
+        res = await pool.query('SELECT * from ' + viewUser + ' where role = $1 AND  verification_user_id = $2 ORDER BY user_id ASC', [role, status]);
       }
     }
     
@@ -311,25 +312,40 @@ class UserModel {
   }
 
   async alldetail (user_id) {
-    try{
-    let res;
-    if (user_id == 'all') {
-    res = await pool.query( 'SELECT merchant.user.name AS "name_pemilik", merchant.restaurant.name AS "name_restaurant", '+
-                            ' merchant.restaurant.id AS "restaurant_id" ,*  FROM merchant.user ' + 
-                            ' INNER JOIN merchant.restaurant ON merchant.user.id = merchant.restaurant.user_id;');
-    } else {
-      res = await pool.query( ' SELECT merchant.user.name AS "name_pemilik", merchant.restaurant.name AS "name_restaurant", '+
+      try{
+      let res;
+      if (user_id == 'all') {
+      res = await pool.query( 'SELECT merchant.user.name AS "name_pemilik", merchant.restaurant.name AS "name_restaurant", '+
                               ' merchant.restaurant.id AS "restaurant_id" ,*  FROM merchant.user ' + 
-                              ' INNER JOIN merchant.restaurant ON merchant.user.id = merchant.restaurant.user_id '+
-                              ' WHERE merchant.user.id = $1;',[user_id])
-    }
+                              ' INNER JOIN merchant.restaurant ON merchant.user.id = merchant.restaurant.user_id;');
+      } else {
+        res = await pool.query( ' SELECT merchant.user.name AS "name_pemilik", merchant.restaurant.name AS "name_restaurant", '+
+                                ' merchant.restaurant.id AS "restaurant_id" ,*  FROM merchant.user ' + 
+                                ' INNER JOIN merchant.restaurant ON merchant.user.id = merchant.restaurant.user_id '+
+                                ' WHERE merchant.user.id = $1;',[user_id])
+      }
 
-    debug('get %o', res);
-    return res;
-  }catch(ex){
-    console.log('Enek seng salah iki ' + ex)
-  };
-    
+      debug('get %o', res);
+      return res;
+    }catch(ex){
+      console.log('Enek seng salah iki ' + ex)
+    };
+  }
+
+  async updatetokenfcm (data) {
+    try{
+      let res;
+      res = await pool.query('UPDATE ' + dbTable + ' SET token_notification = $2 WHERE id = $1 RETURNING id, token_notification',[data.token_notification, data.id]);
+      debug('get %o', res);
+  
+      if (res.rowCount <= 0) {
+        return 'User tidak ditemukan';
+      } else {
+        return res.rows;
+      } 
+    }catch(ex){
+      console.log('Enek seng salah iki ' + ex)
+    }; 
   }
 }
 

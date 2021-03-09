@@ -108,15 +108,15 @@ class customerFilterfoodController{
         authUtils.processRequestWithJWT(req, callback, fallback);
       }
 
-      async filterBycategory(req, res, next) {
+      async filterincategory(req, res, next) {
         let callback = async () => {
      
          try {
             let data = req.query;
             //let data = {page, limit, idKategori, latitude, longitude};
-            let result = await customerFilterfood.filterByname(data);
+            let result = await customerFilterfood.filterincategory(data);
             res.status(200).json({
-              pesan: "Hasil Filter Restaurant",
+              pesan: "Hasil Filter kategori",
               result: result,
             })
           } catch (e) {
