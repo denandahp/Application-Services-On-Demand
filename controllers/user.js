@@ -108,12 +108,12 @@ class UserController {
       let accessToken = jwt.sign({
         data: result
       }, config.secret, {
-        expiresIn: '30s'
+        expiresIn: 86400
       });
       let refreshToken = jwt.sign({
         data: result
       }, config.secret2, {
-        expiresIn: '7d'
+        expiresIn: 604800
       });
       refreshTokens.push(refreshToken);
       res.cookie('jwt', accessToken, {
@@ -135,7 +135,7 @@ class UserController {
     const refreshToken = req.body.token;
     if (!refreshToken || !refreshTokens.includes(refreshToken)) {
       return res.status(403).json({
-        message: "User not authenticated"
+        message: "failed not authenticated"
       });
     }
     jwt.verify(refreshToken, config.secret2, async function (err, decoded) {
@@ -144,7 +144,7 @@ class UserController {
         const accessToken = jwt.sign({
           data: result
         }, config.secret, {
-          expiresIn: '30s'
+          expiresIn: 86400
         });
         return res.status(201).json({
           status: res.statusCode,
@@ -357,207 +357,6 @@ class UserController {
       let result = await user.searchingdata(data);
       res.status(200).json({
         result
-      })
-    } catch (e) {
-      next(e.detail);
-    }
-  }
-
-  async is_active(req, res, next) {
-
-    let id = req.user.data.id
-    try {
-      await user.is_active(id);
-      res.status(200).send({
-        status: res.statusCode,
-        message: "success"
-      })
-    } catch (e) {
-      next(e.detail);
-    }
-  }
-
-  async active(req, res, next) {
-
-    let id = req.user.data.id
-    try {
-      await user.active(id);
-      res.status(200).send({
-        status: res.statusCode,
-        message: "active",
-      })
-    } catch (e) {
-      next(e.detail);
-    }
-  }
-
-  async nonactive(req, res, next) {
-
-    let id = req.user.data.id
-    try {
-      await user.nonactive(id);
-      res.status(200).send({
-        status: res.statusCode,
-        message: "non active",
-      })
-    } catch (e) {
-      next(e.detail);
-    }
-  }
-
-  async autobid(req, res, next) {
-
-    let id = req.user.data.id
-    try {
-      await user.autobid(id);
-      res.status(200).send({
-        status: res.statusCode,
-        message: "success"
-      })
-    } catch (e) {
-      next(e.detail);
-    }
-  }
-
-  async activeautobid(req, res, next) {
-
-    let id = req.user.data.id
-    try {
-      await user.activeautobid(id);
-      res.status(200).send({
-        status: res.statusCode,
-        message: "active",
-      })
-    } catch (e) {
-      next(e.detail);
-    }
-  }
-
-  async nonactiveautobid(req, res, next) {
-
-    let id = req.user.data.id
-    try {
-      await user.nonactiveautobid(id);
-      res.status(200).send({
-        status: res.statusCode,
-        message: "non active",
-      })
-    } catch (e) {
-      next(e.detail);
-    }
-  }
-
-  async homealt(req, res, next) {
-
-    let id = req.user.data.id
-    try {
-      let result = await user.homealt(id);
-      res.status(200).send({
-        status: res.statusCode,
-        data: result
-      })
-    } catch (e) {
-      next(e.detail);
-    }
-  }
-
-  async allorderhistory(req, res, next) {
-
-    let id = req.user.data.id
-    try {
-      let result = await user.allorderhistory(id);
-      res.status(200).send({
-        status: res.statusCode,
-        data: result
-      })
-    } catch (e) {
-      next(e.detail);
-    }
-  }
-
-  async lastorder(req, res, next) {
-
-    let id = req.user.data.id
-    try {
-      let result = await user.lastorder(id);
-      res.status(200).send({
-        status: res.statusCode,
-        data: result
-      })
-    } catch (e) {
-      next(e.detail);
-    }
-  }
-
-  async incomingorder(req, res, next) {
-
-    let kode = req.params.kode
-    try {
-      let result = await user.incomingorder(kode);
-      res.status(200).send({
-        status: res.statusCode,
-        data: result
-      })
-    } catch (e) {
-      next(e.detail);
-    }
-  }
-
-  async acceptorder(req, res, next) {
-
-    let id = req.user.data.id
-    let kode = req.params.kode
-    try {
-      await user.acceptorder(kode, id);
-      res.status(200).send({
-        status: res.statusCode,
-      })
-    } catch (e) {
-      next(e.detail);
-    }
-  }
-
-  async dataorder(req, res, next) {
-
-    let id = req.user.data.id
-    let kode = req.params.kode
-    try {
-      let result = await user.dataorder(kode, id);
-      res.status(200).send({
-        status: res.statusCode,
-        data: result
-      })
-    } catch (e) {
-      next(e.detail);
-    }
-  }
-
-  async rejectorder(req, res, next) {
-
-    let id = req.user.data.id
-    let kode = req.params.kode
-    try {
-      await user.rejectorder(kode, id);
-      res.status(200).send({
-        status: res.statusCode,
-      })
-    } catch (e) {
-      next(e.detail);
-    }
-  }
-
-  async updatedatadriver(req, res, next) {
-
-    let id = req.user.data.id
-    let lat = req.body.latitude
-    let long = req.body.longitude
-    let token = req.body.token
-
-    try {
-      let result = await user.updatedatadriver(id, lat, long, token);
-      res.status(200).send({
-        status: res.statusCode,
-        data: result
       })
     } catch (e) {
       next(e.detail);
