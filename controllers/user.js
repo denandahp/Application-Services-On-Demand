@@ -317,7 +317,7 @@ class UserController {
                 let responsesms = await sendSMSUtils.sendSMSMessage(checkphone.phoneNumber,randomOTP,res);
                 res.status(200).json(
                   {
-                    pesan : "Registrasi Merchant selesai, menunggu verifikasi OTP", 
+                    pesan : "Registrasi driver selesai, menunggu verifikasi OTP", 
                     userData: result.user,
                     otpData: result.otp,
                     limit_otp : result.limit_otp

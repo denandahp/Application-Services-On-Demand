@@ -49,9 +49,9 @@ class UserModel {
       var dd = d.getDate();var mm = d.getMonth() + 1;var y = d.getFullYear();var hour = d.getHours();var minute = d.getMinutes();var second = d.getSeconds();
       var FormattedDate = y + '-'+ mm + '-'+ dd + ' ' + hour+':'+minute+':'+second;
       console.log(FormattedDate);
-      let user = [data.username, data.password, data.email, data.phone, data.role, 1, d, d];
-      let res =  await pool.query('INSERT INTO ' + dbTable + ' (username, password, email, phone, role, verification_user_id, created_at, updated_at )'+
-                                  'VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING username, id, phone, email, role, created_at, updated_at;', user);
+      let user = [data.namadepan, data.namabelakang, data.username, data.password, data.email, data.phone, data.provinsi_penempatan, data.kota_penempatan, data.role, 1, d, d];
+      let res =  await pool.query('INSERT INTO ' + dbTable + ' (namadepan, namabelakang, username, password, email, phone, provinsi_penempatan, kota_penempatan, role, verification_user_id, created_at, updated_at )'+
+                                  'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING username, id, phone, email, role, created_at, updated_at;', user);
       let otpdata = ['driver', 'user', res.rows[0].id, 'registrasi user driver', randomOTP, FormattedDate, d, d, d];
       let otpdb =  await pool.query('INSERT INTO ' + dbOTP + ' (schema, table_name, table_id, verification_task, otp, limit_otp, the_day, created_at, updated_at)VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING schema, table_name, table_id, verification_task, otp, the_day, updated_at', otpdata);
       console.log('Cek sini ');
@@ -139,7 +139,7 @@ class UserModel {
 
   }
 
-  async verifikasiotp(kodeOTP, username) {
+  async verifikasiotp(kodeOTP,id_user) {
     try{
       var d = new Date(Date.now());
       const res = await pool.query('SELECT ' + dbTable + '.id, username, password, role, phone, phone_otp_id, otp,' + dbOTP + '.limit_otp, ' + dbTable +'.updated_at FROM ' + dbTable + ' INNER JOIN '+

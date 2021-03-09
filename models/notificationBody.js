@@ -13,7 +13,7 @@ exports.orderfoodtodriver = (data, result) => {
     },
     android: {
       notification: {
-        click_action: 'OPEN_ACTIVITY_1'      }
+        click_action: 'ORDER_IN'      }
     },
     token: result.rows[0].token_notification
   };
