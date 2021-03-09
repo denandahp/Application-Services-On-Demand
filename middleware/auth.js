@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 const config = require('../configs.json');
 
-//AUTHENTIKASI
 const auth = async (req, res, next) => {
 
     try {
@@ -16,7 +15,6 @@ const auth = async (req, res, next) => {
                 auth: false,
                 message: 'Failed to authenticate token.'
             });
-            // console.log(decoded.data.is_verified);
             if (decoded.data.is_verified == '3') {
                 req.user = decoded;
                 next();

@@ -1,0 +1,112 @@
+const user = require('../models/driverorder.js');
+
+class DriverOrderController {
+
+    async incomingorder(req, res, next) {
+
+        let kode = req.params.kode
+        try {
+            let result = await user.incomingorder(kode);
+            if (result.status == 404) {
+                res.status(404).json({
+                    status: res.statusCode,
+                    message: result.errors
+                });
+            } else {
+                res.status(200).send({
+                    status: res.statusCode,
+                    data: result
+                })
+            }
+        } catch (e) {
+            next(e.detail);
+        }
+    }
+
+    async acceptorder(req, res, next) {
+
+        let id = req.user.data.id
+        let kode = req.params.kode
+        try {
+            let result = await user.acceptorder(kode, id);
+            res.status(200).send({
+                status: res.statusCode,
+                data: result
+            })
+        } catch (e) {
+            next(e.detail);
+        }
+    }
+
+    async dataorder(req, res, next) {
+
+        let id = req.user.data.id
+        let kode = req.params.kode
+        try {
+            let result = await user.dataorder(kode, id);
+            if (result.status == 404) {
+                res.status(404).json({
+                    status: res.statusCode,
+                    message: result.errors
+                });
+            } else {
+                res.status(200).send({
+                    status: res.statusCode,
+                    data: result
+                })
+            }
+        } catch (e) {
+            next(e.detail);
+        }
+    }
+
+    async lihatpesanan(req, res, next) {
+
+        let id = req.user.data.id
+        let kode = req.params.kode
+        try {
+            let result = await user.lihatpesanan(kode, id);
+            res.status(200).send({
+                status: res.statusCode,
+                data: result
+            })
+        } catch (e) {
+            next(e.detail);
+        }
+    }
+
+    async rejectorder(req, res, next) {
+
+        let id = req.user.data.id
+        let kode = req.params.kode
+        try {
+            await user.rejectorder(kode, id);
+            res.status(200).send({
+                status: res.statusCode,
+            })
+        } catch (e) {
+            next(e.detail);
+        }
+    }
+
+    async updatedatadriver(req, res, next) {
+
+        let id = req.user.data.id
+        let lat = req.body.latitude
+        let long = req.body.longitude
+        let token = req.body.token
+
+        try {
+            let result = await user.updatedatadriver(id, lat, long, token);
+            res.status(200).send({
+                status: res.statusCode,
+                data: result
+            })
+        } catch (e) {
+            next(e.detail);
+        }
+    }
+
+}
+
+module.exports = new DriverOrderController();
