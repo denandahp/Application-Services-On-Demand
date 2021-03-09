@@ -151,34 +151,67 @@ class UserController {
 
   async verifikasiotp(req, res, next) {
     let kodeOTP = req.body.otp;
-    let username = req.body.username;
-    try {
-      let result = await user.verifikasiotp(kodeOTP, username);
-      res.status(200).json({
-        pesan: "OTP telah terverifikasi"
-      })
-    } catch (e) {
-      next(e.detail);
+    let id = req.body.id;
+    let otp_id = req.body.otp_id;
+    try{
+    let result = await user.verifikasiotp(kodeOTP,id, otp_id);
+    if(result.status == "400"){
+      res.status(400).json(
+        {
+          pesan : "Registrasi Gagal ada error di system",
+          error : result.error
+        }
+      );
+    }else{
+      res.status(200).json(
+        {
+          pesan : "OTP telah terverifikasi",
+          result
+        }
+      )
     }
+  } catch (e) {
+    next(e.detail);
+  }
   }
 
   async resendotp(req, res, next) {
     let data = req.body;
-    try {
-      let result = await user.resendotp(data);
-      // let response = await sendWAUtils.sendWAMessage(result);
-      // let responsesms = await sendSMSUtils.sendWAmsg(result);
-      let responsesms = await sendSMSUtils.sendSMSMessage(result);
-      console.log(responsesms);
-      // if (response.status == 200){
-      res.status(200).json({
-        pesan: "OTP telah diperbaharui",
-        result
-      })
-      // }
-    } catch (e) {
-      next(e.detail);
-    }
+    try{
+      let checkphone = await sendSMSUtils.checkphone(data);
+      console.log(checkphone.status);
+      if(checkphone.status == 404){
+        console.log("checkphone.status");
+        res.status(400).json({
+          status : 'Coba periksa kembali nomor handphone yang dimasukkan. Sepertinya ada yg keliru.'
+        });
+      }
+      else{
+        var randomOTP = totp.now(); // => generate OTP
+        let result = await user.resendotp(data,randomOTP);
+        if(result.status == "400"){
+          res.status(400).json(
+            {
+              pesan : "Registrasi Gagal ada error di system",
+              error : result.error
+            }
+          );
+        }else{
+          let responsesms = await sendSMSUtils.sendSMSMessage(checkphone.phoneNumber,randomOTP,res);
+          res.status(200).json(
+            {
+              pesan : "OTP telah diperbaharui",
+              userData: result.user,
+              otpData: result.otp,
+              limitOtp:result.limit_otp
+            }
+          );
+        }
+
+      }
+      } catch (e) {
+        next(e.detail);
+      }
   }
 
   async verifikasiUser(req, res, next) {
@@ -200,43 +233,64 @@ class UserController {
     try {
       var randomOTP = totp.now(); // => generate OTP
       let checkregistrasi = await user.checkregistrasi(data, randomOTP);
-      if (checkregistrasi.status == '200') {
+      if (checkregistrasi.status == '200'){
         let checkphone = await sendSMSUtils.checkphone(data);
         console.log(checkphone.status);
-        if (checkphone.status == 404) {
+        if(checkphone.status == 404){
+          console.log("checkphone.status");
           res.status(400).json({
-            status: 'Coba periksa kembali nomor handphone yang dimasukkan. Sepertinya ada yg keliru.'
+            status : 'Coba periksa kembali nomor handphone yang dimasukkan. Sepertinya ada yg keliru.'
           });
-        } else {
-          let responsesms = await sendSMSUtils.sendSMSMessage(checkphone.phoneNumber, randomOTP, res);
-          res.status(200).json({
-            pesan: "User belum verifikasi OTP",
-            userData: checkregistrasi.data,
-          });
+        }
+        else{
+          let responsesms = await sendSMSUtils.sendSMSMessage(checkphone.phoneNumber,randomOTP,res);
+          res.status(200).json(
+            {
+              pesan : "User belum verifikasi OTP", 
+              userData: checkregistrasi.data,
+              otp: checkregistrasi.otp
+            }
+          );
         }
 
-      } else {
+      }else{
         let checkdatauser = await user.checkdatauser(data);
-        if (checkdatauser.status == '400') {
+        if(checkdatauser.status == '400'){
           res.status(400).json({
-            status: checkdatauser.errors
+            status : checkdatauser.errors
           });
-        } else {
-          let checkphone = await sendSMSUtils.checkphone(data);
-          if (checkphone.status == 404) {
-            console.log("checkphone.status");
-            res.status(400).json({
-              status: 'Coba periksa kembali nomor handphone yang dimasukkan. Sepertinya ada yg keliru.'
-            });
-          } else {
-            let result = await user.register(data, randomOTP);
-            let responsesms = await sendSMSUtils.sendSMSMessage(checkphone.phoneNumber, randomOTP, res);
-            res.status(200).json({
-              pesan: "Registrasi awal selesai, menunggu verifikasi OTP",
-              userData: result,
-            });
-          }
         }
+        else {
+            let checkphone = await sendSMSUtils.checkphone(data);
+            console.log(checkphone.status);
+            if(checkphone.status == 404){
+              console.log("checkphone.status");
+              res.status(400).json({
+                status : 'Coba periksa kembali nomor handphone yang dimasukkan. Sepertinya ada yg keliru.'
+              });
+            }
+            else{
+              let result = await user.register(data,randomOTP);
+              if(result.status == "400"){
+                res.status(400).json(
+                  {
+                    pesan : "Registrasi Gagal ada error di system",
+                    error : result.error
+                  }
+                );
+              }else{
+                let responsesms = await sendSMSUtils.sendSMSMessage(checkphone.phoneNumber,randomOTP,res);
+                res.status(200).json(
+                  {
+                    pesan : "Registrasi Merchant selesai, menunggu verifikasi OTP", 
+                    userData: result.user,
+                    otpData: result.otp,
+                    limit_otp : result.limit_otp
+                  }
+                );
+              }
+            }
+          }
       }
 
       //  }
@@ -249,8 +303,7 @@ class UserController {
 
     let data = req.body;
     try {
-      let response = await convimage.base64toimage(data);
-      let result = await user.registerlanjut(data, response);
+      let result = await user.registerlanjut(data);
 
       res.status(200).json({
         pesan: "Akun Driver berhasil didaftarkan",

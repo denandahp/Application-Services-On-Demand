@@ -2,7 +2,7 @@ const debug = require('debug')('app:controller:customerPayment');
 const pool = require('../libs/db');
 const notifbody = require('./notificationBody.js');
 
-const schema = '"order"';
+const schema = '"orders"';
 const table = '"jfood_cart"';
 const dbTable = schema + '.' + table;
 const dbMenuorder = schema + '.' + "jfood_cart_menu";

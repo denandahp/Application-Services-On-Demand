@@ -13,9 +13,7 @@ exports.orderfoodtodriver = (data, result) => {
     },
     android: {
       notification: {
-        click_action: 'OPEN_ACTIVITY_1',
-        icon : 'https://jatstorage.s3.us-east-2.amazonaws.com/Master-Logo-with-Text.png'
-      }
+        click_action: 'OPEN_ACTIVITY_1'      }
     },
     token: result.rows[0].token_notification
   };
