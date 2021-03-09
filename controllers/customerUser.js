@@ -322,9 +322,7 @@ class UserController {
 
     let data = req.body;
     try {
-      
-      let response = await convimage.base64toimage(data);
-      let result = await user.registerlanjut(data,response);
+            let result = await user.registerlanjut(data);
 
 
         res.status(200).json(

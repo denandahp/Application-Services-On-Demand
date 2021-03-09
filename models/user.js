@@ -142,9 +142,9 @@ class UserModel {
   async verifikasiotp(kodeOTP,id_user) {
     try{
       var d = new Date(Date.now());
-      const res = await pool.query('SELECT ' + dbTable + '.id, username, password, role, phone, phone_otp_id, otp,' + dbOTP + '.limit_otp, ' + dbTable +'.updated_at FROM ' + dbTable + ' INNER JOIN '+
+      const res = await pool.query('SELECT ' + dbTable + '.id, username, password, role, phone, phone_otp_id, otp,' + dbOTP + '.limit_otp  FROM ' + dbTable + ' INNER JOIN '+
                                   dbOTP + ' ON '+ dbTable + '.phone_otp_id = ' + dbOTP +'.id where '+ dbTable +'.id = $1 AND ' + dbOTP + '.otp = $2',[id_user, kodeOTP]);
-      console.log(kodeOTP + "    "+ id_user + "limit_otp: " + res.rows[0].limit_otp);
+      console.log(kodeOTP + "    "+ id_user + " limit_otp: " + res.rows[0].limit_otp);
       console.log(d);
       if (res.rowCount <= 0) {
         throw new Error('OTP tidak ditemukan');
@@ -163,7 +163,7 @@ class UserModel {
     };
   }
 
-  async resendotp(data) {
+  async resendotp(data, randomOTP) {
     try{
       let otplimit = 120; // in Second
       var d = new Date(Date.now());
