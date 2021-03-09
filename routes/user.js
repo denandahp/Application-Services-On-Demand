@@ -1,8 +1,8 @@
 const Router = require('express').Router();
 const auth = require('../middleware/auth.js');
 const user = require('../controllers/user.js');
-const home = require('../controllers/homealtdriver.js');
-const order = require('../controllers/driverorder.js');
+const home = require('../controllers/driverHomealt.js');
+const order = require('../controllers/driverOrder.js');
 
 Router.post('/login', user.login)
       .post('/renewAccessToken', user.renewAccessToken)
