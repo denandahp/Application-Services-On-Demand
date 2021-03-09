@@ -1,8 +1,6 @@
 const debug = require('debug')('app:model:user');
 const pool = require('../libs/db');
-const {
-  hash
-} = require('bcrypt');
+//const {hash} = require('bcrypt');
 const encryptPassword = require('../libs/secret').encryptPassword;
 const comparePassword = require('../libs/secret').comparePassword;
 const compareOTP = require('../libs/secret').compareOTP;
@@ -15,10 +13,10 @@ const dbTable = schema + '.' + table;
 const scheduledb = 'public.schedule';
 const modaldb = 'public.modal';
 const jfoodviews = 'orders.jfood';
-const orderdb = 'public.order';
 const orderstb = 'orders.orders';
 const dbOTP = 'utility.otp';
 
+const orderdb = 'public.order';
 
 class UserModel {
 
@@ -520,7 +518,7 @@ class UserModel {
   async updatedatadriver(id, lat, long, token) {
 
     try {
-      let res = await pool.query("UPDATE " + dbTable + " SET latitude_position = " + lat + ", longitude_position = " + long + ", token_notification = " + token + " WHERE id = " + id + "RETURNING latitude_position, longitude_position, token_notification");
+      let res = await pool.query("UPDATE " + dbTable + " SET (latitude_position, longitude_position, token_notification) = ($1, $2, $3) WHERE id = " + id + " RETURNING latitude_position, longitude_position, token_notification", [lat, long, token]);
       debug('edit %o', res);
       if (res.rowCount <= 0) {
         throw 'Edit fail';

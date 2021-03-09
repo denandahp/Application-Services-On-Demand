@@ -9,6 +9,7 @@ const convimage = require('./convimage.js');
 const jsotp = require('jsotp');
 const totp = jsotp.TOTP('BASE32ENCODEDSECRET');
 const maxAge = 1 * 24 * 60 * 60;
+let refreshTokens = []
 
 class UserController {
   async showAllUser(req, res) {
@@ -104,23 +105,57 @@ class UserController {
 
     try {
       let result = await user.login(username, password);
-      let token = jwt.sign({
+      let accessToken = jwt.sign({
         data: result
       }, config.secret, {
-        expiresIn: 86400
+        expiresIn: '30s'
       });
-      res.cookie('jwt', token, {
+      let refreshToken = jwt.sign({
+        data: result
+      }, config.secret2, {
+        expiresIn: '7d'
+      });
+      refreshTokens.push(refreshToken);
+      res.cookie('jwt', accessToken, {
         httpOnly: true,
         maxAge: -1
       });
-      res.status(200).send({
+      res.status(200).json({
         status: res.statusCode,
-        token: token
+        accessToken,
+        refreshToken
       });
     } catch (e) {
       let errorResponse = authUtils.processLoginError(e);
       res.status(400).json(errorResponse);
     }
+  }
+
+  async renewAccessToken(req, res, next) {
+    const refreshToken = req.body.token;
+    if (!refreshToken || !refreshTokens.includes(refreshToken)) {
+      return res.status(403).json({
+        message: "User not authenticated"
+      });
+    }
+    jwt.verify(refreshToken, config.secret2, async function (err, decoded) {
+      let result = decoded.data
+      if (!err) {
+        const accessToken = jwt.sign({
+          data: result
+        }, config.secret, {
+          expiresIn: '30s'
+        });
+        return res.status(201).json({
+          status: res.statusCode,
+          accessToken
+        });
+      } else {
+        return res.status(403).json({
+          message: "User not authenticated"
+        });
+      }
+    })
   }
 
   async logout(req, res, next) {
