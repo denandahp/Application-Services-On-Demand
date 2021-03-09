@@ -264,7 +264,7 @@ class UserModel {
     try{
       let res,sets;
       sets = [data.id, data.token_notification, data.latitude_position, data.longitude_position]
-      res = await pool.query('UPDATE ' + dbTable + ' SET (token_notification, latitude_position, longitude_position) = ($2, $3, $4) WHERE id = $1 RETURNING id, token_notification',sets);
+      res = await pool.query('UPDATE ' + dbTable + ' SET (token_notification, latitude_position, longitude_position) = ($2, $3, $4) WHERE id = $1 RETURNING id, token_notification, latitude_position, longitude_position',sets);
       debug('get %o', res);
   
       if (res.rowCount <= 0) {

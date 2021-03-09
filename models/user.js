@@ -23,7 +23,7 @@ class UserModel {
   async login(username, password) {
     // password = encryptPassword(password, username);
 
-    const res = await pool.query('SELECT id, username, password, role, verification_user_id from ' + dbTable + ' where username = $1', [username]);
+    const res = await pool.query('SELECT id, username, password, role, is_verified from ' + dbTable + ' where username = $1', [username]);
     debug('login %o', res);
 
     if (res.rowCount <= 0) {
@@ -50,7 +50,7 @@ class UserModel {
       var FormattedDate = y + '-'+ mm + '-'+ dd + ' ' + hour+':'+minute+':'+second;
       console.log(FormattedDate);
       let user = [data.namadepan, data.namabelakang, data.username, data.password, data.email, data.phone, data.provinsi_penempatan, data.kota_penempatan, data.role, 1, d, d];
-      let res =  await pool.query('INSERT INTO ' + dbTable + ' (namadepan, namabelakang, username, password, email, phone, provinsi_penempatan, kota_penempatan, role, verification_user_id, created_at, updated_at )'+
+      let res =  await pool.query('INSERT INTO ' + dbTable + ' (namadepan, namabelakang, username, password, email, phone, provinsi_penempatan, kota_penempatan, role, is_verified, created_at, updated_at )'+
                                   'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING username, id, phone, email, role, created_at, updated_at;', user);
       let otpdata = ['driver', 'user', res.rows[0].id, 'registrasi user driver', randomOTP, FormattedDate, d, d, d];
       let otpdb =  await pool.query('INSERT INTO ' + dbOTP + ' (schema, table_name, table_id, verification_task, otp, limit_otp, the_day, created_at, updated_at)VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING schema, table_name, table_id, verification_task, otp, the_day, updated_at', otpdata);
@@ -150,7 +150,7 @@ class UserModel {
         throw new Error('OTP tidak ditemukan');
       } else {
         if (await kodeOTP == res.rows[0].otp && d <= res.rows[0].limit_otp) {
-          const updateVerif = await pool.query('UPDATE' + dbTable + 'SET  verification_user_id = $1 WHERE phone_otp_id = $2 RETURNING id, username, verification_user_id, phone',[2,res.rows[0].phone_otp_id]);
+          const updateVerif = await pool.query('UPDATE' + dbTable + 'SET  is_verified = $1 WHERE phone_otp_id = $2 RETURNING id, username, is_verified, phone',[2,res.rows[0].phone_otp_id]);
           return updateVerif.rows[0];
         } else {
           throw new Error('OTP salah.');
@@ -200,12 +200,12 @@ class UserModel {
         var dd = d.getDate();var mm = d.getMonth() + 1;var y = d.getFullYear();var hour = d.getHours();var minute = d.getMinutes();var second = d.getSeconds();
         var FormattedDate = y + '-'+ mm + '-'+ dd + ' ' + hour+':'+minute+':'+second;
         let user = [data.username, data.email, data.phone, randomOTP, 1, d, FormattedDate];
-        const res = await pool.query('SELECT * FROM' + dbTable + 'where username = $1 AND email = $2 AND phone = $3 AND  verification_user_id = $4 ',[data.username, data.email, data.phone, 1]);
+        const res = await pool.query('SELECT * FROM' + dbTable + 'where username = $1 AND email = $2 AND phone = $3 AND  is_verified = $4 ',[data.username, data.email, data.phone, 1]);
         if (res.rowCount > 0) {
             let otpdata = ['driver', 'user', res.rows[0].id, 'registrasi user driver belum verifikasi OTP', randomOTP, FormattedDate, d, d, d];
             let otpdb =  await pool.query('INSERT INTO ' + dbOTP + ' (schema, table_name, table_id, verification_task, otp, limit_otp, the_day, created_at, updated_at)VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *', otpdata);
             let value = [data.username, data.email, data.phone, otpdb.rows[0].id, 1, d];
-            const updateregistrasi = await pool.query('UPDATE' + dbTable + 'SET (username, email, phone, phone_otp_id,  verification_user_id, updated_at) = ($1, $2, $3, $4, $5, $6) WHERE username = $1 RETURNING id, username, email, phone,  verification_user_id, phone_otp_id, updated_at',value);
+            const updateregistrasi = await pool.query('UPDATE' + dbTable + 'SET (username, email, phone, phone_otp_id,  is_verified, updated_at) = ($1, $2, $3, $4, $5, $6) WHERE username = $1 RETURNING id, username, email, phone,  is_verified, phone_otp_id, updated_at',value);
             let created = updateregistrasi.rows[0];
             console.log(user.length);
             debug('register %o', updateregistrasi);
@@ -220,9 +220,9 @@ class UserModel {
     }
 
   async verifikasiUser(statusUserUpdate) {
-    const res = await pool.query('SELECT id, username, role, verification_user_id FROM' + dbTable + 'where username = $1', [statusUserUpdate.username]);
+    const res = await pool.query('SELECT id, username, role, is_verified FROM' + dbTable + 'where username = $1', [statusUserUpdate.username]);
     //1 =  not verified , 2 = Pending, 3 = Verified
-    const updateVerif = await pool.query('UPDATE' + dbTable + 'SET verification_user_id = $1 WHERE username = $2 ', [statusUserUpdate.verification_user_id, statusUserUpdate.username]);
+    const updateVerif = await pool.query('UPDATE' + dbTable + 'SET is_verified = $1 WHERE username = $2 ', [statusUserUpdate.is_verified, statusUserUpdate.username]);
   }
 
   async edit(data) {
@@ -276,7 +276,7 @@ class UserModel {
       if (status == 'all') {
         res = await pool.query('SELECT * from ' + dbTable + ' where role = $1 ORDER BY id ASC', [role]);
       } else {
-        res = await pool.query('SELECT * from ' + dbTable + ' where role = $1 AND verification_user_id = $2 ORDER BY id ASC', [role, status]);
+        res = await pool.query('SELECT * from ' + dbTable + ' where role = $1 AND is_verified = $2 ORDER BY id ASC', [role, status]);
       }
     }
 
@@ -303,9 +303,9 @@ class UserModel {
     let res;
 
     if (id === undefined) {
-      res = await pool.query('SELECT username,email, phone, role, verification_user_id  from ' + dbTable + ' ORDER BY id ASC')
+      res = await pool.query('SELECT username,email, phone, role, is_verified  from ' + dbTable + ' ORDER BY id ASC')
     } else {
-      res = await pool.query('SELECT username,email, phone, role, verification_user_id from ' + dbTable + ' where id = $1 ORDER BY id ASC', [id]);
+      res = await pool.query('SELECT username,email, phone, role, is_verified from ' + dbTable + ' where id = $1 ORDER BY id ASC', [id]);
     }
 
     debug('get %o', res);
