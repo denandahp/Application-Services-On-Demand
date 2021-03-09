@@ -32,5 +32,10 @@ Router.post('/login', user.login)
       .get('/dataorder/:kode', auth, order.dataorder)
       .post('/rejectorder/:kode', auth, order.rejectorder)
       .put('/updatedatadriver', auth, order.updatedatadriver)
+// .put('/latlong', auth, user.latlong)
+// .get('/ruteantar', auth, user.ruteantar)
+// .get('/lihatpesanan', auth, user.lihatpesanan)
+// .get('/allorderhistory', auth, user.allorderhistory);
+// .get('/lastorder', auth, user.lastorder);
 
 module.exports = Router;
