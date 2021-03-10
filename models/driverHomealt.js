@@ -115,10 +115,11 @@ class HomeAltDriverModel {
     }
 
     async homealt(id) {
-        let users = await pool.query('SELECT photo, is_active, namadepan, namabelakang, is_bid_active, perform, estimasi_pendapatan, jumlah_orderan_masuk  FROM ' + dbTable + ' WHERE id = ' + id);
+        let users = await pool.query('SELECT is_verified, photo, is_active, namadepan, namabelakang, is_bid_active, perform, estimasi_pendapatan, jumlah_orderan_masuk  FROM ' + dbTable + ' WHERE id = ' + id);
         debug('homealt %o', users);
 
         return {
+            "is_verified": users.rows[0].is_verified,
             "photo": users.rows[0].photo,
             "isactive": users.rows[0].is_active,
             "name": users.rows[0].namadepan + users.rows[0].namabelakang,
