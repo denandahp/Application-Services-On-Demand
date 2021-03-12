@@ -122,7 +122,7 @@ class HomeAltDriverModel {
             "is_verified": users.rows[0].is_verified,
             "photo": users.rows[0].photo,
             "isactive": users.rows[0].is_active,
-            "name": users.rows[0].namadepan + users.rows[0].namabelakang,
+            "name": users.rows[0].namadepan + ' ' + users.rows[0].namabelakang,
             "autobid": users.rows[0].is_bid_active,
             "perform": users.rows[0].perform,
             "estimasi_pendapatan": users.rows[0].estimasi_pendapatan,
