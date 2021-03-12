@@ -15,7 +15,7 @@ const auth = async (req, res, next) => {
                 auth: false,
                 message: 'Failed to authenticate token.'
             });
-            if (decoded.data.is_verified == '3') {
+            if (decoded.data.is_verified == '3' || '2' || '1') {
                 req.user = decoded;
                 next();
             } else {
