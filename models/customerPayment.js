@@ -6,11 +6,14 @@ const schema = '"orders"';
 const table = '"jfood_cart"';
 const dbTable = schema + '.' + table;
 const dbMenuorder = schema + '.' + "jfood_cart_menu";
+const dbOrders = schema + '.' + "orders";
+
 
 class customerPaymentModel{
 
     async paymentOrdernumber (data) {
       try{
+        let result ={};
         var d = new Date(Date.now());d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
         var dd = d.getDate();var mm = d.getMonth() + 1;var hour = d.getHours();var minute = d.getMinutes();
         var kodeSistem= "JF";
@@ -28,8 +31,16 @@ class customerPaymentModel{
                                     'longitude_destination, note_destination, metode_pembayaran, promo_admin_id, sub_total, ongkir, ' +
                                     'harga_total, created_at, updated_at, diskon_admin, diskon_merchant ,harga_total_merchant ,kode_promo ,harga_total_driver)'+
                                     'VALUES ($1 ,$2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20) RETURNING *;', sets);
+        let values =[kode, data.user_id, "Customer Memesan Makanan", data.latitude_destination, data.longitude_destination, data.landmark_destination, data.address_destination,
+                                    data.note_destination, data.kode_promo, data.diskon_admin, data.diskon_merchant, data.sub_total, data.ongkir,
+                                    data.harga_total_merchant, data.harga_total_driver, data.harga_total, d, d, token_customer, token_merchant, data.latitude_merchant, data.longitude_merchant]
+        let orders = await pool.query('INSERT INTO ' + dbOrders + ' (kode, customer_id, status, latitude_location_destination, longitude_location_destination,'+
+                                      'landmark_destination, address_destination, patokan_destination, kode_promo, diskon_admin, diskon_merchant, sub_total, ongkir,'+
+                                      'total_price_merchant, total_price_driver, total_price_customer, created_at, updated_at, data.token_customer, data.token_merchant'+
+                                      'latitude_location_pickup, longitude_location_pickup)' + 
+                                    ' VALUES ($1 ,$2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22) RETURNING *;', values)
         debug('update %o', res);
-        let result = res.rows[0];
+        result.orders = orders;
         return result;
       }catch(ex){
         console.log('Enek seng salah iki ' + ex)

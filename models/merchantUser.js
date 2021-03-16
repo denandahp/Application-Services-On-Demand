@@ -335,7 +335,7 @@ class UserModel {
   async updatetokenfcm (data) {
     try{
       let res;
-      res = await pool.query('UPDATE ' + dbTable + ' SET token_notification = $2 WHERE id = $1 RETURNING id, token_notification',[data.token_notification, data.id]);
+      res = await pool.query('UPDATE ' + dbRestaurant + ' SET (latitude, longitude, token_notification) = ($2, $3, $4) WHERE id = $1 RETURNING id, latitude, longitude, token_notification',[data.id, data.latitude, data.longitude, data.token_notification, ]);
       debug('get %o', res);
   
       if (res.rowCount <= 0) {
