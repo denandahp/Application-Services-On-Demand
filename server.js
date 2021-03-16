@@ -81,6 +81,7 @@ const driverSchedule = require('./routes/schedule.js');
 const driverAtribut = require('./routes/atribut.js');
 const driverComment = require('./routes/comment.js');
 const driverNotiffood = require('./routes/driverNotiffood.js');
+const driverPayment = require('./routes/driverPayment.js')
 const customerUser = require('./routes/customerUser.js');
 const customerFilterfood = require('./routes/customerFilterfood.js');
 const customerMenujfood = require('./routes/customerMenujfood.js');
@@ -98,12 +99,15 @@ const warning = require('./routes/warning.js');
 const wilayah = require('./routes/wilayah.js');
 const uploadImage = require('./routes/uploadImage.js');
 
+
+
 app.use('/', index);
 app.use('/api/driver', driverUser);
 app.use('/api/driver', driverNotiffood);
 app.use('/api/driver/comment', driverComment);
 app.use('/api/driver/schedule', driverSchedule);
 app.use('/api/driver/atribut', driverAtribut);
+app.use('/api/driver/payment', driverPayment);
 app.use('/api/customer', customerUser);
 app.use('/api/customer', customerFilterfood);
 app.use('/api/customer', customerMenujfood);

@@ -49,9 +49,9 @@ class DriverOrderModel {
 
         try {
             let driver = await pool.query(`SELECT latitude_location_driver_start, longitude_location_driver_start FROM ${orderstb} WHERE "kode" = '${kode}'`);
-            let res = await pool.query(`SELECT latitude_restaurant, longitude_restaurant, customer_name, phone, landmark_restaurant, address_restaurant FROM ${jfoodviews} WHERE "kode" = '${kode}'`);
-            debug('dataorder %o', res);
-            if (res.rowCount <= 0) {
+            let order = await pool.query(`SELECT jarak, latitude_restaurant, longitude_restaurant, customer_name, phone, landmark_restaurant, address_restaurant, kode, jumlah_menu, jumlah_pesanan, menu_name, menu_quantity, menu_catatan, menu_price_merchant, menu_price_customer FROM ${jfoodviews} WHERE "kode" = '${kode}'`);
+            debug('dataorder %o', order);
+            if (order.rowCount <= 0) {
                 console.log("Kode Tidak Tersedia");
                 return {
                     "status": "404",
@@ -60,7 +60,7 @@ class DriverOrderModel {
             } else {
                 return {
                     driver: driver.rows[0],
-                    order: res.rows[0]
+                    order: order.rows,
                 }
             }
         } catch (ex) {
