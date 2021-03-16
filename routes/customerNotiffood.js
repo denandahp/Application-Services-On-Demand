@@ -2,6 +2,6 @@ const Router = require('express').Router();
 const notification = require('../controllers/customerNotiffood.js');
 
 Router.post('/orderfoodtodriver', notification.orderfoodtodriver)
-      .get('/searchBycategory', notification.searchBycategory)
+      .post('/orderfood/customertomerchant', notification.orderfood_customertomerchant)
       
 module.exports = Router;

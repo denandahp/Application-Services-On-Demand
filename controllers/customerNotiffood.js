@@ -25,17 +25,13 @@ class customerNotiffoodController{
         authUtils.processRequestWithJWT(req, callback, fallback);
       }
 
-      async searchBycategory(req, res, next) {
+    async orderfood_customertomerchant(req, res, next) {
         let callback = async () => {
      
          try {
-            let data = req.query;
-            //let data = {page, limit, idKategori, hargaMin, hargaMax, jenisMakanan, penilaian, sortBy, data};
-            let result = await customerNotiffood.searchBycategory(data);
-            res.status(200).json({
-              pesan: "Hasil Filter kategori",
-              result: result,
-            })
+            let data = req.body;
+            let result = await customerNotiffood.orderfood_customertomerchant(data, res);
+
           } catch (e) {
             console.log(e);
             let errorResponse = authUtils.processPOSTRequestError();

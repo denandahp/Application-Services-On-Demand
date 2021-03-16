@@ -11,6 +11,13 @@ const logger = require('morgan');
 const path = require('path');
 const cors = require('cors');
 
+var admin = require("firebase-admin");
+var serviceAccount = require('./private_key_firebase.json');
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
 const PORT = process.env.PORT || 3000;
 
 server.listen(PORT, () => {
@@ -74,6 +81,8 @@ const driverSchedule = require('./routes/schedule.js');
 const driverAtribut = require('./routes/atribut.js');
 const driverComment = require('./routes/comment.js');
 const driverListOrder = require('./routes/driverListOrder.js');
+const driverNotiffood = require('./routes/driverNotiffood.js');
+const driverPayment = require('./routes/driverPayment.js')
 const customerUser = require('./routes/customerUser.js');
 const customerFilterfood = require('./routes/customerFilterfood.js');
 const customerMenujfood = require('./routes/customerMenujfood.js');
@@ -85,27 +94,35 @@ const merchantInfousaha = require('./routes/merchantInfousaha.js');
 const merchantJambuka = require('./routes/merchantJambuka.js');
 const merchantInfoproduk = require('./routes/merchantInfoproduk.js');
 const merchantInforestoran = require('./routes/merchantInforestoran.js');
+const merchantNotiffood = require('./routes/merchantNotiffood.js');
+const merchantOrder = require('./routes/merchantOrder.js');
 const warning = require('./routes/warning.js');
 const wilayah = require('./routes/wilayah.js');
 const uploadImage = require('./routes/uploadImage.js');
 
+
+
 app.use('/', index);
 app.use('/api/driver', driverUser);
+app.use('/api/driver', driverNotiffood);
 app.use('/api/driver/comment', driverComment);
 app.use('/api/driver/schedule', driverSchedule);
 app.use('/api/driver/atribut', driverAtribut);
 app.use('/api/dashboard', driverListOrder);
+app.use('/api/driver/payment', driverPayment);
 app.use('/api/customer', customerUser);
 app.use('/api/customer', customerFilterfood);
 app.use('/api/customer', customerMenujfood);
 app.use('/api/customer', customerNotiffood);
 app.use('/api/customer', customerPayment);
 app.use('/api/merchant', merchantUser);
+app.use('/api/merchant', merchantNotiffood);
 app.use('/api/merchant/infopemilik', merchantInfopemilik);
 app.use('/api/merchant/infousaha', merchantInfousaha);
 app.use('/api/merchant/jambuka', merchantJambuka);
 app.use('/api/merchant/infoproduk', merchantInfoproduk);
 app.use('/api/merchant/inforestoran', merchantInforestoran);
+app.use('/api/merchant/order', merchantOrder);
 app.use('/api/warning', warning);
 app.use('/api/wilayah', wilayah);
 app.use('/api/uploadImage', uploadImage);

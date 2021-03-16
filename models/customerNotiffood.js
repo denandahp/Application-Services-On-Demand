@@ -2,11 +2,6 @@ const debug = require('debug')('app:controller:customerNotiffood');
 const pool = require('../libs/db');
 const notifbody = require('./notificationBody.js');
 var admin = require("firebase-admin");
-var serviceAccount = require('../private_key_firebase.json');
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});
 
 const schema = '"orders"';
 const table = '"search_driver"';
@@ -18,7 +13,6 @@ class customerNotiffoodModel{
         let result = await pool.query('SELECT * FROM' + dbTable + '($1, $2);', [data.latitude, data.longitude]);
         console.log(result.rows[0]);
         let body = await notifbody.orderfoodtodriver(data,result);
-        
         await admin.messaging().send(body.payload)
             .then(function(response) {
               console.log('Successfully sent message:', response);
@@ -37,29 +31,24 @@ class customerNotiffoodModel{
       };
     }
 
-    async update (data, datagambar) {
-      var d = new Date(Date.now());
-        console.log(datagambar);
-        let sets = [data.id, data.name, datagambar.media_family, datagambar.media_identity, data.no_identity, data.birthday, d, data.state_profil_pemilik]
-        let res = await pool.query('UPDATE' + dbTable + 'SET (name, media_family, media_identity, no_identity, birthday, updated_at, state_profil_pemilik) = ($2, $3, $4, $5, $6, $7, $8) WHERE id = $1 RETURNING *;', sets);
-        debug('update %o', res);
-        let result = res.rows[0];
-        return result;
-    }
-
-    async get(id) {
-
-      let res;
-      if(id == 'all'){
-        res = await pool.query(' SELECT * FROM ' + dbTable + 'ORDER BY id DESC')
-      }else {
-        res = await pool.query(' SELECT * FROM ' + dbTable + ' where id = $1 ORDER BY id DESC', [id])
-      }
-      
-      debug('get %o', res);
-
-      return res.rows;
-
+    async orderfood_customertomerchant (data, res) {
+      try{
+        let body = await notifbody.orderfood_customertomerchant(data);
+        
+        await admin.messaging().send(body.payload)
+            .then(function(response) {
+              console.log('Successfully sent message:', response);
+              res.status(200).json({
+                pesan: "Notifikasi Pesanan JFOOD dibuat atas nama " + data.name,
+                result: response,
+              })
+            })
+            .catch(function(error) {
+              console.log('Error sending message:', error);
+            });
+      }catch(ex){
+        console.log('Enek seng salah iki ' + ex)
+      };
     }
 
 }
