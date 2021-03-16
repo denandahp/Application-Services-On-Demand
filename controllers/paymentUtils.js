@@ -15,7 +15,7 @@ class PaymentIntegrationController {
                 Accept: "application/json",
                 Authorization:
                     "Basic " +
-                    Buffer.from("SB-Mid-server-LeUCYpw_pv89q-NPJ8ovRHB7").toString("base64")
+                    Buffer.from("SB-Mid-server-YSRtOBQ5Oe6FtdO81TOL1vfZ").toString("base64")
                 },
                 data: req.body
             }).then( response => { 
