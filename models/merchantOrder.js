@@ -4,6 +4,8 @@ const pool = require('../libs/db');
 const schema = '"orders"';
 const table = '"jfood"';
 const dbTable = schema + '.' + table;
+const dbOrders = schema + '.' + '"orders"' ;
+
 
 class merchantOrderModel{
 
@@ -11,8 +13,8 @@ class merchantOrderModel{
     try{
       var d = new Date(Date.now());d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
       let value =  [ data.kode, "Merchant Menerima Pesanan", data.total_price_merchant, "Accepted", d];
-      let res = await pool.query('UPDATE ' + dbTable + ' SET (status, total_price_merchant, status_paid_merchant, updated_at)'+
-                ' = ($2, $3, $4, $5) WHERE kode = $1 RETURNING *;', value);
+      let res = await pool.query('UPDATE ' + dbOrders + ' SET (status, total_price_merchant, status_paid_merchant, updated_at)'+
+                ' = ($2, $3, $4, $5) WHERE kode = $1 RETURNING kode, status, total_price_merchant, status_paid_merchant, updated_at;', value);
       debug('register %o', res);
   
       return res;
@@ -26,8 +28,8 @@ class merchantOrderModel{
       var verifcode = Math.floor(Math.random() * (9999 - 1111 + 1)) + 1111;
       var d = new Date(Date.now());d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
       let value =  [ data.kode, "Merchant Pesanan Sudah Siap", data.total_price_merchant, "Paid", d];
-      let res = await pool.query('UPDATE ' + dbTable + ' SET (status, total_price_merchant, status_paid_merchant, updated_at)'+
-                ' = ($2, $3, $4, $5) WHERE kode = $1 RETURNING *;', value);
+      let res = await pool.query('UPDATE ' + dbOrders + ' SET (status, total_price_merchant, status_paid_merchant, updated_at)'+
+                ' = ($2, $3, $4, $5) WHERE kode = $1 RETURNING kode, status, total_price_merchant, status_paid_merchant, updated_at;', value);
       debug('register %o', res);
   
       return res;
@@ -39,9 +41,9 @@ class merchantOrderModel{
   async rejectorder (data) {
     try{
       var d = new Date(Date.now());d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
-      let value =  [ data.kode, "Merchant Menolak Pesanan", data.reason_merchant_rejected, d, d];
-      let res = await pool.query('UPDATE ' + dbTable + ' SET (status, reason_merchant_rejected, time_merchant_rejected, updated_at)'+
-                ' = ($2, $3, $4, $5) WHERE kode = $1 RETURNING *;', value);
+      let value =  [ data.kode, "Merchant Menolak Pesanan", data.reason_merchant_rejected, "Rejected", d, d];
+      let res = await pool.query('UPDATE ' + dbOrders + ' SET (status, reason_merchant_rejected, status_paid_merchant, time_merchant_rejected, updated_at)'+
+                ' = ($2, $3, $4, $5, $6) WHERE kode = $1 RETURNING kode, status, reason_merchant_rejected, status_paid_merchant, time_merchant_rejected, updated_at;', value);
       debug('register %o', res);
   
       return res;

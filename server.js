@@ -88,6 +88,7 @@ const customerFilterfood = require('./routes/customerFilterfood.js');
 const customerMenujfood = require('./routes/customerMenujfood.js');
 const customerNotiffood = require('./routes/customerNotiffood.js');
 const customerPayment = require('./routes/customerPayment.js');
+const customerListOrder = require('./routes/customerListOrder.js');
 const merchantUser = require('./routes/merchantUser.js');
 const merchantInfopemilik = require('./routes/merchantInfopemilik.js');
 const merchantInfousaha = require('./routes/merchantInfousaha.js');
@@ -99,7 +100,6 @@ const merchantOrder = require('./routes/merchantOrder.js');
 const warning = require('./routes/warning.js');
 const wilayah = require('./routes/wilayah.js');
 const uploadImage = require('./routes/uploadImage.js');
-
 
 
 app.use('/', index);
@@ -115,6 +115,7 @@ app.use('/api/customer', customerFilterfood);
 app.use('/api/customer', customerMenujfood);
 app.use('/api/customer', customerNotiffood);
 app.use('/api/customer', customerPayment);
+app.use('/api/customer/dashboard', customerListOrder);
 app.use('/api/merchant', merchantUser);
 app.use('/api/merchant', merchantNotiffood);
 app.use('/api/merchant/infopemilik', merchantInfopemilik);

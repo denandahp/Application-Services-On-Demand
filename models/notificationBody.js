@@ -72,7 +72,7 @@ exports.orderfood_merchanttodriver = (data, result) => {
       kodePemesanan: data.kode,
       user_id: data.user_id,
       restaurant_id: data.restaurant_id,
-      driver_id: result.rows[0].id
+      driver_id: String(result.rows[0].id)
     },
     notification: {
       title: 'Orderan JFOOD Masuk',
@@ -82,7 +82,7 @@ exports.orderfood_merchanttodriver = (data, result) => {
       notification: {
         click_action: 'ORDER_IN'      }
     },
-    token: data.rows[0].token_notification
+    token: result.rows[0].token_notification
   };
       
     return {"payload" : message};
