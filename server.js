@@ -100,7 +100,6 @@ const wilayah = require('./routes/wilayah.js');
 const uploadImage = require('./routes/uploadImage.js');
 
 
-
 app.use('/', index);
 app.use('/api/driver', driverUser);
 app.use('/api/driver', driverNotiffood);
