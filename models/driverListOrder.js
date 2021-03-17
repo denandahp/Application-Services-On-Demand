@@ -7,6 +7,7 @@ const jsotp = require('jsotp');
 const totp = jsotp.TOTP('BASE32ENCODEDSECRET');
 
 const aktcust = 'driver.aktivitas_customer';
+const aktpeng = 'driver.aktivitas_pengemudi';
 const aktselpeng = 'driver.aktivitas_seluruh_pengemudi';
 const antpeng = 'driver.antrian_pengemudi';
 const antpengnew = 'driver.antrian_pengemudi_baru';
@@ -24,6 +25,24 @@ class DriverListOrder {
                 return {
                     "status": "404",
                     "errors": "Aktifitas pengemudi masih kosong"
+                }
+            } else {
+                return res.rows;
+            }
+        } catch (ex) {
+            console.log('Error : ' + ex);
+        };
+    }
+
+    async listorderbydriver(id) {
+
+        try {
+            let res = await pool.query(`SELECT * FROM ${aktpeng}(` + id + `)`);
+            debug('driverlistorder %o', res);
+            if (res.rowCount <= 0) {
+                return {
+                    "status": "404",
+                    "errors": "ID Driver tidak ditemukan"
                 }
             } else {
                 return res.rows;
