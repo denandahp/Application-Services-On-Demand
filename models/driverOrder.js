@@ -137,6 +137,26 @@ class DriverOrderModel {
             console.log('Error : ' + ex);
         };
     }
+
+    async selesaiantar(kode) {
+
+        try {
+            let new_status = "Driver sudah dilokasi"
+            let res = await pool.query(`UPDATE ${orderstb} SET status = ($1) WHERE "kode" = '${kode}' RETURNING status`, [new_status]);
+            debug('selesaiantar %o', res);
+            if (res.rowCount <= 0) {
+                console.log("Kode Tidak Terdaftar");
+                return {
+                    "status": "404",
+                    "errors": "Kode " + kode + " tidak terdaftar"
+                }
+            } else {
+                return res.rows[0]
+            }
+        } catch (ex) {
+            console.log('Error : ' + ex);
+        };
+    }
 }
 
 module.exports = new DriverOrderModel();

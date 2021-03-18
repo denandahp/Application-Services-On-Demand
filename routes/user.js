@@ -34,5 +34,6 @@ Router.post('/login', user.login)
       .put('/updatedatadriver', auth, order.updatedatadriver)
       .put('/verifikasi/:kode', auth, order.verifikasi)
       .put('/antarkanpesanan/:kode', auth, order.antarkanpesanan)
+      .put('/selesaiantar/:kode', auth, order.selesaiantar)
 
 module.exports = Router;
