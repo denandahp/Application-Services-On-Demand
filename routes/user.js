@@ -32,6 +32,7 @@ Router.post('/login', user.login)
       .get('/dataorder/:kode', auth, order.dataorder)
       .post('/rejectorder/:kode', auth, order.rejectorder)
       .put('/updatedatadriver', auth, order.updatedatadriver)
-      .post('/verifikasi/:kode', auth, order.verifikasi)
+      .put('/verifikasi/:kode', auth, order.verifikasi)
+      .put('/antarkanpesanan/:kode', auth, order.antarkanpesanan)
 
 module.exports = Router;
