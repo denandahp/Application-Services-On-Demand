@@ -95,6 +95,28 @@ class DriverOrderModel {
         };
     }
 
+    async verifikasi(kode, verifikasi) {
+
+        try {
+            let code = await pool.query(`SELECT driver_verification_code FROM ${orderstb} WHERE "kode" = '${kode}'`);
+            let new_status = "Driver sudah mengambil pesanan"
+            if (code.rows[0].driver_verification_code == verifikasi) {
+                let res = await pool.query(`UPDATE ${orderstb} SET status = ($1) WHERE "kode" = '${kode}' RETURNING status`, [new_status]);
+                debug('verifikasi %o', res);
+                if (res.rowCount > 0) {
+                    return res.rows[0]
+                }
+            } else {
+                console.log("Kode Tidak Cocok");
+                return {
+                    "status": "404",
+                    "errors": "Kode " + verifikasi + " tidak cocok"
+                }
+            }
+        } catch (ex) {
+            console.log('Error : ' + ex);
+        };
+    }
 }
 
 module.exports = new DriverOrderModel();
