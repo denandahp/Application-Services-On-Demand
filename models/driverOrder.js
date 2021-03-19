@@ -17,16 +17,20 @@ class DriverOrderModel {
     async incomingorder(kode) {
 
         try {
-            let res = await pool.query(`SELECT * FROM ${jfoodviews} WHERE "kode" = '${kode}'`);
-            debug('incomingorder %o', res);
-            if (res.rowCount <= 0) {
+            let driver = await pool.query(`SELECT token_customer, token_merchant FROM ${orderstb} WHERE "kode" = '${kode}'`);
+            let order = await pool.query(`SELECT * FROM ${jfoodviews} WHERE "kode" = '${kode}'`);
+            debug('incomingorder %o', order);
+            if (order.rowCount <= 0) {
                 console.log("Kode Tidak Tersedia");
                 return {
                     "status": "404",
                     "errors": "Kode " + kode + " tidak terdaftar"
                 }
             } else {
-                return res.rows[0];
+                return {
+                    driver: driver.rows[0],
+                    order: order.rows,
+                }
             }
         } catch (ex) {
             console.log('Error : ' + ex);
@@ -48,7 +52,7 @@ class DriverOrderModel {
     async dataorder(kode) {
 
         try {
-            let driver = await pool.query(`SELECT latitude_location_driver_start, longitude_location_driver_start FROM ${orderstb} WHERE "kode" = '${kode}'`);
+            let driver = await pool.query(`SELECT token_customer, token_merchant, latitude_location_driver_start, longitude_location_driver_start FROM ${orderstb} WHERE "kode" = '${kode}'`);
             let order = await pool.query(`SELECT  kode, jarak, latitude_restaurant, longitude_restaurant, landmark_restaurant, address_restaurant, jumlah_menu, jumlah_pesanan, menu_name, menu_quantity, menu_catatan, menu_price_merchant, menu_price_customer, metode_pembayaran, customer_name, phone, landmark_destination, address_destination, latitude_destination, longitude_destination FROM ${jfoodviews} WHERE "kode" = '${kode}'`);
             debug('dataorder %o', order);
             if (order.rowCount <= 0) {
