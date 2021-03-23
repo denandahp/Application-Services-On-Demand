@@ -1,7 +1,7 @@
 const debug = require('debug')('app:controller:customerMenujfood');
 const pool = require('../libs/db');
 
-const schema = '"merchant"';
+const schema = '"orders"';
 const table = '"orders"';
 const dbTable = schema + '.' + table;
 const dbViewjfood = schema + '.' + '"jfood"';

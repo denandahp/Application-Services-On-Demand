@@ -27,9 +27,9 @@ class merchantOrderModel{
     try{
       var verifcode = Math.floor(Math.random() * (9999 - 1111 + 1)) + 1111;
       var d = new Date(Date.now());d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
-      let value =  [ data.kode, "Merchant Pesanan Sudah Siap", data.total_price_merchant, "Paid", d];
-      let res = await pool.query('UPDATE ' + dbOrders + ' SET (status, total_price_merchant, status_paid_merchant, updated_at)'+
-                ' = ($2, $3, $4, $5) WHERE kode = $1 RETURNING kode, status, total_price_merchant, status_paid_merchant, updated_at;', value);
+      let value =  [ data.kode, "Merchant Pesanan Sudah Siap", data.total_price_merchant, "Paid", d, verifcode];
+      let res = await pool.query('UPDATE ' + dbOrders + ' SET (status, total_price_merchant, status_paid_merchant, updated_at, driver_verification_code)'+
+                ' = ($2, $3, $4, $5, $6) WHERE kode = $1 RETURNING kode, status, total_price_merchant, status_paid_merchant, updated_at, driver_verification_code;', value);
       debug('register %o', res);
   
       return res;
