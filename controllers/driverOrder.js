@@ -92,6 +92,90 @@ class DriverOrderController {
         }
     }
 
+    async verifikasi(req, res, next) {
+
+        let verifikasi = req.body.verifikasi
+        let kode = req.params.kode
+        try {
+            let result = await user.verifikasi(kode, verifikasi);
+            if (result.status == 404) {
+                res.status(404).json({
+                    status: res.statusCode,
+                    message: result.errors
+                });
+            } else {
+                res.status(200).send({
+                    status: res.statusCode,
+                    data: result
+                })
+            }
+        } catch (e) {
+            next(e.detail);
+        }
+    }
+
+    async antarkanpesanan(req, res, next) {
+
+        let kode = req.params.kode
+        try {
+            let result = await user.antarkanpesanan(kode);
+            if (result.status == 404) {
+                res.status(404).json({
+                    status: res.statusCode,
+                    message: result.errors
+                });
+            } else {
+                res.status(200).send({
+                    status: res.statusCode,
+                    data: result
+                })
+            }
+        } catch (e) {
+            next(e.detail);
+        }
+    }
+
+    async selesaiantar(req, res, next) {
+
+        let kode = req.params.kode
+        try {
+            let result = await user.selesaiantar(kode);
+            if (result.status == 404) {
+                res.status(404).json({
+                    status: res.statusCode,
+                    message: result.errors
+                });
+            } else {
+                res.status(200).send({
+                    status: res.statusCode,
+                    data: result
+                })
+            }
+        } catch (e) {
+            next(e.detail);
+        }
+    }
+
+    async pesananselesai(req, res, next) {
+
+        let kode = req.params.kode
+        try {
+            let result = await user.pesananselesai(kode);
+            if (result.status == 404) {
+                res.status(404).json({
+                    status: res.statusCode,
+                    message: result.errors
+                });
+            } else {
+                res.status(200).send({
+                    status: res.statusCode,
+                    data: result
+                })
+            }
+        } catch (e) {
+            next(e.detail);
+        }
+    }
 }
 
 module.exports = new DriverOrderController();
