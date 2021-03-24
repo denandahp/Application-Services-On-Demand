@@ -29,7 +29,7 @@ class DriverOrderModel {
             } else {
                 return {
                     driver: driver.rows[0],
-                    order: order.rows,
+                    order: order.rows[0]
                 }
             }
         } catch (ex) {
