@@ -116,6 +116,27 @@ class driverNotiffoodController{
         authUtils.processRequestWithJWT(req, callback, fallback);
     }
 
+    async finishedfood_drivertocustomer(req, res, next) {
+      let callback = async () => {
+     
+        try {
+          let data = req.body;
+          let result = await driverNotiffood.finishedfood_drivertocustomer(data, res);
+
+        } catch (e) {
+          console.log(e);
+          let errorResponse = authUtils.processPOSTRequestError();
+          res.status(400).json(errorResponse);
+        }
+      };
+    
+      let fallback = (err) => {
+        console.log(err);
+        next(err);
+      }
+    
+        authUtils.processRequestWithJWT(req, callback, fallback);
+    }
     
 
 

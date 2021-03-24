@@ -35,7 +35,7 @@ exports.orderfood_customertomerchant = (data) => {
     },
     android: {
       notification: {
-        click_action: 'ORDER_IN'      }
+        click_action: 'JFOOD_ORDER_IN_MERCHANT'      }
     },
     token: data.token_merchant
   };
@@ -57,7 +57,7 @@ exports.rejectedfood_merchanttocustomer = (data) => {
     },
     android: {
       notification: {
-        click_action: 'ORDER_IN'      }
+        click_action: 'JFOOD_REJECT_MERCHANT'}
     },
     token: data.token_customer
   };
@@ -80,7 +80,7 @@ exports.orderfood_merchanttodriver = (data, result) => {
     },
     android: {
       notification: {
-        click_action: 'ORDER_IN'      }
+        click_action: 'JFOOD_ORDER_DRIVER'      }
     },
     token: result.rows[0].token_notification
   };
@@ -103,7 +103,7 @@ exports.orderfood_drivertomerchant = (data) => {
     },
     android: {
       notification: {
-        click_action: 'ORDER_IN'      }
+        click_action: 'JFOOD_DRIVER_TO_MERCHANT'      }
     },
     token: data.token_merchant
   };
@@ -126,7 +126,7 @@ exports.orderfood_drivertocustomer = (data) => {
     },
     android: {
       notification: {
-        click_action: 'ORDER_IN'      }
+        click_action: 'JFOOD_DRIVER_TO_RESTO'      }
     },
     token: data.token_customer
   };
@@ -149,7 +149,7 @@ exports.processfood_drivertocustomer = (data) => {
     },
     android: {
       notification: {
-        click_action: 'ORDER_IN'      }
+        click_action: 'JFOOD_ORDER_IN_PROCESS'      }
     },
     token: data.token_customer
   };
@@ -172,7 +172,7 @@ exports.processfood_merchanttodriver = (data) => {
     },
     android: {
       notification: {
-        click_action: 'ORDER_IN'      }
+        click_action: 'JFOOD_ORDER_READY'      }
     },
     token: data.token_driver
   };
@@ -195,7 +195,7 @@ exports.deliverfood_drivertocustomer = (data) => {
     },
     android: {
       notification: {
-        click_action: 'ORDER_IN'      }
+        click_action: 'JFOOD_DRIVER_DELIVERED'      }
     },
     token: data.token_customer
   };
@@ -218,7 +218,30 @@ exports.arrivedfood_drivertocustomer = (data) => {
     },
     android: {
       notification: {
-        click_action: 'ORDER_IN'      }
+        click_action: 'JFOOD_DRIVER_IN_LOCATION'      }
+    },
+    token: data.token_customer
+  };
+      
+    return {"payload" : message};
+}
+
+exports.finishedfood_drivertocustomer = (data) => {
+  
+  var message = {
+    data: {
+      kodePemesanan: data.kode,
+      user_id: data.user_id,
+      restaurant_id: data.restaurant_id,
+      driver_id : data.driver_id
+    },
+    notification: {
+      title: 'Orderan Selesai',
+      body: 'Selamat menikmati makannnya'
+    },
+    android: {
+      notification: {
+        click_action: 'JFOOD_ORDER_FINISHED'      }
     },
     token: data.token_customer
   };

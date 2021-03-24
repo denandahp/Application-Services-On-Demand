@@ -6,5 +6,6 @@ Router.post('/orderfood/drivertomerchant', notification.orderfood_drivertomercha
       .post('/processfood/drivertocustomer', notification.processfood_drivertocustomer)
       .post('/deliverfood/drivertocustomer', notification.deliverfood_drivertocustomer)
       .post('/arrivedfood/drivertocustomer', notification.arrivedfood_drivertocustomer)
+      .post('/finishedfood/drivertocustomer', notification.finishedfood_drivertocustomer)
 
 module.exports = Router;
