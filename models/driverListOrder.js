@@ -10,6 +10,7 @@ const aktcust = 'driver.aktivitas_customer';
 const aktpeng = 'driver.aktivitas_pengemudi';
 const aktselpeng = 'driver.aktivitas_seluruh_pengemudi';
 const detord = 'driver.detail_order';
+const jfoodviews = 'orders.jfood';
 const antpeng = 'driver.antrian_pengemudi';
 const antpengnew = 'driver.antrian_pengemudi_baru';
 const allpeng = 'driver.semua_pengemudi';
@@ -57,6 +58,7 @@ class DriverListOrder {
 
         try {
             let res = await pool.query(`SELECT * FROM ${detord}( '${kode}') `);
+            let loc = await pool.query(`SELECT latitude_restaurant, longitude_restaurant, latitude_destination, longitude_destination FROM ${jfoodviews} WHERE "kode" = '${kode}'`);
             debug('driverlistorder %o', res);
             if (res.rowCount <= 0) {
                 return {
@@ -64,7 +66,10 @@ class DriverListOrder {
                     "errors": "ID Order tidak ditemukan"
                 }
             } else {
-                return res.rows;
+                return {
+                    res: res.rows[0],
+                    loc: loc.rows[0]
+                }
             }
         } catch (ex) {
             console.log('Error : ' + ex);
