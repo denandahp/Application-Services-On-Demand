@@ -1,4 +1,4 @@
-const debug = require('debug')('app:controller:customerMenujfood');
+const debug = require('debug')('app:controller:customerListOrder');
 const pool = require('../libs/db');
 
 const schema = '"orders"';
@@ -6,7 +6,7 @@ const table = '"orders"';
 const dbTable = schema + '.' + table;
 const dbViewjfood = schema + '.' + '"jfood"';
 
-class customerMenujfoodModel{
+class customerListOrderModel{
 
     async listorder(id_user) {
         try{
@@ -49,4 +49,4 @@ class customerMenujfoodModel{
 
 }
 
-module.exports = new customerMenujfoodModel();
+module.exports = new customerListOrderModel();
