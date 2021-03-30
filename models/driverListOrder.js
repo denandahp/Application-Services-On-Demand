@@ -18,7 +18,7 @@ const pendnew = 'driver.pendaftar_baru';
 
 class DriverListOrder {
 
-    async driverlistorder(kode) {
+    async driverlistorder() {
 
         try {
             let res = await pool.query(`SELECT * FROM ${aktselpeng}`);
