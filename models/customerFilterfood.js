@@ -7,6 +7,7 @@ const dbTable = schema + '.' + table;
 const dbKategoriresto = "merchant.kategori_restaurant";
 const dbFilterkategori = "merchant.search_restaurant_by_category";
 const dbFiltermenu = "merchant.search_restaurant_by_menu";
+const dbFilterallresto = "merchant.search_all_restaurant_by_menu";
 
 
 
@@ -92,6 +93,53 @@ class customerFilterfoodModel{
         }else{
           let sets = [data.idKategori, data.latitude, data.longitude, startIndex, limit]
           res = await pool.query('SELECT * FROM ' + dbFilterkategori + '($1, $2, $3) ORDER BY distance ASC OFFSET $4 LIMIT $5;', sets);
+          results.res = res.rows;
+        }
+        results.date = d;
+        console.log(d);
+        debug('register %o', results);
+        return results;
+      }catch(ex){
+        console.log('Enek seng salah iki ' + ex);
+        return {"error": "data" + ex, "res" : err};
+      };
+    }
+
+    async allResto (data) {
+      let page = parseInt(data.page); let limit = parseInt(data.limit);
+      const startIndex = (page - 1) * limit;
+      const endIndex = page * limit;
+      let counts, res, results = {}, err = [];
+      var d = new Date(Date.now()); d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
+      try{
+        if(data.filterName == "all"){
+          counts= await pool.query('SELECT COUNT (*)  FROM ' + dbFilterallresto);
+        }else{
+          console.log(data.filterName, data.latitude, data.longitude, startIndex, limit, endIndex);
+          counts = await pool.query('SELECT COUNT (*)  FROM ' + dbFilterallresto + ' ($1, $2, $3)', [data.filterName, data.latitude, data.longitude]);
+        };
+        console.log("cek sini");
+        console.log(data.filterName, startIndex, limit, endIndex, counts.rows[0].count);
+        if (endIndex <= counts.rows[0].count) {
+          results.next = {
+            page: page + 1,
+            limit: limit
+          }
+        }else{ throw new Error('data kosong');};
+
+        if (startIndex > 0) {
+          results.previous = {
+            page: page - 1,
+            limit: limit
+          }
+        }else{results.previous ={ page : 0, limit: limit} };
+        results.countResto = counts.rows[0].count;
+        if(data.filterName == "all"){
+          res = await pool.query('SELECT id, name, media_logo, city, kategori_restaurant_id FROM' + dbFilterallresto + ' ORDER BY distance ASC OFFSET $1 LIMIT $2', [startIndex, limit]);
+          results.res = res.rows;
+        }else{
+          let sets = [data.filterName, data.latitude, data.longitude, startIndex, limit]
+          res = await pool.query('SELECT * FROM ' + dbFilterallresto + '($1, $2, $3) ORDER BY distance ASC OFFSET $4 LIMIT $5;', sets);
           results.res = res.rows;
         }
         results.date = d;

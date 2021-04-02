@@ -64,7 +64,8 @@ class ScheduleController{
           try {
             let detail = (await schedule.get(username));
       
-            res.status(200).json(detail)
+            res.status(200).json(
+              {data : detail})
       
           } catch (e) {
             console.log(e);
