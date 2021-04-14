@@ -121,6 +121,7 @@ class UserModel {
 
   async registerlanjut(data) {
     try {
+      let result = {};
       var d = new Date(Date.now());
       //console.log(created);
       let user = [data.id, data.username, data.phone,
@@ -132,12 +133,16 @@ class UserModel {
         'SET (phone_darurat, photo, provinsi_identitas, kota_kab_identitas, kecamatan_identitas, kodepos_identitas, alamat_identitas, nama_kendaraan, pabrikan_kendaraan, kapasitas_mesin, plat_nomor, tahun_produksi, an_kepemilikan, tampak_depan, tampak_samping, tampak_belakang, foto_identitas, foto_stnk, updated_at) = ' +
         '($4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22) WHERE id = $1 AND username = $2 AND phone = $3 RETURNING *',
         user);
+      let schedule = [data.username,'0', '0001-01-01', '0001-01-01', '0001-01-01'];
+      let datas = await pool.query('INSERT INTO ' + dbTable + ' (username, schedule_name, schedule_start, schedule_end, schedule_date) VALUES ($1, $2, $3, $4, $5) RETURNING *;', schedule);
+
+      result.userData = res.rows[0]; result.userData = datas.rows[0];
       let created = res.rows[0];
       debug('edit %o', res);
       if (res.rowCount <= 0) {
         throw 'register fail';
       } else {
-        return created;
+        return result;
       }
 
     } catch (ex) {

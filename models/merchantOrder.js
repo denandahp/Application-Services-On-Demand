@@ -55,7 +55,7 @@ class merchantOrderModel{
     async pesananmasuk(kode){
       try{
         let result = {};
-        let status = await pool.query('SELECT status, customer_id, merchant_id, landmark_destination, address_destination, patokan_destination, latitude_location_destination, '+
+        let status = await pool.query('SELECT kode, status, customer_id, merchant_id, landmark_pickup, address_pickup, patokan_pickup, landmark_destination, address_destination, patokan_destination, latitude_location_destination, '+
         'longitude_location_destination, token_customer, token_driver FROM ' + dbOrders + ' WHERE kode = $1 ORDER BY customer_id ASC;', [kode]);
         let res = await pool.query(' SELECT kode, user_id, customer_name, harga_total_merchant, jumlah_menu, menu_id, menu_name,'+
             ' menu_price_merchant, menu_quantity, menu_catatan FROM ' + dbTable + ' WHERE kode = $1 ORDER BY menu_id ASC',[kode])

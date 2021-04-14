@@ -59,7 +59,7 @@ class customerNotiffoodModel{
             .then(function(response) {
               console.log('Successfully sent message:', response);
               res.status(200).json({
-                pesan: 'Pesanan JFOOD dibatalkan oleh ' + data.name + " dengan alasan " + data.alasan,
+                pesan: 'Pesanan JFOOD dibatalkan oleh ' + data.name + " dengan alasan " + data.reason_customer_rejected,
                 result: response,
               })
             })

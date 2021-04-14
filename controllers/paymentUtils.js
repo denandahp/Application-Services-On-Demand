@@ -26,10 +26,7 @@ class PaymentIntegrationController {
         } catch (error) {
             res.send(error)
         }
-        
-     
     }
-    
     
 }    
 module.exports = new PaymentIntegrationController();
