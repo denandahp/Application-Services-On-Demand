@@ -30,9 +30,9 @@ class customerPaymentController{
         }
     
         authUtils.processRequestWithJWT(req, callback, fallback);
-      }
+    }
 
-      async paymentOrdernumber(req, res, next) {
+    async paymentOrdernumber(req, res, next) {
         let callback = async () => {
      
          try {
@@ -42,7 +42,7 @@ class customerPaymentController{
             let pesan = "Orderan sudah didaftarkan dengan nomor " + result.kode;
             res.status(200).json({
               pesan: pesan,
-              result: result,
+              result: result.result,
             })
           } catch (e) {
             console.log(e);
@@ -57,7 +57,36 @@ class customerPaymentController{
         }
     
         authUtils.processRequestWithJWT(req, callback, fallback);
+    }
+
+    async rejectedorder(req, res, next) {
+      let callback = async () => {
+   
+       try {
+          let data = req.body;
+          //let data = {page, limit, idKategori, hargaMin, hargaMax, jenisMakanan, penilaian, sortBy, data};
+          let result = await customerPayment.rejectedorder(data);
+          let pesan = "Orderan sudah didaftarkan dengan nomor " + result.kode;
+          res.status(200).json({
+            pesan: pesan,
+            result: result.result,
+          })
+        } catch (e) {
+          console.log(e);
+          let errorResponse = authUtils.processPOSTRequestError();
+          res.status(400).json(errorResponse);
+        }
+      };
+  
+      let fallback = (err) => {
+        console.log(err);
+        next(err);
       }
+  
+      authUtils.processRequestWithJWT(req, callback, fallback);
+    }
+
+    
 
 
 }

@@ -21,6 +21,7 @@ class UserController {
     res.status(200).json({
       users
     });
+    
   }
 
   async userbyschedule(req, res) {

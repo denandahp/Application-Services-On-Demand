@@ -41,9 +41,8 @@ class customerPaymentModel{
                                       'latitude_location_pickup, longitude_location_pickup)' + 
                                     ' VALUES ($1 ,$2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22) RETURNING *;', values)
         console.log("CEK SINIII");
-        debug('update %o', res);
         result.cart = res.rows[0]; result.orders = orders.rows[0];
-        return result.rows;
+        return {"result" : result, "kode" : kode};
       }catch(ex){
         console.log('Enek seng salah iki ' + ex)
       };
@@ -58,6 +57,20 @@ class customerPaymentModel{
         debug('update %o', res);
         let result = res.rows[0];
         return result;
+      }catch(ex){
+        console.log('Enek seng salah iki ' + ex)
+      };
+    }
+
+    async rejectedorder (data) {
+      try{
+        var d = new Date(Date.now());d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
+        let value =  [ data.kode, "Customer Menolak Pesanan", data.reason_customer_rejected, "Rejected by Customer", d, d];
+        let res = await pool.query('UPDATE ' + dbOrders + ' SET (status, reason_customer_rejected, status_paid_customer, time_customer_rejected, updated_at)'+
+                  ' = ($2, $3, $4, $5, $6) WHERE kode = $1 RETURNING kode, status, reason_customer_rejected, status_paid_customer, time_customer_rejected, updated_at;', value);
+        debug('register %o', res);
+    
+        return res;
       }catch(ex){
         console.log('Enek seng salah iki ' + ex)
       };

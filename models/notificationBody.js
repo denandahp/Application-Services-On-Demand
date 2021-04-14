@@ -43,13 +43,37 @@ exports.orderfood_customertomerchant = (data) => {
     return {"payload" : message};
 }
 
+exports.rejectedfood_customertomerchant = (data) => {
+  
+  var message = {
+    data: {
+      kodePemesanan: data.kode,
+      user_id: data.user_id,
+      restaurant_id: data.restaurant_id,
+      reason : data.reason_customer_rejected
+    },
+    notification: {
+      title: 'Pesanan Dibatalkan',
+      body: 'Pesanan JFOOD dibatalkan oleh ' + data.name ,
+    },
+    android: {
+      notification: {
+        click_action: 'JFOOD_REJECT_FROM_CUSTOMER'      }
+    },
+    token: data.token_merchant
+  };
+      
+    return {"payload" : message};
+}
+
 exports.rejectedfood_merchanttocustomer = (data) => {
   
   var message = {
     data: {
       kodePemesanan: data.kode,
       user_id: data.user_id,
-      restaurant_id : data.restaurant_id
+      restaurant_id : data.restaurant_id,
+      reason : data.reason_merchant_rejected
     },
     notification: {
       title: 'Pesanan Ditolak ',
