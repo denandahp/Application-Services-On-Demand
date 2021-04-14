@@ -18,7 +18,7 @@ class scheduleModel{
   async update (data) {
 
       let sets =[ data.username, data.schedule_name, data.schedule_start, data.schedule_end ,data.schedule_date]
-      let res = await pool.query('UPDATE ' + dbTable + 'SET (username, schedule_name, schedule_start, schedule_end, schedule_date) VALUES ($2, $3, $4, $5) WHERE username = $1 RETURNING *;', sets);
+      let res = await pool.query('UPDATE ' + dbTable + 'SET (schedule_name, schedule_start, schedule_end, schedule_date) = ($2, $3, $4, $5) WHERE username = $1 RETURNING *;', sets);
       debug('update %o', res);
       let result = res.rows[0];
       return result;

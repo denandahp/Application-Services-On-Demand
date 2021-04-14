@@ -9,6 +9,7 @@ const dbTable = schema + '.' + table;
 const dbMenuorder = schema + '.' + "jfood_cart_menu";
 const dbOrders = schema + '.' + "orders";
 const dbJfoodview = schema + '.' + dbJfood;
+const dbDriver = '"public.users"';
 
 
 class customerPaymentModel{
@@ -89,6 +90,18 @@ class customerPaymentModel{
         debug('get %o', result);
 
         return result;
+      }catch(ex){
+        console.log('Enek seng salah iki ' + ex)
+      };
+    }
+
+    async datadriver(id_driver){
+      try{
+        let status = await pool.query('SELECT id, username, namadepan, namabelakang, photo, phone, token_notification, latitude_position, longitude_position ' + dbDriver + ' WHERE id = $1;', [id_driver]);
+        
+        debug('get %o', status.rows[0]);
+
+        return status.rows[0];
       }catch(ex){
         console.log('Enek seng salah iki ' + ex)
       };

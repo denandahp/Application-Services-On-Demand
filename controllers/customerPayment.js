@@ -66,7 +66,7 @@ class customerPaymentController{
           let data = req.body;
           //let data = {page, limit, idKategori, hargaMin, hargaMax, jenisMakanan, penilaian, sortBy, data};
           let result = await customerPayment.rejectedorder(data);
-          let pesan = "Orderan dibatalkan oleh " + data.name + " dengan alasan" + data.reason_customer_rejected;
+          let pesan = "Orderan dibatalkan oleh " + data.name + " dengan alasan " + data.reason_customer_rejected;
           res.status(200).json({
             pesan: pesan,
             result: result.result,
@@ -96,7 +96,33 @@ class customerPaymentController{
           let pesan = "Detail orderan kode pemesanan " + kode;
           res.status(200).json({
             pesan: pesan,
-            result: result.result,
+            result: result,
+          })
+        } catch (e) {
+          console.log(e);
+          let errorResponse = authUtils.processPOSTRequestError();
+          res.status(400).json(errorResponse);
+        }
+      };
+  
+      let fallback = (err) => {
+        console.log(err);
+        next(err);
+      }
+  
+      authUtils.processRequestWithJWT(req, callback, fallback);
+    }
+
+    async datadriver(req, res, next) {
+      let callback = async () => {
+   
+       try {
+          let id_driver = req.params.id_driver;
+          //let data = {page, limit, idKategori, hargaMin, hargaMax, jenisMakanan, penilaian, sortBy, data};
+          let result = await customerPayment.datadriver(id_driver);
+          res.status(200).json({
+            pesan: "Detail data driver",
+            result: result,
           })
         } catch (e) {
           console.log(e);
