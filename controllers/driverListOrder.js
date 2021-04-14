@@ -5,7 +5,7 @@ class DriverListOrderController {
     async driverlistorder(req, res, next) {
 
         try {
-            let result = await user.driverlistorder(kode);
+            let result = await user.driverlistorder();
             if (result.status == 404) {
                 res.status(404).json({
                     status: res.statusCode,

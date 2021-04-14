@@ -27,8 +27,9 @@ class DriverOrderController {
 
         let id = req.user.data.id
         let kode = req.params.kode
+        let token = req.body.token
         try {
-            let result = await user.acceptorder(kode, id);
+            let result = await user.acceptorder(kode, id, token);
             res.status(200).send({
                 status: res.statusCode,
                 data: result

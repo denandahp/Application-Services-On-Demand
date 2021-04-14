@@ -37,13 +37,20 @@ class DriverOrderModel {
         };
     }
 
-    async acceptorder(kode, id) {
+    async acceptorder(kode, id, token) {
         try {
             pool.query("call orders.order_jfood_accepted_by_driver('" + kode + "', _driver_id => " + id + ")", (error, results) => {
                 if (error) {
                     return console.error(error.message);
                 }
             });
+            let res = await pool.query(`UPDATE ${orderstb} SET token_driver = $1 WHERE "kode" = '${kode}' RETURNING token_driver`, [token]);
+            debug('updatedatadriver %o', res);
+            if (res.rowCount <= 0) {
+                throw 'Edit fail';
+            } else {
+                return res.rows[0]
+            }
         } catch (ex) {
             console.log('Error : ' + ex);
         };
