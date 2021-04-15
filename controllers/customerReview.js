@@ -41,7 +41,7 @@ class customerReviewController{
             let pesan = "Review MERCHANT oleh id " + data.user_id + " berhasil ditambahkan" ;
             res.status(200).json({
               pesan: pesan,
-              result: result.result,
+              result: result,
             })
           } catch (e) {
             console.log(e);
