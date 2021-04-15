@@ -107,7 +107,7 @@ class merchantOrderController{
       }
       
           authUtils.processRequestWithJWT(req, callback, fallback);
-      }
+    }
 
     async transaksiorder(req, res, next) {
       let callback = async () => {
@@ -136,7 +136,33 @@ class merchantOrderController{
        }
       
           authUtils.processRequestWithJWT(req, callback, fallback);
-      }
+    }
+
+    async datadriver(req, res, next) {
+      let callback = async () => {
+         try {
+            let id_driver = req.params.id_driver;
+            //let data = {page, limit, idKategori, hargaMin, hargaMax, jenisMakanan, penilaian, sortBy, data};
+            let result = await merchantOrder.datadriver(id_driver);
+            res.status(200).json({
+                pesan: "Detail data driver",
+                result: result,
+            })
+        } catch (e) {
+            console.log(e);
+             let errorResponse = authUtils.processGETRequestError();
+             res.status(400).json(errorResponse);
+            }
+        }
+      
+        let fallback = (err) => {
+            console.log(err);
+            next(err);
+       }
+      
+          authUtils.processRequestWithJWT(req, callback, fallback);
+    }
+      
 }
 
 module.exports = new merchantOrderController();

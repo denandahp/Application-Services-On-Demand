@@ -134,6 +134,25 @@ class driverNotiffoodModel{
       };
     }
 
+    async finishedfood_drivertomerchant (data, res) {
+      try{
+        let body = await notifbody.finishedfood_drivertomerchant(data);
+        let pesan = 'Orderan telah sampai di customer atas nama ' + data.name;
+        await admin.messaging().send(body.payload)
+            .then(function(response) {
+              console.log('Successfully sent message:', response);
+              res.status(200).json({
+                pesan: pesan,
+                result: response,
+              })
+            })
+            .catch(function(error) {
+              console.log('Error sending message:', error);
+            });
+      }catch(ex){
+        console.log('Enek seng salah iki ' + ex)
+      };
+    }
 
 
 }

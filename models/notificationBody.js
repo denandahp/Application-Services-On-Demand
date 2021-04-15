@@ -272,3 +272,26 @@ exports.finishedfood_drivertocustomer = (data) => {
       
     return {"payload" : message};
 }
+
+exports.finishedfood_drivertomerchant = (data) => {
+  
+  var message = {
+    data: {
+      kodePemesanan: data.kode,
+      user_id: data.user_id,
+      restaurant_id: data.restaurant_id,
+      driver_id : data.driver_id
+    },
+    notification: {
+      title: 'Orderan telah selesai',
+      body: 'Orderan telah sampai di customer atas nama ' + data.name,
+    },
+    android: {
+      notification: {
+        click_action: 'JFOOD_ORDER_FINISHED'      }
+    },
+    token: data.token_customer
+  };
+      
+    return {"payload" : message};
+}

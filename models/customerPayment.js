@@ -9,7 +9,7 @@ const dbTable = schema + '.' + table;
 const dbMenuorder = schema + '.' + "jfood_cart_menu";
 const dbOrders = schema + '.' + "orders";
 const dbJfoodview = schema + '.' + dbJfood;
-const dbDriver = '"public.users"';
+const dbDriver = 'public.users';
 
 
 class customerPaymentModel{
@@ -97,7 +97,7 @@ class customerPaymentModel{
 
     async datadriver(id_driver){
       try{
-        let status = await pool.query('SELECT id, username, namadepan, namabelakang, photo, phone, token_notification, latitude_position, longitude_position ' + dbDriver + ' WHERE id = $1;', [id_driver]);
+        let status = await pool.query('SELECT id, username, namadepan, namabelakang, photo, phone, token_notification, latitude_position, longitude_position FROM ' + dbDriver + ' WHERE id = $1;', [id_driver]);
         
         debug('get %o', status.rows[0]);
 
