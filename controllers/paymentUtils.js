@@ -1,8 +1,6 @@
 const axios = require('axios');
 
 
-
-
 class PaymentIntegrationController {
     async generateSnap(req, res, next) {
         // req.body.transaction_details.order_id = "order-csb-" + Math.round(new Date().getTime() / 1000)
@@ -26,10 +24,7 @@ class PaymentIntegrationController {
         } catch (error) {
             res.send(error)
         }
-        
-     
     }
-    
     
 }    
 module.exports = new PaymentIntegrationController();

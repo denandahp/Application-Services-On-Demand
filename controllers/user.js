@@ -21,6 +21,7 @@ class UserController {
     res.status(200).json({
       users
     });
+    
   }
 
   async userbyschedule(req, res) {
@@ -342,7 +343,7 @@ class UserController {
 
       res.status(200).json({
         pesan: "Akun Driver berhasil didaftarkan",
-        userData: result,
+        result,
 
       });
 

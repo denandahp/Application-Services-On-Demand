@@ -4,9 +4,12 @@ const notifbody = require('./notificationBody.js');
 
 const schema = '"orders"';
 const table = '"jfood_cart"';
+const dbJfood = '"jfood"';
 const dbTable = schema + '.' + table;
 const dbMenuorder = schema + '.' + "jfood_cart_menu";
 const dbOrders = schema + '.' + "orders";
+const dbJfoodview = schema + '.' + dbJfood;
+const dbDriver = 'public.users';
 
 
 class customerPaymentModel{
@@ -38,12 +41,11 @@ class customerPaymentModel{
         let orders = await pool.query('INSERT INTO ' + dbOrders + ' (kode, customer_id, status, latitude_location_destination, longitude_location_destination,'+
                                       'landmark_destination, address_destination, patokan_destination, kode_promo, diskon_admin, diskon_merchant, sub_total, ongkir,'+
                                       'total_price_merchant, total_price_driver, total_price_customer, created_at, updated_at, token_customer, token_merchant,'+
-                                      'latitude_location_pickup, longitude_location_pickup)' + 
-                                    ' VALUES ($1 ,$2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22) RETURNING *;', values)
+                                      'latitude_location_pickup, longitude_location_pickup, landmark_pickup, address_pickup, patokan_pickup)' + 
+                                    ' VALUES ($1 ,$2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25) RETURNING *;', values)
         console.log("CEK SINIII");
-        debug('update %o', res);
         result.cart = res.rows[0]; result.orders = orders.rows[0];
-        return result.rows;
+        return {"result" : result, "kode" : kode};
       }catch(ex){
         console.log('Enek seng salah iki ' + ex)
       };
@@ -63,19 +65,46 @@ class customerPaymentModel{
       };
     }
 
-    async get(id) {
+    async rejectedorder (data) {
+      try{
+        var d = new Date(Date.now());d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
+        let value =  [ data.kode, "Customer Menolak Pesanan", data.reason_customer_rejected, "Rejected by Customer", d, d];
+        let res = await pool.query('UPDATE ' + dbOrders + ' SET (status, reason_customer_rejected, status_paid_customer, time_customer_rejected, updated_at)'+
+                  ' = ($2, $3, $4, $5, $6) WHERE kode = $1 RETURNING kode, status, reason_customer_rejected, status_paid_customer, time_customer_rejected, updated_at;', value);
+        debug('register %o', res);
+    
+        return res;
+      }catch(ex){
+        console.log('Enek seng salah iki ' + ex)
+      };
+    }
 
-      let res;
-      if(id == 'all'){
-        res = await pool.query(' SELECT * FROM ' + dbTable + 'ORDER BY id DESC')
-      }else {
-        res = await pool.query(' SELECT * FROM ' + dbTable + ' where id = $1 ORDER BY id DESC', [id])
-      }
-      
-      debug('get %o', res);
+    async detailorder(kode){
+      try{
+        let result = {};
+        let status = await pool.query('SELECT kode, status, customer_id, merchant_id, landmark_pickup, address_pickup, patokan_pickup, landmark_destination, address_destination, patokan_destination, latitude_location_destination, '+
+        'longitude_location_destination, latitude_location_pickup, longitude_location_pickup, token_customer, token_driver FROM ' + dbOrders + ' WHERE kode = $1 ORDER BY customer_id ASC;', [kode]);
+        let res = await pool.query(' SELECT kode, user_id, customer_name, harga_total_merchant, jumlah_menu, menu_id, menu_name,'+
+            ' menu_price_merchant, menu_quantity, menu_catatan FROM ' + dbJfoodview + ' WHERE kode = $1 ORDER BY menu_id ASC',[kode])
+        result.status = status.rows;result.data = res.rows;
+        debug('get %o', result);
 
-      return res.rows;
+        return result;
+      }catch(ex){
+        console.log('Enek seng salah iki ' + ex)
+      };
+    }
 
+    async datadriver(id_driver){
+      try{
+        let status = await pool.query('SELECT id, username, namadepan, namabelakang, photo, phone, token_notification, latitude_position, longitude_position FROM ' + dbDriver + ' WHERE id = $1;', [id_driver]);
+        
+        debug('get %o', status.rows[0]);
+
+        return status.rows[0];
+      }catch(ex){
+        console.log('Enek seng salah iki ' + ex)
+      };
     }
 
 }

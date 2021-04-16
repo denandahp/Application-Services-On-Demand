@@ -51,6 +51,26 @@ class customerNotiffoodModel{
       };
     }
 
+    async rejectedfood_customertomerchant (data, res) {
+      try{
+        let body = await notifbody.rejectedfood_customertomerchant(data);
+        
+        await admin.messaging().send(body.payload)
+            .then(function(response) {
+              console.log('Successfully sent message:', response);
+              res.status(200).json({
+                pesan: 'Pesanan JFOOD dibatalkan oleh ' + data.name + " dengan alasan " + data.reason_customer_rejected,
+                result: response,
+              })
+            })
+            .catch(function(error) {
+              console.log('Error sending message:', error);
+            });
+      }catch(ex){
+        console.log('Enek seng salah iki ' + ex)
+      };
+    }
+
 }
 
 module.exports = new customerNotiffoodModel();

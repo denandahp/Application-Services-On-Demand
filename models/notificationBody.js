@@ -43,13 +43,37 @@ exports.orderfood_customertomerchant = (data) => {
     return {"payload" : message};
 }
 
+exports.rejectedfood_customertomerchant = (data) => {
+  
+  var message = {
+    data: {
+      kodePemesanan: data.kode,
+      user_id: data.user_id,
+      restaurant_id: data.restaurant_id,
+      reason : data.reason_customer_rejected
+    },
+    notification: {
+      title: 'Pesanan Dibatalkan',
+      body: 'Pesanan JFOOD dibatalkan oleh ' + data.name ,
+    },
+    android: {
+      notification: {
+        click_action: 'JFOOD_REJECT_FROM_CUSTOMER'      }
+    },
+    token: data.token_merchant
+  };
+      
+    return {"payload" : message};
+}
+
 exports.rejectedfood_merchanttocustomer = (data) => {
   
   var message = {
     data: {
       kodePemesanan: data.kode,
       user_id: data.user_id,
-      restaurant_id : data.restaurant_id
+      restaurant_id : data.restaurant_id,
+      reason : data.reason_merchant_rejected
     },
     notification: {
       title: 'Pesanan Ditolak ',
@@ -238,6 +262,29 @@ exports.finishedfood_drivertocustomer = (data) => {
     notification: {
       title: 'Orderan Selesai',
       body: 'Selamat menikmati makannnya'
+    },
+    android: {
+      notification: {
+        click_action: 'JFOOD_ORDER_FINISHED'      }
+    },
+    token: data.token_customer
+  };
+      
+    return {"payload" : message};
+}
+
+exports.finishedfood_drivertomerchant = (data) => {
+  
+  var message = {
+    data: {
+      kodePemesanan: data.kode,
+      user_id: data.user_id,
+      restaurant_id: data.restaurant_id,
+      driver_id : data.driver_id
+    },
+    notification: {
+      title: 'Orderan telah selesai',
+      body: 'Orderan telah sampai di customer atas nama ' + data.name,
     },
     android: {
       notification: {
