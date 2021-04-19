@@ -37,7 +37,8 @@ class customerPaymentModel{
                                     
         let values =[kode, data.user_id, "Customer Memesan Makanan", data.latitude_destination, data.longitude_destination, data.landmark_destination, data.address_destination,
                                     data.note_destination, data.kode_promo, data.diskon_admin, data.diskon_merchant, data.sub_total, data.ongkir,
-                                    data.harga_total_merchant, data.harga_total_driver, data.harga_total, d, d, data.token_customer, data.token_merchant, data.latitude_merchant, data.longitude_merchant]
+                                    data.harga_total_merchant, data.harga_total_driver, data.harga_total, d, d, data.token_customer, data.token_merchant, data.latitude_merchant, data.longitude_merchant,
+                                    data.landmark_pickup, data.address_pickup, data.patokan_pickup]
         let orders = await pool.query('INSERT INTO ' + dbOrders + ' (kode, customer_id, status, latitude_location_destination, longitude_location_destination,'+
                                       'landmark_destination, address_destination, patokan_destination, kode_promo, diskon_admin, diskon_merchant, sub_total, ongkir,'+
                                       'total_price_merchant, total_price_driver, total_price_customer, created_at, updated_at, token_customer, token_merchant,'+
