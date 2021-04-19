@@ -104,6 +104,7 @@ const merchantListOrder = require('./routes/merchantListOrder.js');
 const warning = require('./routes/warning.js');
 const wilayah = require('./routes/wilayah.js');
 const uploadImage = require('./routes/uploadImage.js');
+const dashboardPrice = require('./routes/dashboardPrice.js');
 
 
 app.use('/', index);
@@ -135,6 +136,7 @@ app.use('/api/merchant/dashboard', merchantListOrder);
 app.use('/api/warning', warning);
 app.use('/api/wilayah', wilayah);
 app.use('/api/uploadImage', uploadImage);
+app.use('/api/dashboard/price', dashboardPrice);
 
 // Error Middleware
 app.use(require('./libs/error.js'));
