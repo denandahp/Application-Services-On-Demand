@@ -74,7 +74,7 @@ class customerPaymentModel{
                   ' = ($2, $3, $4, $5, $6) WHERE kode = $1 RETURNING kode, status, reason_customer_rejected, status_paid_customer, time_customer_rejected, updated_at;', value);
         debug('register %o', res);
     
-        return res;
+        return res.rows[0];
       }catch(ex){
         console.log('Enek seng salah iki ' + ex)
       };
