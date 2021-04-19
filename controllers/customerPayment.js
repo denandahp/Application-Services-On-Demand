@@ -69,7 +69,7 @@ class customerPaymentController{
           let pesan = "Orderan dibatalkan oleh " + data.name + " dengan alasan " + data.reason_customer_rejected;
           res.status(200).json({
             pesan: pesan,
-            result: result.result,
+            result: result,
           })
         } catch (e) {
           console.log(e);
