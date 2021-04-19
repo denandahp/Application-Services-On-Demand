@@ -12,6 +12,7 @@ const table = '"users"'
 const dbTable = schema + '.' + table;
 const scheduledb = 'public.schedule';
 const dbOTP = 'utility.otp';
+const dbSaldo = 'driver.saldo';
 
 class UserModel {
 
@@ -135,8 +136,8 @@ class UserModel {
         user);
       let schedule = [data.username,'0', '0001-01-01', '0001-01-01', '0001-01-01'];
       let datas = await pool.query('INSERT INTO ' + scheduledb + ' (username, schedule_name, schedule_start, schedule_end, schedule_date) VALUES ($1, $2, $3, $4, $5) RETURNING *;', schedule);
-
-      result.userData = res.rows[0]; result.schedule = datas.rows[0];
+      let saldo = await pool.query('INSERT INTO ' + dbSaldo + ' (driver_id, nominal, created_at, updated_at, status) VALUES ($1, $2, $3, $4, $5) RETURNING *;', [data.id, 0, d, d, 'saldo kurang']);
+      result.userData = res.rows[0]; result.schedule = datas.rows[0]; result.saldo = saldo.rows[0]; 
       let created = res.rows[0];
       debug('edit %o', res);
       if (res.rowCount <= 0) {
