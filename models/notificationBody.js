@@ -1,3 +1,6 @@
+//------------------------------------------------------------------------------------
+//                                JFOOD
+//-------------------------------------------------------------------------------------
 
 exports.orderfoodtodriver = (data, result) => {
   
@@ -289,6 +292,98 @@ exports.finishedfood_drivertomerchant = (data) => {
     android: {
       notification: {
         click_action: 'JFOOD_ORDER_FINISHED'      }
+    },
+    token: data.token_customer
+  };
+      
+    return {"payload" : message};
+}
+
+//------------------------------------------------------------------------------------
+//                                JRIDE
+//-------------------------------------------------------------------------------------
+
+exports.orderjride_customertodriver = (data, result) => {
+  
+  var message = {
+    data: {
+      kodePemesanan: data.kode,
+      user_id: data.user_id,
+      driver_id: String(result.rows[0].id)
+    },
+    notification: {
+      title: 'Orderan JRIDE Masuk',
+      body: 'Pesanan JRIDE dibuat atas nama ' + data.name,
+    },
+    android: {
+      notification: {
+        click_action: 'JRIDE_ORDER_DRIVER'      }
+    },
+    token: result.rows[0].token_notification
+  };
+      
+    return {"payload" : message};
+}
+
+exports.acceptjride_drivertocustomer = (data) => {
+  
+  var message = {
+    data: {
+      kodePemesanan: data.kode,
+      user_id: data.user_id,
+      driver_id : data.driver_id
+    },
+    notification: {
+      title: 'JRIDE',
+      body: 'Driver sedang menuju ke lokasi anda ',
+    },
+    android: {
+      notification: {
+        click_action: 'JFOOD_ACCEPT_ORDER'      }
+    },
+    token: data.token_customer
+  };
+      
+    return {"payload" : message};
+}
+
+exports.deliverjride_drivertocustomer = (data) => {
+  
+  var message = {
+    data: {
+      kodePemesanan: data.kode,
+      user_id: data.user_id,
+      driver_id : data.driver_id
+    },
+    notification: {
+      title: 'JRIDE',
+      body: 'Driver mengantar ke tujuan anda ',
+    },
+    android: {
+      notification: {
+        click_action: 'JFOOD_DELIVER_ORDER'      }
+    },
+    token: data.token_customer
+  };
+      
+    return {"payload" : message};
+}
+
+exports.finishedjride_drivertocustomer = (data) => {
+  
+  var message = {
+    data: {
+      kodePemesanan: data.kode,
+      user_id: data.user_id,
+      driver_id : data.driver_id
+    },
+    notification: {
+      title: 'JRIDE',
+      body: 'Sudah sampai ditujuan anda ',
+    },
+    android: {
+      notification: {
+        click_action: 'JFOOD_FINISHED_ORDER'      }
     },
     token: data.token_customer
   };
