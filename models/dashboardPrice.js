@@ -28,7 +28,7 @@ class DashboardPriceModel {
     async pricingget(service) {
 
         try {
-            let res = await pool.query(`SELECT * FROM ${pricetb} WHERE "service" = '${service}' ORDER BY created_at ASC`);
+            let res = await pool.query(`SELECT * FROM ${pricetb} WHERE "service" = '${service}' ORDER BY created_at DESC`);
             debug('pricingget %o', res);
             if (res.rowCount <= 0) {
                 console.log("service Tidak Tersedia");
