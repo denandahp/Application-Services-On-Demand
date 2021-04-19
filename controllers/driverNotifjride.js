@@ -1,17 +1,17 @@
 const authUtils = require('./authUtils.js');
-const debug = require('debug')('app:controller:driverNotiffood');
-const driverNotiffood = require('../models/driverNotiffood.js');
+const debug = require('debug')('app:controller:driverNotifjride');
+const driverNotifjride = require('../models/driverNotifjride.js');
 const convimage = require('./convimage.js');
 
 const config = require('../configs.json');
 
-class driverNotiffoodController{
+class driverNotifjrideController{
     async acceptjride_drivertocustomer(req, res, next) {
         let callback = async () => {
      
          try {
             let data = req.body;
-            let result = await driverNotiffood.acceptjride_drivertocustomer(data, res);
+            let result = await driverNotifjride.acceptjride_drivertocustomer(data, res);
 
           } catch (e) {
             console.log(e);
@@ -33,7 +33,7 @@ class driverNotiffoodController{
      
         try {
           let data = req.body;
-          let result = await driverNotiffood.deliverjride_drivertocustomer(data, res);
+          let result = await driverNotifjride.deliverjride_drivertocustomer(data, res);
 
         } catch (e) {
           console.log(e);
@@ -55,7 +55,7 @@ class driverNotiffoodController{
      
         try {
           let data = req.body;
-          let result = await driverNotiffood.finishedjride_drivertocustomer(data, res);
+          let result = await driverNotifjride.finishedjride_drivertocustomer(data, res);
 
         } catch (e) {
           console.log(e);
@@ -74,4 +74,4 @@ class driverNotiffoodController{
 
 }
 
-module.exports = new driverNotiffoodController();
+module.exports = new driverNotifjrideController();

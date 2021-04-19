@@ -1,5 +1,5 @@
 const Router = require('express').Router();
-const notification = require('../controllers/driverNotiffood.js');
+const notification = require('../controllers/driverNotifjride.js');
 
 Router.post('/acceptjride/drivertocustomer', notification.acceptjride_drivertocustomer)
       .post('/deliverjride/drivertocustomer', notification.deliverjride_drivertocustomer)

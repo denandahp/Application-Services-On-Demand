@@ -1,4 +1,4 @@
-const debug = require('debug')('app:controller:driverNotiffood');
+const debug = require('debug')('app:controller:driverNotifjride');
 const pool = require('../libs/db');
 const notifbody = require('./notificationBody.js');
 var admin = require("firebase-admin");
@@ -13,7 +13,7 @@ const table = '"search_driver"';
 const dbTable = schema + '.' + table;
 
 
-class driverNotiffoodModel{
+class driverNotifjrideModel{
     async acceptjride_drivertocustomer (data, res) {
       try{
         let body = await notifbody.acceptjride_drivertocustomer(data);
@@ -77,4 +77,4 @@ class driverNotiffoodModel{
 
 }
 
-module.exports = new driverNotiffoodModel();
+module.exports = new driverNotifjrideModel();
