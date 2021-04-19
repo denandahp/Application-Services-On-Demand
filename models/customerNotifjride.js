@@ -24,9 +24,11 @@ class customerNotifjrideModel{
           .then(function(response) {
             console.log('Successfully sent message:', response);
             res.status(200).json({
-              pesan: "notifikasi terkirim mencari driver ",
+              pesan: "notifikasi terkirim mencari driver JRIDE ",
               result: response,
-              driver : result.rows[0]
+              driver : result.rows[0],
+              data: data
+              
             })
           })
           .catch(function(error) {

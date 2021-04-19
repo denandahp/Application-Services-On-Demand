@@ -24,6 +24,7 @@ class driverNotifjrideModel{
               res.status(200).json({
                 pesan: "notifikasi Driver sedang menuju ke lokasi customer",
                 result: response,
+                data: data
               })
             })
             .catch(function(error) {
@@ -44,6 +45,7 @@ class driverNotifjrideModel{
               res.status(200).json({
                 pesan: "notifikasi Driver mengantar customer ke tujuan ",
                 result: response,
+                data: data
               })
             })
             .catch(function(error) {
@@ -64,6 +66,7 @@ class driverNotifjrideModel{
               res.status(200).json({
                 pesan: "notifikasi Driver sudah sampai ditujuan customer ",
                 result: response,
+                data: data
               })
             })
             .catch(function(error) {
