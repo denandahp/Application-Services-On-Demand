@@ -2,7 +2,6 @@ const Router = require('express').Router();
 const auth = require('../middleware/auth.js');
 const user = require('../controllers/user.js');
 const home = require('../controllers/driverHomealt.js');
-const order = require('../controllers/driverOrder.js');
 
 Router.post('/login', user.login)
       .post('/renewAccessToken', user.renewAccessToken)
@@ -27,14 +26,5 @@ Router.post('/login', user.login)
       .put('/activeautobid', auth, home.activeautobid)
       .put('/nonactiveautobid', auth, home.nonactiveautobid)
       .get('/homealt', auth, home.homealt)
-      .get('/jfood/incomingorder/:kode', auth, order.incomingorder)
-      .post('/jfood/acceptorder/:kode', auth, order.acceptorder)
-      .get('/jfood/dataorder/:kode', auth, order.dataorder)
-      .post('/jfood/rejectorder/:kode', auth, order.rejectorder)
-      .put('/updatedatadriver', auth, order.updatedatadriver)
-      .put('/jfood/verifikasi/:kode', auth, order.verifikasi)
-      .put('/jfood/antarkanpesanan/:kode', auth, order.antarkanpesanan)
-      .put('/jfood/selesaiantar/:kode', auth, order.selesaiantar)
-      .put('/jfood/pesananselesai/:kode', auth, order.pesananselesai)
 
 module.exports = Router;
