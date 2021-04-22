@@ -287,13 +287,13 @@ exports.finishedfood_drivertomerchant = (data) => {
     },
     notification: {
       title: 'Orderan telah selesai',
-      body: 'Orderan telah sampai di customer atas nama ' + data.name,
+      body: 'Driver sudah mengambil pesanannya',
     },
     android: {
       notification: {
-        click_action: 'JFOOD_ORDER_FINISHED'      }
+        click_action: 'JFOOD_ORDER_MERCHANT_FINISHED'      }
     },
-    token: data.token_customer
+    token: data.token_merchant
   };
       
     return {"payload" : message};

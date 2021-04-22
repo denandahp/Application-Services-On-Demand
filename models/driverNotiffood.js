@@ -137,7 +137,7 @@ class driverNotiffoodModel{
     async finishedfood_drivertomerchant (data, res) {
       try{
         let body = await notifbody.finishedfood_drivertomerchant(data);
-        let pesan = 'Orderan telah sampai di customer atas nama ' + data.name;
+        let pesan = 'Driver sudah mengambil pesanannya';
         await admin.messaging().send(body.payload)
             .then(function(response) {
               console.log('Successfully sent message:', response);
