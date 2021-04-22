@@ -78,6 +78,7 @@ app.use(function LocalsMiddleware(req, res, next) {
 const index = require('./routes/index.js');
 const driverUser = require('./routes/user.js');
 const driverOrder = require('./routes/driverOrder.js');
+const driverRideOrder = require('./routes/driverRideOrder.js');
 const driverSchedule = require('./routes/schedule.js');
 const driverAtribut = require('./routes/atribut.js');
 const driverComment = require('./routes/comment.js');
@@ -111,6 +112,7 @@ const dashboardPrice = require('./routes/dashboardPrice.js');
 app.use('/', index);
 app.use('/api/driver', driverUser);
 app.use('/api/driver/jfood', driverOrder);
+app.use('/api/driver/jride', driverRideOrder);
 app.use('/api/driver/jfood', driverNotiffood);
 app.use('/api/driver/jride', driverNotifjride);
 app.use('/api/driver/comment', driverComment);
