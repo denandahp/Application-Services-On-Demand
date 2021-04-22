@@ -154,7 +154,6 @@ class driverNotiffoodModel{
       };
     }
 
-
 }
 
 module.exports = new driverNotiffoodModel();
