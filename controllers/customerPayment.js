@@ -174,7 +174,7 @@ class customerPaymentController{
           let pesan = "Orderan dibuat oleh " + data.name + " dengan kode pemesanan " + result.kode;
           res.status(200).json({
             pesan: pesan,
-            result: result,
+            result: result.data,
           })
         } catch (e) {
           console.log(e);

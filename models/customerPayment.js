@@ -147,9 +147,7 @@ class customerPaymentModel{
                       data.kode_promo, data.tax_driver];
         console.log(kode, d);
         let res = await pool.query('CALL ' + dbProcOrderjride + '($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22)', value);
-        debug('register %o', res);
-    
-        return res.rows[0];
+        return {"data" : res.rows[0], "kode" : kode};
       }catch(ex){
         console.log('Enek seng salah iki ' + ex)
       };
