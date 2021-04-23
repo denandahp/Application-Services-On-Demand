@@ -10,7 +10,7 @@ const dbMenuorder = schema + '.' + "jfood_cart_menu";
 const dbOrders = schema + '.' + "orders";
 const dbJfoodview = schema + '.' + dbJfood;
 const dbDriver = 'public.users';
-const dbPricing = 'pricicng.pricing_rule';
+const dbPricing = 'pricing.pricing_rule';
 const dbProcOrderjride = 'orders.order_jride';
 const dbviewJride = 'orders.jride';
 
@@ -115,12 +115,13 @@ class customerPaymentModel{
 
     async ongkirJride(distance){
       try{
-        
+        var zone = Math.floor(distance/3.9);
         let result ={}
-        let status = await pool.query('SELECT id, multiplier, zero_point, created_at FROM ' + dbPricing + ' WHERE service = ongkir ORDER BY created_at DESC LIMIT 3;');
-        let taxQuery = await pool.query('SELECT id, multiplier, zero_point, created_at FROM ' + dbPricing + ' WHERE service = komisi jride ORDER BY created_at DESC LIMIT 3;');
+        let status = await pool.query('SELECT rule_id, multiplier, zero_point, created_at FROM ' + dbPricing + ' WHERE service = ongkir ORDER BY created_at DESC LIMIT 3;');
+        let taxQuery = await pool.query('SELECT rule_id, multiplier, zero_point, created_at FROM ' + dbPricing + ' WHERE service = komisi jride ORDER BY created_at DESC LIMIT 3;');
+        console.log(zone);
         let taxValue = taxQuery.rows[0]; let value = status.rows[0];
-        result.ongkir = (value.multiplier*distance) + value.zero_point;
+        result.ongkir = (value.multiplier*zone) + value.zero_point;
         result.taxdriver = (taxValue.multiplier/100) *distance;
         result.data = status.rows[0];
         debug('get %o', result);
