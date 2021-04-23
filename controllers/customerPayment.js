@@ -113,13 +113,13 @@ class customerPaymentController{
       authUtils.processRequestWithJWT(req, callback, fallback);
     }
 
-    async datadriver(req, res, next) {
+    async datadriverjfood(req, res, next) {
       let callback = async () => {
    
        try {
           let id_driver = req.params.id_driver;
           //let data = {page, limit, idKategori, hargaMin, hargaMax, jenisMakanan, penilaian, sortBy, data};
-          let result = await customerPayment.datadriver(id_driver);
+          let result = await customerPayment.datadriverjfood(id_driver);
           res.status(200).json({
             pesan: "Detail data driver",
             result: result,
@@ -139,8 +139,82 @@ class customerPaymentController{
       authUtils.processRequestWithJWT(req, callback, fallback);
     }
 
+    async ongkirJride(req, res, next) {
+      let callback = async () => {
+   
+       try {
+          let distance = req.params.distance;
+          //let data = {page, limit, idKategori, hargaMin, hargaMax, jenisMakanan, penilaian, sortBy, data};
+          let result = await customerPayment.ongkirJride(distance);
+          res.status(200).json({
+            pesan: "Detail data driver",
+            result: result,
+          })
+        } catch (e) {
+          console.log(e);
+          let errorResponse = authUtils.processPOSTRequestError();
+          res.status(400).json(errorResponse);
+        }
+      };
+  
+      let fallback = (err) => {
+        console.log(err);
+        next(err);
+      }
+  
+      authUtils.processRequestWithJWT(req, callback, fallback);
+    }
     
+    async orderJride(req, res, next) {
+      let callback = async () => {
+   
+       try {
+          let data = req.body;
+          let result = await customerPayment.orderJride(data);
+          let pesan = "Orderan dibuat oleh " + data.name + " dengan kode pemesanan " + result.kode;
+          res.status(200).json({
+            pesan: pesan,
+            result: result,
+          })
+        } catch (e) {
+          console.log(e);
+          let errorResponse = authUtils.processPOSTRequestError();
+          res.status(400).json(errorResponse);
+        }
+      };
+  
+      let fallback = (err) => {
+        console.log(err);
+        next(err);
+      }
+  
+      authUtils.processRequestWithJWT(req, callback, fallback);
+    }
 
+    async datadriverjride(req, res, next) {
+      let callback = async () => {
+   
+       try {
+          let kode = req.params.kode;
+          let result = await customerPayment.datadriverjride(kode);
+          res.status(200).json({
+            pesan: "Detail data driver",
+            result: result,
+          })
+        } catch (e) {
+          console.log(e);
+          let errorResponse = authUtils.processPOSTRequestError();
+          res.status(400).json(errorResponse);
+        }
+      };
+  
+      let fallback = (err) => {
+        console.log(err);
+        next(err);
+      }
+  
+      authUtils.processRequestWithJWT(req, callback, fallback);
+    }
 
 }
 

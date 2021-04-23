@@ -10,6 +10,11 @@ const dbMenuorder = schema + '.' + "jfood_cart_menu";
 const dbOrders = schema + '.' + "orders";
 const dbJfoodview = schema + '.' + dbJfood;
 const dbDriver = 'public.users';
+const dbPricing = 'pricicng.pricing_rule';
+const dbProcOrderjride = 'orders.order_jride';
+const dbviewJride = 'orders.jride';
+
+
 
 
 class customerPaymentModel{
@@ -96,9 +101,61 @@ class customerPaymentModel{
       };
     }
 
-    async datadriver(id_driver){
+    async datadriverjfood(id_driver){
       try{
         let status = await pool.query('SELECT id, username, namadepan, namabelakang, photo, phone, token_notification, latitude_position, longitude_position FROM ' + dbDriver + ' WHERE id = $1;', [id_driver]);
+        
+        debug('get %o', status.rows[0]);
+
+        return status.rows[0];
+      }catch(ex){
+        console.log('Enek seng salah iki ' + ex)
+      };
+    }
+
+    async ongkirJride(distance){
+      try{
+        
+        let result ={}
+        let status = await pool.query('SELECT id, multiplier, zero_point, created_at FROM ' + dbPricing + ' WHERE service = ongkir ORDER BY created_at DESC LIMIT 3;');
+        let taxQuery = await pool.query('SELECT id, multiplier, zero_point, created_at FROM ' + dbPricing + ' WHERE service = komisi jride ORDER BY created_at DESC LIMIT 3;');
+        let taxValue = taxQuery.rows[0]; let value = status.rows[0];
+        result.ongkir = (value.multiplier*distance) + value.zero_point;
+        result.taxdriver = (taxValue.multiplier/100) *distance;
+        result.data = status.rows[0];
+        debug('get %o', result);
+
+        return result;
+      }catch(ex){
+        console.log('Enek seng salah iki ' + ex)
+      };
+    }
+
+    async orderJride (data) {
+      try{
+        var d = new Date(Date.now());d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
+        var dd = d.getDate();var mm = d.getMonth() + 1;var hour = d.getHours();var minute = d.getMinutes();
+        var kodeSistem= "JR";
+        var FormattedDate = dd + ""+ mm + "" + hour +""+ minute ;
+        var strUserid = "" + data.customer_id; var padUserid = "000000";
+        var ansUserid = padUserid.substring(0, padUserid.length - strUserid.length) + strUserid;
+        var kode = kodeSistem + ansUserid  + FormattedDate;
+        let value =  [ kode, data.customer_id, data.latitude_location_pickup, data.longitude_location_pickup, data.landmark_pickup, data.address_pickup, data.note_pickup_pickup, 
+                      data.latitude_location_destination, data.longitude_location__destination, data.landmark_destination, data.address_destination, data.note_destination,
+                      data.distance, data.estimate_minute, data.ongkir, data.diskon_admin, data.total_price_customer, data.total_price_driver, data.token_customer, data.metode_pembayaran,
+                      data.kode_promo, data.tax_driver];
+        let res = await pool.query('CALL ' + dbProcOrderjride + ' ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22);', value);
+        debug('register %o', res);
+    
+        return res.rows[0];
+      }catch(ex){
+        console.log('Enek seng salah iki ' + ex)
+      };
+    }
+
+    async datadriverjride(kode){
+      try{
+        let status = await pool.query('SELECT driver_id, driver_name, phone_driver, photo_driver, plat_nomor, pabrikan_kendaraan, nama_kendaraan, latitude_location_driver_start, longitude_location_driver_start, status FROM ' + dbviewJride + ' WHERE kode = $1;', [kode]);
         
         debug('get %o', status.rows[0]);
 
