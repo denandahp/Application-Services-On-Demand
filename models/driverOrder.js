@@ -79,13 +79,17 @@ class DriverOrderModel {
         };
     }
 
-    async rejectorder(kode, id) {
+    async rejectorder(kode, id, reason) {
         try {
-            pool.query("call orders.order_jfood_rejected_by_driver('" + kode + "', _driver_id => " + id + ")", (error, results) => {
-                if (error) {
-                    return console.error(error.message);
-                }
-            });
+            return new Promise((resolve, reject) => {
+                pool.query(`call orders.order_jfood_rejected_by_driver( _kode => '${kode}', _driver_id => '${id}', _reason_driver_rejected => '${reason}')`, (error, results) => {
+
+                    if (error) {
+                        return reject(error);
+                    }
+                    return resolve(kode + " rejected by driver");
+                })
+            })
         } catch (ex) {
             console.log('Error : ' + ex);
         };

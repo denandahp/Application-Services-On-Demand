@@ -63,12 +63,14 @@ class DriverOrderController {
 
     async rejectorder(req, res, next) {
 
-        let id = req.user.data.id
         let kode = req.params.kode
+        let id = req.user.data.id
+        let reason = req.body.reason
         try {
-            await user.rejectorder(kode, id);
+            let result = await user.rejectorder(kode, id, reason);
             res.status(200).send({
                 status: res.statusCode,
+                data: result
             })
         } catch (e) {
             next(e.detail);

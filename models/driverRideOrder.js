@@ -38,7 +38,6 @@ class DriverRideOrderModel {
                     if (error) {
                         return reject(error);
                     }
-                    console.log(kode + " accepted by driver");
                     return resolve(kode + " accepted by driver");
                 })
             })
@@ -54,7 +53,6 @@ class DriverRideOrderModel {
                     if (error) {
                         return reject(error);
                     }
-                    console.log(kode + " rejected by driver");
                     return resolve(kode + " rejected by driver");
                 })
             })
@@ -89,7 +87,6 @@ class DriverRideOrderModel {
                     if (error) {
                         return reject(error);
                     }
-                    console.log(kode + " pickup by driver");
                     return resolve(kode + " pickup by driver");
                 })
             })
@@ -105,7 +102,6 @@ class DriverRideOrderModel {
                     if (error) {
                         return reject(error);
                     }
-                    console.log(kode + " finished by driver");
                     return resolve(kode + " finished by driver");
                 })
             })
