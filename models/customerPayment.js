@@ -141,6 +141,7 @@ class customerPaymentModel{
         var strUserid = "" + data.customer_id; var padUserid = "000000";
         var ansUserid = padUserid.substring(0, padUserid.length - strUserid.length) + strUserid;
         var kode = kodeSistem + ansUserid  + FormattedDate;
+        console.log(kode);
         let value =  [ kode, data.customer_id, data.latitude_location_pickup, data.longitude_location_pickup, data.landmark_pickup, data.address_pickup, data.note_pickup_pickup, 
                       data.latitude_location_destination, data.longitude_location__destination, data.landmark_destination, data.address_destination, data.note_destination,
                       data.distance, data.estimate_minute, data.ongkir, data.diskon_admin, data.total_price_customer, data.total_price_driver, data.token_customer, data.metode_pembayaran,
