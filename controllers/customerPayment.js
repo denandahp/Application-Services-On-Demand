@@ -172,10 +172,11 @@ class customerPaymentController{
           let data = req.body;
           let result = await customerPayment.orderJride(data);
           // let pesan = "Orderan dibuat oleh customer id " + data.customer + " dengan kode pemesanan " + result.kode;
-          let pesan = "Orderan dibuat oleh customer id " + data.customer_id;
+          let pesan = "Orderan dibuat oleh customer id " + data.customer_id + " dengan kode pemesanan " + result.kode;
           res.status(200).json({
             pesan: pesan,
-            result: result,
+            kode: result.kode,
+            result: result.data,
           })
         } catch (e) {
           console.log(e);
