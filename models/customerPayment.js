@@ -122,7 +122,7 @@ class customerPaymentModel{
         console.log(zone);
         let taxValue = taxQuery.rows[0]; let value = status.rows[0];
         result.ongkir = (value.multiplier*zone) + value.zero_point;
-        result.taxdriver = (taxValue.multiplier/100) *ongkir;
+        result.taxdriver = (taxValue.multiplier/100) *result.ongkir;
         result.data = status.rows[0];
         debug('get %o', result);
 
