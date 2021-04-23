@@ -117,8 +117,8 @@ class customerPaymentModel{
       try{
         var zone = Math.floor(distance/3.9);
         let result ={}
-        let status = await pool.query('SELECT id, multiplier, zero_point, created_at FROM ' + dbPricing + ' WHERE service = ongkir ORDER BY created_at DESC LIMIT 3;');
-        let taxQuery = await pool.query('SELECT id, multiplier, zero_point, created_at FROM ' + dbPricing + ' WHERE service = komisi jride ORDER BY created_at DESC LIMIT 3;');
+        let status = await pool.query('SELECT rule_id, multiplier, zero_point, created_at FROM ' + dbPricing + ' WHERE service = ongkir ORDER BY created_at DESC LIMIT 3;');
+        let taxQuery = await pool.query('SELECT rule_id, multiplier, zero_point, created_at FROM ' + dbPricing + ' WHERE service = komisi jride ORDER BY created_at DESC LIMIT 3;');
         console.log(zone);
         let taxValue = taxQuery.rows[0]; let value = status.rows[0];
         result.ongkir = (value.multiplier*zone) + value.zero_point;
