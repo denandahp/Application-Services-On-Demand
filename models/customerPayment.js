@@ -121,7 +121,7 @@ class customerPaymentModel{
         let taxQuery = await pool.query('SELECT rule_id, multiplier, zero_point, created_at FROM ' + dbPricing + ' WHERE service = \'komisi jride\' ORDER BY created_at DESC LIMIT 3;');
         console.log(zone);
         let taxValue = taxQuery.rows[0]; let value = status.rows[0];
-        result.ongkir = (value.multiplier*zone) + value.zero_point;
+        result.ongkir = (value.multiplier*distance) + value.zero_point;
         result.taxdriver = (taxValue.multiplier/100) *result.ongkir;
         result.data = status.rows[0];
         debug('get %o', result);
@@ -141,12 +141,12 @@ class customerPaymentModel{
         var strUserid = "" + data.customer_id; var padUserid = "000000";
         var ansUserid = padUserid.substring(0, padUserid.length - strUserid.length) + strUserid;
         var kode = kodeSistem + ansUserid  + FormattedDate;
-        console.log(kode);
         let value =  [ kode, data.customer_id, data.latitude_location_pickup, data.longitude_location_pickup, data.landmark_pickup, data.address_pickup, data.note_pickup_pickup, 
                       data.latitude_location_destination, data.longitude_location__destination, data.landmark_destination, data.address_destination, data.note_destination,
                       data.distance, data.estimate_minute, data.ongkir, data.diskon_admin, data.total_price_customer, data.total_price_driver, data.token_customer, data.metode_pembayaran,
                       data.kode_promo, data.tax_driver];
-        let res = await pool.query('CALL ' + dbProcOrderjride + ' ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22);', value);
+        console.log(kode, d);
+        let res = await pool.query('CALL ' + dbProcOrderjride + ' ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22)', value);
         debug('register %o', res);
     
         return res.rows[0];
