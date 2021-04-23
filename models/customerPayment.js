@@ -146,7 +146,7 @@ class customerPaymentModel{
                       data.distance, data.estimate_minute, data.ongkir, data.diskon_admin, data.total_price_customer, data.total_price_driver, data.token_customer, data.metode_pembayaran,
                       data.kode_promo, data.tax_driver];
         console.log(kode, d);
-        let res = await pool.query('CALL ' + dbProcOrderjride + '($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22)', value);
+        let res = await pool.query('CALL ' + dbProcOrderjride + '($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22) RETURNING *', value);
         return {"data" : res.rows[0], "kode" : kode};
       }catch(ex){
         console.log('Enek seng salah iki ' + ex)
