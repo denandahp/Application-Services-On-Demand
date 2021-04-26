@@ -64,7 +64,7 @@ class DriverRideOrderModel {
     async dataorder(kode) {
 
         try {
-            let order = await pool.query(`SELECT latitude_location_driver_start, longitude_location_driver_start, latitude_location_pickup, longitude_location_pickup, customer_name, phone_customer, landmark_destination, address_destination, note_pickup, kode, ongkir, kode_promo, total_price_driver, metode_pembayaran FROM ${jrideview} WHERE "kode" = '${kode}'`);
+            let order = await pool.query(`SELECT latitude_location_driver_start, longitude_location_driver_start, latitude_location_pickup, longitude_location_pickup, landmark_pickup, address_pickup, latitude_location_destination, longitude_location_destination, landmark_destination, address_destination, customer_name, phone_customer, note_pickup, kode, ongkir, kode_promo, total_price_driver, metode_pembayaran FROM ${jrideview} WHERE "kode" = '${kode}'`);
             debug('dataorder %o', order);
             if (order.rowCount <= 0) {
                 console.log("Kode Tidak Tersedia");
