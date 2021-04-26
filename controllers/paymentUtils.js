@@ -12,7 +12,7 @@ class PaymentIntegrationController {
         var hour = d.getHours();
         var minute = d.getMinutes();
         var second = d.getSeconds();
-        var FormattedDate = y + mm + dd + '-' + hour + minute + second;
+        var FormattedDate = y + '-' + mm + '-' + dd + '-' + hour + '-' + minute + '-' + second;
 
         let id = req.user.data.id;
         let nd = req.user.data.namadepan;
