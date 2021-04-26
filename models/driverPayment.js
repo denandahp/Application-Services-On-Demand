@@ -13,7 +13,7 @@ class PaymentActivityModel {
 
         let value = [data.transaction_status.toUpperCase(), data.transaction_id, data.signature_key, data.payment_type, data.transaction_time]
         console.log(value);
-        let res = await pool.query(`UPDATE ${topuptb} SET (transaction_status, transaction_id, signature_key, payment_type, updated_at) = ($1, $2, $3, $4, $5) WHERE "topup_id" = ${data.order_id} RETURNING *;`, value);
+        let res = await pool.query(`UPDATE ${topuptb} SET (transaction_status, transaction_id, signature_key, payment_type, updated_at) = ($1, $2, $3, $4, $5) WHERE "topup_id" = '${data.order_id}' RETURNING *;`, value);
 
         return res;
 
