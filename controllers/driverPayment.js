@@ -6,7 +6,6 @@ class PaymentActivityController {
         let callback = async () => {
 
             try {
-                // let id = req.user.data.id
                 let data = req.body;
                 let result = await paymentActivity.add(data);
                 res.status(200).json({
