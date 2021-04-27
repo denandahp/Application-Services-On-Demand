@@ -22,8 +22,7 @@ class PaymentActivityModel {
             let value = [saldo, d]
             var hasil = await pool.query(`UPDATE ${saldotb} SET (nominal, updated_at) = ($1, $2) WHERE "driver_id" = '${newData.driver_id}' RETURNING *;`, value);
         }
-        console.log(hasil.rows[0]);
-        return hasil;
+        return res;
     }
 }
 
