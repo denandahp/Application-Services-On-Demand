@@ -13,10 +13,10 @@ class merchantListOrderModel{
           let result;
           if (id_merchant === 'all') {
             result = await pool.query(' SELECT kode, status, customer_id, driver_id, merchant_id, total_price_merchant, created_at, time_order_started, '+
-                                        'time_order_finished, metode_pembayaran FROM ' + dbTable + ' ORDER BY created_at ASC;')
+                                        'time_order_finished, metode_pembayaran FROM ' + dbViewjfood + ' ORDER BY created_at ASC;')
           } else {
             result = await pool.query(' SELECT kode, status, customer_id, driver_id, merchant_id, total_price_merchant, created_at, time_order_started, '+
-                                        'time_order_finished, metode_pembayaran FROM ' + dbTable + ' WHERE merchant_id = $1 ORDER BY created_at ASC', [id_merchant])
+                                        'time_order_finished, metode_pembayaran FROM ' + dbViewjfood + ' WHERE restaurant_id = $1 ORDER BY created_at ASC', [id_merchant])
           }
             debug('get %o', result);
             return result.rows;
