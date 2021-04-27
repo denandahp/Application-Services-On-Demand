@@ -47,6 +47,25 @@ class PaymentActivityModel {
             console.log('Error : ' + ex);
         };
     }
+
+    async history(id) {
+
+        try {
+            const history = await pool.query(`SELECT transaction_status, nominal, updated_at FROM ${topuptb} WHERE "driver_id" = '${id}' ORDER BY updated_at DESC`);
+            if (history.rowCount <= 0) {
+                console.log("ID Tidak Tersedia");
+                return {
+                    "status": "404",
+                    "errors": "ID " + kode + " tidak terdaftar"
+                }
+            } else {
+                // console.log(history.rows);
+                return history.rows
+            }
+        } catch (ex) {
+            console.log('Error : ' + ex);
+        };
+    }
 }
 
 module.exports = new PaymentActivityModel();

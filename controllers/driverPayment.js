@@ -52,6 +52,30 @@ class PaymentActivityController {
         authUtils.processRequestWithJWT(req, callback, fallback);
     }
 
+    async history(req, res, next) {
+        let callback = async () => {
+
+            try {
+                let id = req.user.data.id
+                let result = await paymentActivity.history(id);
+                res.status(200).send({
+                    status: res.statusCode,
+                    data: result
+                })
+            } catch (e) {
+                console.log(e);
+                let errorResponse = authUtils.processPOSTRequestError();
+                res.status(400).json(errorResponse);
+            }
+        };
+
+        let fallback = (err) => {
+            console.log(err);
+            next(err);
+        }
+
+        authUtils.processRequestWithJWT(req, callback, fallback);
+    }
 }
 
 module.exports = new PaymentActivityController();
