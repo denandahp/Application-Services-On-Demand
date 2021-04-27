@@ -7,6 +7,7 @@ const jsotp = require('jsotp');
 const totp = jsotp.TOTP('BASE32ENCODEDSECRET');
 
 const topuptb = 'driver.topup';
+const saldotb = 'driver.saldo';
 
 class PaymentActivityModel {
     async add(data) {
