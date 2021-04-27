@@ -30,7 +30,7 @@ class merchantListOrderModel{
       async detailorder(id_merchant, kode) {
         try{
             
-            let res = await pool.query(' SELECT * FROM ' + dbViewjfood + ' WHERE merchant_id = $1 AND kode = $2 ;', [id_merchant, kode])
+            let res = await pool.query(' SELECT * FROM ' + dbViewjfood + ' WHERE restaurant_id = $1 AND kode = $2 ;', [id_merchant, kode])
             debug('get %o', res);
             return res.rows;
 
