@@ -13,9 +13,9 @@ class merchantOrderModel{
   async opsistatus (data) {
     try{
       var d = new Date(Date.now());d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
-      let value =  [ data.kode, "Merchant Menerima Pesanan", data.total_price_merchant, "Accepted", d];
-      let res = await pool.query('UPDATE ' + dbOrders + ' SET (status, total_price_merchant, status_paid_merchant, updated_at)'+
-                ' = ($2, $3, $4, $5) WHERE kode = $1 RETURNING kode, status, total_price_merchant, status_paid_merchant, updated_at;', value);
+      let value =  [ data.kode, data.restaurant_id, "Merchant Menerima Pesanan", data.total_price_merchant, "Accepted", d];
+      let res = await pool.query('UPDATE ' + dbOrders + ' SET (merchant_id, status, total_price_merchant, status_paid_merchant, updated_at)'+
+                ' = ($2, $3, $4, $5, $6) WHERE kode = $1 RETURNING kode, merchant_id, status, total_price_merchant, status_paid_merchant, updated_at;', value);
       debug('register %o', res);
   
       return res;
@@ -28,9 +28,9 @@ class merchantOrderModel{
     try{
       var verifcode = Math.floor(Math.random() * (9999 - 1111 + 1)) + 1111;
       var d = new Date(Date.now());d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
-      let value =  [ data.kode, "Merchant Pesanan Sudah Siap", data.total_price_merchant, "Paid", d, verifcode];
-      let res = await pool.query('UPDATE ' + dbOrders + ' SET (status, total_price_merchant, status_paid_merchant, updated_at, driver_verification_code)'+
-                ' = ($2, $3, $4, $5, $6) WHERE kode = $1 RETURNING kode, status, total_price_merchant, status_paid_merchant, updated_at, driver_verification_code;', value);
+      let value =  [ data.kode, data.restaurant_id, "Merchant Pesanan Sudah Siap", data.total_price_merchant, "Paid", d, verifcode];
+      let res = await pool.query('UPDATE ' + dbOrders + ' SET (merchant_id, status, total_price_merchant, status_paid_merchant, updated_at, driver_verification_code)'+
+                ' = ($2, $3, $4, $5, $6, $7) WHERE kode = $1 RETURNING kode, merchant_id, status, total_price_merchant, status_paid_merchant, updated_at, driver_verification_code;', value);
       debug('register %o', res);
   
       return res;
@@ -42,9 +42,9 @@ class merchantOrderModel{
   async rejectorder (data) {
     try{
       var d = new Date(Date.now());d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
-      let value =  [ data.kode, "Merchant Menolak Pesanan", data.reason_merchant_rejected, "Rejected", d, d];
-      let res = await pool.query('UPDATE ' + dbOrders + ' SET (status, reason_merchant_rejected, status_paid_merchant, time_merchant_rejected, updated_at)'+
-                ' = ($2, $3, $4, $5, $6) WHERE kode = $1 RETURNING kode, status, reason_merchant_rejected, status_paid_merchant, time_merchant_rejected, updated_at;', value);
+      let value =  [ data.kode, data.restaurant_id, "Merchant Menolak Pesanan", data.reason_merchant_rejected, "Rejected", d, d];
+      let res = await pool.query('UPDATE ' + dbOrders + ' SET (merchant_id, status, reason_merchant_rejected, status_paid_merchant, time_merchant_rejected, updated_at)'+
+                ' = ($2, $3, $4, $5, $6, $7) WHERE kode = $1 RETURNING kode, merchant_id ,status, reason_merchant_rejected, status_paid_merchant, time_merchant_rejected, updated_at;', value);
       debug('register %o', res);
   
       return res;
