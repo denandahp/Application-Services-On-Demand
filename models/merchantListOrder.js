@@ -5,6 +5,8 @@ const schema = '"orders"';
 const table = '"orders"';
 const dbTable = schema + '.' + table;
 const dbViewjfood = schema + '.' + '"jfood"';
+const dbViewjride = schema + '.' + '"jride"';
+
 
 class merchantListOrderModel{
 
@@ -28,6 +30,38 @@ class merchantListOrderModel{
       }
 
       async detailorder(id_merchant, kode) {
+        try{
+            
+            let res = await pool.query(' SELECT * FROM ' + dbViewjfood + ' WHERE restaurant_id = $1 AND kode = $2 ;', [id_merchant, kode])
+            debug('get %o', res);
+            return res.rows;
+
+        }catch(ex){
+            console.log('Enek seng salah iki ' + ex);
+            return "data " + ex;
+        };
+      }
+
+      async listordercustomer(customer_id) {
+        try{
+          let result;
+          if (customer_id === 'all') {
+            result = await pool.query(' SELECT kode, status, user_id, driver_id, restaurant_id, customer_name,  jarak, estimate_minute, harga_total_merchant, status, '+
+                                      'jumlah_pesanan, metode_pembayaran FROM ' + dbViewjride + ' ORDER BY created_at ASC;')
+          } else {
+            result = await pool.query(' SELECT kode, status, user_id, driver_id, restaurant_id, customer_name,  jarak, estimate_minute, harga_total_merchant, status, '+
+                                        'jumlah_pesanan, metode_pembayaran FROM ' + dbViewjride + ' WHERE restaurant_id = $1 ORDER BY created_at ASC', [customer_id])
+          }
+            debug('get %o', result);
+            return result.rows;
+
+        }catch(ex){
+            console.log('Enek seng salah iki ' + ex);
+            return "data " + ex;
+        };
+      }
+
+      async detailordercustomer(id_merchant, kode) {
         try{
             
             let res = await pool.query(' SELECT * FROM ' + dbViewjfood + ' WHERE restaurant_id = $1 AND kode = $2 ;', [id_merchant, kode])

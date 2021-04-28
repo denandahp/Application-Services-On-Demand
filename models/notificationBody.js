@@ -339,7 +339,7 @@ exports.acceptjride_drivertocustomer = (data) => {
     },
     android: {
       notification: {
-        click_action: 'JFOOD_ACCEPT_ORDER'      }
+        click_action: 'JRIDE_ACCEPT_ORDER'      }
     },
     token: data.token_customer
   };
@@ -361,7 +361,7 @@ exports.deliverjride_drivertocustomer = (data) => {
     },
     android: {
       notification: {
-        click_action: 'JFOOD_DELIVER_ORDER'      }
+        click_action: 'JRIDE_DELIVER_ORDER'      }
     },
     token: data.token_customer
   };
@@ -383,7 +383,7 @@ exports.finishedjride_drivertocustomer = (data) => {
     },
     android: {
       notification: {
-        click_action: 'JFOOD_FINISHED_ORDER'      }
+        click_action: 'JRIDE_FINISHED_ORDER'      }
     },
     token: data.token_customer
   };
