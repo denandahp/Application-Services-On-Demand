@@ -52,55 +52,6 @@ class merchantListOrderController{
         authUtils.processRequestWithJWT(req, callback, fallback);
       }
 
-      async listordercustomer(req, res, next) {
-        let callback = async () => {
-         try {
-            let customer_id = req.params.customer_id;
-            let result = await merchantListOrder.listordercustomer(customer_id);
-            res.status(200).json({
-              pesan: "List order user",
-              result: result,
-            })
-          } catch (e) {
-            console.log(e);
-            let errorResponse = authUtils.processPOSTRequestError();
-            res.status(400).json(errorResponse);
-          }
-        };
-    
-        let fallback = (err) => {
-          console.log(err);
-          next(err);
-        }
-    
-        authUtils.processRequestWithJWT(req, callback, fallback);
-      }
-
-      async detailordercustomer(req, res, next) {
-        let callback = async () => {
-         try {
-            let id_merchant = req.params.id_merchant;
-            let kode = req.params.kode;
-            let result = await merchantListOrder.detailordercustomer(id_merchant, kode);
-            res.status(200).json({
-              pesan: "detail pesanan",
-              result: result,
-            })
-          } catch (e) {
-            console.log(e);
-            let errorResponse = authUtils.processPOSTRequestError();
-            res.status(400).json(errorResponse);
-          }
-        };
-    
-        let fallback = (err) => {
-          console.log(err);
-          next(err);
-        }
-    
-        authUtils.processRequestWithJWT(req, callback, fallback);
-      }
-
 
 }
 
