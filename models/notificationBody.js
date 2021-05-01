@@ -8,7 +8,8 @@ exports.orderfoodtodriver = (data, result) => {
     data: {
       kodePemesanan: data.kode,
       user_id: data.user_id,
-      restaurant_id: data.restaurant_id
+      restaurant_id: data.restaurant_id,
+      click_notif: 'ORDER_IN'
     },
     notification: {
       title: 'Orderan Masuk',
@@ -31,6 +32,7 @@ exports.orderfood_customertomerchant = (data) => {
       kodePemesanan: data.kode,
       user_id: data.user_id,
       restaurant_id: data.restaurant_id,
+      click_notif: 'JFOOD_ORDER_IN_MERCHANT'
     },
     notification: {
       title: 'Pesanan Masuk',
@@ -53,7 +55,8 @@ exports.rejectedfood_customertomerchant = (data) => {
       kodePemesanan: data.kode,
       user_id: data.user_id,
       restaurant_id: data.restaurant_id,
-      reason : data.reason_customer_rejected
+      reason : data.reason_customer_rejected,
+      click_notif: 'JFOOD_REJECT_FROM_CUSTOMER'
     },
     notification: {
       title: 'Pesanan Dibatalkan',
@@ -76,7 +79,8 @@ exports.rejectedfood_merchanttocustomer = (data) => {
       kodePemesanan: data.kode,
       user_id: data.user_id,
       restaurant_id : data.restaurant_id,
-      reason : data.reason_merchant_rejected
+      reason : data.reason_merchant_rejected,
+      click_notif: 'JFOOD_REJECT_MERCHANT'
     },
     notification: {
       title: 'Pesanan Ditolak ',
@@ -99,7 +103,8 @@ exports.orderfood_merchanttodriver = (data, result) => {
       kodePemesanan: data.kode,
       user_id: data.user_id,
       restaurant_id: data.restaurant_id,
-      driver_id: String(result.rows[0].id)
+      driver_id: String(result.rows[0].id),
+      click_notif: 'JFOOD_ORDER_DRIVER'
     },
     notification: {
       title: 'Orderan JFOOD Masuk',
@@ -122,7 +127,8 @@ exports.orderfood_drivertomerchant = (data) => {
       kodePemesanan: data.kode,
       user_id: data.user_id,
       restaurant_id: data.restaurant_id,
-      driver_id : data.driver_id
+      driver_id : data.driver_id,
+      click_notif: 'JFOOD_DRIVER_TO_MERCHANT'
     },
     notification: {
       title: 'JFOOD',
@@ -145,7 +151,8 @@ exports.orderfood_drivertocustomer = (data) => {
       kodePemesanan: data.kode,
       user_id: data.user_id,
       restaurant_id: data.restaurant_id,
-      driver_id : data.driver_id
+      driver_id : data.driver_id,
+      click_notif: 'JFOOD_DRIVER_TO_RESTO'
     },
     notification: {
       title: 'JFOOD',
@@ -168,7 +175,8 @@ exports.processfood_drivertocustomer = (data) => {
       kodePemesanan: data.kode,
       user_id: data.user_id,
       restaurant_id: data.restaurant_id,
-      driver_id : data.driver_id
+      driver_id : data.driver_id,
+      click_notif: 'JFOOD_ORDER_IN_PROCESS'
     },
     notification: {
       title: 'Driver sudah di resto',
@@ -191,7 +199,8 @@ exports.processfood_merchanttodriver = (data) => {
       kodePemesanan: data.kode,
       user_id: data.user_id,
       restaurant_id: data.restaurant_id,
-      driver_id : data.driver_id
+      driver_id : data.driver_id,
+      click_notif: 'JFOOD_ORDER_READY'
     },
     notification: {
       title: 'Pesanan Selesai',
@@ -214,7 +223,8 @@ exports.deliverfood_drivertocustomer = (data) => {
       kodePemesanan: data.kode,
       user_id: data.user_id,
       restaurant_id: data.restaurant_id,
-      driver_id : data.driver_id
+      driver_id : data.driver_id,
+      click_notif: 'JFOOD_DRIVER_DELIVERED'  
     },
     notification: {
       title: 'Pesanan Selesai diBuat',
@@ -237,7 +247,8 @@ exports.arrivedfood_drivertocustomer = (data) => {
       kodePemesanan: data.kode,
       user_id: data.user_id,
       restaurant_id: data.restaurant_id,
-      driver_id : data.driver_id
+      driver_id : data.driver_id,
+      click_notif: 'JFOOD_DRIVER_IN_LOCATION'
     },
     notification: {
       title: 'Orderan Sampai',
@@ -260,7 +271,8 @@ exports.finishedfood_drivertocustomer = (data) => {
       kodePemesanan: data.kode,
       user_id: data.user_id,
       restaurant_id: data.restaurant_id,
-      driver_id : data.driver_id
+      driver_id : data.driver_id,
+      click_notif: 'JFOOD_ORDER_FINISHED'
     },
     notification: {
       title: 'Orderan Selesai',
@@ -283,7 +295,8 @@ exports.finishedfood_drivertomerchant = (data) => {
       kodePemesanan: data.kode,
       user_id: data.user_id,
       restaurant_id: data.restaurant_id,
-      driver_id : data.driver_id
+      driver_id : data.driver_id,
+      click_notif: 'JFOOD_ORDER_MERCHANT_FINISHED'
     },
     notification: {
       title: 'Orderan telah selesai',
@@ -309,7 +322,8 @@ exports.orderjride_customertodriver = (data, result) => {
     data: {
       kodePemesanan: data.kode,
       user_id: data.user_id,
-      driver_id: String(result.rows[0].id)
+      driver_id: String(result.rows[0].id),
+      click_notif: 'JRIDE_ORDER_DRIVER'
     },
     notification: {
       title: 'Orderan JRIDE Masuk',
@@ -331,7 +345,8 @@ exports.acceptjride_drivertocustomer = (data) => {
     data: {
       kodePemesanan: data.kode,
       user_id: data.user_id,
-      driver_id : data.driver_id
+      driver_id : data.driver_id,
+      click_notif: 'JRIDE_ACCEPT_ORDER'
     },
     notification: {
       title: 'JRIDE',
@@ -353,7 +368,8 @@ exports.deliverjride_drivertocustomer = (data) => {
     data: {
       kodePemesanan: data.kode,
       user_id: data.user_id,
-      driver_id : data.driver_id
+      driver_id : data.driver_id,
+      click_notif: 'JRIDE_DELIVER_ORDER'
     },
     notification: {
       title: 'JRIDE',
@@ -375,7 +391,8 @@ exports.finishedjride_drivertocustomer = (data) => {
     data: {
       kodePemesanan: data.kode,
       user_id: data.user_id,
-      driver_id : data.driver_id
+      driver_id : data.driver_id,
+      click_notif: 'JRIDE_FINISHED_ORDER'
     },
     notification: {
       title: 'JRIDE',
