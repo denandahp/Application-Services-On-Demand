@@ -25,19 +25,25 @@ class DashboardPriceModel {
         };
     }
 
-    async pricingget(service) {
+    async pricingget(data) {
 
         try {
-            let res = await pool.query(`SELECT * FROM ${pricetb} WHERE "service" = '${service}' ORDER BY created_at DESC`);
-            debug('pricingget %o', res);
-            if (res.rowCount <= 0) {
+            let one = await pool.query('SELECT * FROM ' + pricetb + ' WHERE service = $1 ORDER BY created_at DESC', [data.service_one]);
+            let two = await pool.query('SELECT * FROM ' + pricetb + ' WHERE service = $1 ORDER BY created_at DESC', [data.service_two]);
+            let three = await pool.query('SELECT * FROM ' + pricetb + ' WHERE service = $1 ORDER BY created_at DESC', [data.service_three]);
+            debug('pricingget %o', one);
+            if (one.rowCount <= 0) {
                 console.log("service Tidak Tersedia");
                 return {
                     "status": "404",
                     "errors": "service " + service + " tidak terdaftar"
                 }
             } else {
-                return res.rows[0]
+                return {
+                    one: one.rows[0],
+                    two: two.rows[0],
+                    three: three.rows[0]
+                }
             }
         } catch (ex) {
             console.log('Error : ' + ex);
