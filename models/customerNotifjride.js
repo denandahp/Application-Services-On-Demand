@@ -14,7 +14,7 @@ class customerNotifjrideModel{
   async orderjride_customertodriver (data, res) {
     try{
       console.log(data);
-      let result = await pool.query('SELECT * FROM' + dbTable + '($1, $2);', [data.latitude_customer, data.latitude_customer]);
+      let result = await pool.query('SELECT * FROM' + dbTable + '($1, $2);', [data.latitude_customer, data.longitude_customer]);
       console.log(result.rows[0]);
       let body = await notifbody.orderjride_customertodriver(data, result);
       //let dbdriver = await pool.query('UPDATE ' + dbOrders + ' SET (driver_id, token_driver) = ($2, $3) WHERE kode = $1 RETURNING kode, driver_id, token_driver ;', 
