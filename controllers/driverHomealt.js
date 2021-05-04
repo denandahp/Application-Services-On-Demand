@@ -100,25 +100,12 @@ class HomeAltDriverController {
         }
     }
 
-    async allorderhistory(req, res, next) {
+    async history(req, res, next) {
 
         let id = req.user.data.id
+        let time = req.body
         try {
-            let result = await user.allorderhistory(id);
-            res.status(200).send({
-                status: res.statusCode,
-                data: result
-            })
-        } catch (e) {
-            next(e.detail);
-        }
-    }
-
-    async lastorder(req, res, next) {
-
-        let id = req.user.data.id
-        try {
-            let result = await user.lastorder(id);
+            let result = await user.history(id, time);
             res.status(200).send({
                 status: res.statusCode,
                 data: result
