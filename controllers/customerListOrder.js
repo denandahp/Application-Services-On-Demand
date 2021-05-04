@@ -10,7 +10,6 @@ class customerListOrderController{
             let result = await customerListOrder.listorder(id_user);
             res.status(200).json({
               pesan: "List order user",
-              service : "J-FOOD",
               result: result,
             })
           } catch (e) {
@@ -36,7 +35,6 @@ class customerListOrderController{
             let result = await customerListOrder.detailorder(id_user, kode);
             res.status(200).json({
               pesan: "detail pesanan",
-              service : "J-FOOD",
               result: result,
             })
           } catch (e) {

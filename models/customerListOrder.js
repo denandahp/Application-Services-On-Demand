@@ -6,7 +6,7 @@ const table = '"orders"';
 const dbTable = schema + '.' + table;
 const dbViewjfood = schema + '.' + '"jfood"';
 const dbViewjride = schema + '.' + '"jfood"';
-const dblistordercustomer = schema + '.' + '"jfood"';
+const dblistordercustomer = schema + '.' + '"list_order_customer"';
 
 
 class customerListOrderModel{
