@@ -57,7 +57,8 @@ class PaymentActivityController {
 
             try {
                 let id = req.user.data.id
-                let result = await paymentActivity.history(id);
+                let time = req.body
+                let result = await paymentActivity.history(id, time);
                 res.status(200).send({
                     status: res.statusCode,
                     data: result

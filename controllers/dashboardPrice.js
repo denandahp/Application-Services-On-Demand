@@ -18,9 +18,9 @@ class DashboardPriceController {
 
     async pricingget(req, res, next) {
 
-        let service = req.params.service
+        let data = req.body
         try {
-            let result = await price.pricingget(service);
+            let result = await price.pricingget(data);
             res.status(200).send({
                 status: res.statusCode,
                 data: result
