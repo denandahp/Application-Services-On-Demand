@@ -14,7 +14,7 @@ class customerListOrderModel{
     async listorder(id_user) {
         try{
           let result
-          if(id == 'all'){
+          if(id_user == 'all'){
             result = await pool.query(' SELECT * FROM '+ dblistordercustomer +' (0);')
           }else {
             result = await pool.query(' SELECT * FROM '+ dblistordercustomer +' ($1);', [id_user])
