@@ -5,6 +5,7 @@ const totp = jsotp.TOTP('BASE32ENCODEDSECRET');
 const schema = '"public"';
 const table = '"users"'
 const dbTable = schema + '.' + table;
+var moment = require('moment');
 
 class HomeAltDriverModel {
 
