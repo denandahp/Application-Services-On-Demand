@@ -5,6 +5,7 @@ const {
 } = require('bcrypt');
 const jsotp = require('jsotp');
 const totp = jsotp.TOTP('BASE32ENCODEDSECRET');
+var moment = require('moment');
 
 const topuptb = 'driver.topup';
 const saldotb = 'driver.saldo';
@@ -49,20 +50,35 @@ class PaymentActivityModel {
         };
     }
 
-    async history(id) {
+    async history(id, time) {
 
         try {
-            const history = await pool.query(`SELECT transaction_status, nominal, updated_at FROM ${topuptb} WHERE "driver_id" = '${id}' ORDER BY updated_at DESC`);
-            if (history.rowCount <= 0) {
-                console.log("ID Tidak Tersedia");
-                return {
-                    "status": "404",
-                    "errors": "ID " + kode + " tidak terdaftar"
+            let start = moment(time.start).format('YYYY-MM-DD 00:00:00.000+08');
+            let end = moment(time.end).format('YYYY-MM-DD 23:59:59.000+08');
+            if (time.start === undefined) {
+                const history = await pool.query(`SELECT updated_at, nominal, transaction_status FROM ${topuptb} WHERE "driver_id" = '${id}' ORDER BY updated_at DESC`);
+                if (history.rowCount <= 0) {
+                    console.log("Data tidak tersedia");
+                    return {
+                        "status": "404",
+                        "errors": "Tidak ada riwayat transaksi"
+                    }
+                } else {
+                    return history.rows
                 }
             } else {
-                // console.log(history.rows);
-                return history.rows
+                const history = await pool.query(`SELECT updated_at, nominal, transaction_status FROM ${topuptb} WHERE "driver_id" = '${id}' AND "updated_at" BETWEEN '${start}' AND '${end}' ORDER BY updated_at DESC`);
+                if (history.rowCount <= 0) {
+                    console.log("Data tidak tersedia");
+                    return {
+                        "status": "404",
+                        "errors": "Tidak ada riwayat transaksi"
+                    }
+                } else {
+                    return history.rows
+                }
             }
+
         } catch (ex) {
             console.log('Error : ' + ex);
         };
