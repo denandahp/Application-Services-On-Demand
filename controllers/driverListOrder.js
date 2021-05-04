@@ -2,10 +2,10 @@ const user = require('../models/driverListOrder.js');
 
 class DriverListOrderController {
 
-    async driverlistorder(req, res, next) {
+    async listorder(req, res, next) {
 
         try {
-            let result = await user.driverlistorder();
+            let result = await user.listorder();
             if (result.status == 404) {
                 res.status(404).json({
                     status: res.statusCode,
@@ -43,52 +43,11 @@ class DriverListOrderController {
         }
     }
 
-    async detailorder(req, res, next) {
+    async detailorderjfood(req, res, next) {
 
         let kode = req.params.kode
         try {
-            let result = await user.detailorder(kode);
-            if (result.status == 404) {
-                res.status(404).json({
-                    status: res.statusCode,
-                    message: result.errors
-                });
-            } else {
-                res.status(200).send({
-                    status: res.statusCode,
-                    data: result
-                })
-            }
-        } catch (e) {
-            next(e.detail);
-        }
-    }
-
-    async listorderbydriverjride(req, res, next) {
-
-        let id = req.params.id
-        try {
-            let result = await user.listorderbydriverjride(id);
-            if (result.status == 404) {
-                res.status(404).json({
-                    status: res.statusCode,
-                    message: result.errors
-                });
-            } else {
-                res.status(200).send({
-                    status: res.statusCode,
-                    data: result
-                })
-            }
-        } catch (e) {
-            next(e.detail);
-        }
-    }
-
-    async driverlistorderjride(req, res, next) {
-
-        try {
-            let result = await user.driverlistorderjride();
+            let result = await user.detailorderjfood(kode);
             if (result.status == 404) {
                 res.status(404).json({
                     status: res.statusCode,

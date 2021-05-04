@@ -6,19 +6,18 @@ const {
 const jsotp = require('jsotp');
 const totp = jsotp.TOTP('BASE32ENCODEDSECRET');
 
-const aktpeng = 'driver.aktivitas_pengemudi';
-const aktselpeng = 'driver.aktivitas_seluruh_pengemudi';
 const detord = 'driver.detail_order';
 const jfoodviews = 'orders.jfood';
 const jrideviews = 'orders.jride';
+const listbyid = 'orders.list_order_driver';
 
 class DriverListOrder {
 
-    async driverlistorder() {
+    async listorder() {
 
         try {
-            let res = await pool.query(`SELECT * FROM ${aktselpeng}`);
-            debug('driverlistorder %o', res);
+            let res = await pool.query(`SELECT * FROM ${listbyid}('0') ORDER BY created_at DESC`);
+            debug('listorder %o', res);
             if (res.rowCount <= 0) {
                 return {
                     "status": "404",
@@ -35,7 +34,7 @@ class DriverListOrder {
     async listorderbydriver(id) {
 
         try {
-            let res = await pool.query(`SELECT * FROM ${aktpeng}(` + id + `)`);
+            let res = await pool.query(`SELECT * FROM ${listbyid}(` + id + `) ORDER BY created_at DESC`);
             debug('driverlistorder %o', res);
             if (res.rowCount <= 0) {
                 return {
@@ -50,12 +49,12 @@ class DriverListOrder {
         };
     }
 
-    async detailorder(kode) {
+    async detailorderjfood(kode) {
 
         try {
             let res = await pool.query(`SELECT * FROM ${detord}( '${kode}') `);
             let loc = await pool.query(`SELECT latitude_restaurant, longitude_restaurant, latitude_destination, longitude_destination FROM ${jfoodviews} WHERE "kode" = '${kode}'`);
-            debug('driverlistorder %o', res);
+            debug('detailorderjfood %o', res);
             if (res.rowCount <= 0) {
                 return {
                     "status": "404",
@@ -65,48 +64,6 @@ class DriverListOrder {
                 return {
                     res: res.rows[0],
                     loc: loc.rows[0]
-                }
-            }
-        } catch (ex) {
-            console.log('Error : ' + ex);
-        };
-    }
-
-    async listorderbydriverjride(id) {
-
-        try {
-            let res = await pool.query(`SELECT kode, customer_name, total_price_driver, created_at, status FROM ${jrideviews} WHERE "driver_id" = '${id}'`);
-            debug('listorderbydriverjride %o', res);
-            if (res.rowCount <= 0) {
-                return {
-                    "status": "404",
-                    "errors": "Aktifitas pengemudi masih kosong"
-                }
-            } else {
-                return {
-                    layanan: "J-Ride",
-                    res: res.rows
-                }
-            }
-        } catch (ex) {
-            console.log('Error : ' + ex);
-        };
-    }
-
-    async driverlistorderjride() {
-
-        try {
-            let res = await pool.query(`SELECT kode, driver_name, total_price_driver, created_at, status FROM ${jrideviews}`);
-            debug('driverlistorderjride %o', res);
-            if (res.rowCount <= 0) {
-                return {
-                    "status": "404",
-                    "errors": "Aktifitas pengemudi masih kosong"
-                }
-            } else {
-                return {
-                    layanan: "J-Ride",
-                    res: res.rows
                 }
             }
         } catch (ex) {
