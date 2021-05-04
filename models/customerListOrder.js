@@ -5,13 +5,20 @@ const schema = '"orders"';
 const table = '"orders"';
 const dbTable = schema + '.' + table;
 const dbViewjfood = schema + '.' + '"jfood"';
+const dbViewjride = schema + '.' + '"jfood"';
+const dblistordercustomer = schema + '.' + '"jfood"';
+
 
 class customerListOrderModel{
 
     async listorder(id_user) {
         try{
-            
-            let result = await pool.query(' SELECT kode, total_price_customer, created_at, status FROM ' + dbTable + ' WHERE customer_id = $1 ORDER BY created_at ASC', [id_user])
+          let result
+          if(id == 'all'){
+            result = await pool.query(' SELECT * FROM '+ dblistordercustomer +' (0);')
+          }else {
+            result = await pool.query(' SELECT * FROM '+ dblistordercustomer +' ($1);', [id_user])
+          }
             debug('get %o', result);
             return result.rows;
 
