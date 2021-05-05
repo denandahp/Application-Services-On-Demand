@@ -8,13 +8,13 @@ const dbTable = schema + '.' + table;
 
 class customerReviewModel{
 
-    async driverreview (data) {
+    async jfooddriverreview (data) {
       try{
         var d = new Date(Date.now());;d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
-        let sets = [data.user_id, data.driver_id, data.role, data.service, data.rate, data.comment, d, d, data.kode]
+        let sets = [data.kode, data.user_id, data.driver_id, 'true', 'jfood', data.rate_to_driver, data.comment_to_driver,d, d]
         console.log(data);
-        let res = await pool.query('INSERT INTO ' + dbTable + ' (user_id, driver_id, role, service, rate, comment, created_at, updated_at, kode)' + 
-                                  ' VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *;', sets);
+        let res = await pool.query('INSERT INTO ' + dbTable + ' (kode, user_id, driver_id, finished_review_driver, service, rate_to_driver, comment_to_driver, time_comment_driver, created_at)' + 
+                                  ' VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)', sets);
         debug('update %o', res);
         let result = res.rows[0];
         return result;
@@ -23,19 +23,34 @@ class customerReviewModel{
       };
     }
 
-    async merchantreview (data) {
+    async jfoodmerchantreview (data) {
         try{
             var d = new Date(Date.now());;d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
-            let sets = [data.user_id, data.restaurant_id, data.role, data.service, data.rate, data.comment, d, d, data.kode]
+            let sets = [data.kode, data.user_id, data.restaurant_id, 'true', data.service, data.rate_to_restaurant, data.comment_to_restaurant, d, d]
             console.log(data);
-            let res = await pool.query('INSERT INTO ' + dbTable + ' (user_id, restaurant_id, role, service, rate, comment, created_at, updated_at, kode)' + 
-                                      ' VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *;', sets);
+            let res = await pool.query('UPDATE ' + dbTable + ' SET (kode, user_id, restaurant_id, finished_review_restaurant, service, rate_to_restaurant, comment_to_restaurant, time_comment_driver, updated_at)' + 
+                                      ' = ($1, $2, $3, $4, $5, $6, $7, $8, $9) WHERE kode = $1 AND user_id = $2 RETURNING *;', sets);
             debug('update %o', res);
             let result = res.rows[0];
             return result;
           }catch(ex){
             console.log('Enek seng salah iki ' + ex)
           };
+    }
+
+    async jridedriverreview (data) {
+      try{
+        var d = new Date(Date.now());;d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
+        let sets = [data.kode, data.user_id, data.driver_id, 'true', 'jride', data.rate_to_driver, data.comment_to_driver,d, d]
+        console.log(data);
+        let res = await pool.query('INSERT INTO ' + dbTable + ' (kode, user_id, driver_id, finished_review_driver, service, rate_to_driver, comment_to_driver, time_comment_driver, created_at)' + 
+                                  ' VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)', sets);
+        debug('update %o', res);
+        let result = res.rows[0];
+        return result;
+      }catch(ex){
+        console.log('Enek seng salah iki ' + ex)
+      };
     }
 
 }
