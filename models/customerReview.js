@@ -28,7 +28,7 @@ class customerReviewModel{
             var d = new Date(Date.now());;d.toLocaleString('en-GB', { timeZone: 'Asia/Jakarta' });
             let sets = [data.kode, data.user_id, data.restaurant_id, 'true', data.service, data.rate_to_restaurant, data.comment_to_restaurant, d]
             console.log(data);
-            let res = await pool.query('UPDATE ' + dbTable + ' SET (kode, user_id, restaurant_id, finished_review_restaurant, service, rate_to_restaurant, comment_to_restaurant, time_comment_driver)' + 
+            let res = await pool.query('UPDATE ' + dbTable + ' SET (kode, user_id, restaurant_id, finished_review_restaurant, service, rate_to_restaurant, comment_to_restaurant, time_comment_restaurant)' + 
                                       ' = ($1, $2, $3, $4, $5, $6, $7, $8) WHERE kode = $1 AND user_id = $2 RETURNING *;', sets);
             debug('update %o', res);
             let result = res.rows[0];
