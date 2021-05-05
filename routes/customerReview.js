@@ -3,7 +3,7 @@ const customerReview = require('../controllers/customerReview.js');
 
 Router.post('/jfood/driverreview', customerReview.jfooddriverreview)
       .post('/jfood/merchantreview', customerReview.jfoodmerchantreview)
-      .post('/jride/driverreview', customerReview.driverreview)
+      .post('/jride/driverreview', customerReview.jridedriverreview)
 
       
 module.exports = Router;
