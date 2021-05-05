@@ -44,7 +44,7 @@ class customerReviewModel{
         let sets = [data.kode, data.user_id, data.driver_id, 'true', 'jride', data.rate_to_driver, data.comment_to_driver,d, d]
         console.log(data);
         let res = await pool.query('INSERT INTO ' + dbTable + ' (kode, user_id, driver_id, finished_review_driver, service, rate_to_driver, comment_to_driver, time_comment_driver, created_at)' + 
-                                  ' VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)', sets);
+                                  ' VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *', sets);
         debug('update %o', res);
         let result = res.rows[0];
         return result;
