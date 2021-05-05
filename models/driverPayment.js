@@ -66,6 +66,17 @@ class PaymentActivityModel {
                 } else {
                     return history.rows
                 }
+            } else if (time.status) {
+                const history = await pool.query(`SELECT updated_at, nominal, transaction_status FROM ${topuptb} WHERE "driver_id" = '${id}' AND "transaction_status" = '${time.status}' ORDER BY created_at DESC`);
+                if (history.rowCount <= 0) {
+                    console.log("Data tidak tersedia");
+                    return {
+                        "status": "404",
+                        "errors": "Tidak ada riwayat transaksi"
+                    }
+                } else {
+                    return history.rows
+                }
             } else {
                 const history = await pool.query(`SELECT updated_at, nominal, transaction_status FROM ${topuptb} WHERE "driver_id" = '${id}' AND "updated_at" BETWEEN '${start}' AND '${end}' ORDER BY updated_at DESC`);
                 if (history.rowCount <= 0) {

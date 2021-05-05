@@ -5,6 +5,7 @@ const totp = jsotp.TOTP('BASE32ENCODEDSECRET');
 const schema = '"public"';
 const table = '"users"'
 const dbTable = schema + '.' + table;
+var moment = require('moment');
 
 class HomeAltDriverModel {
 
@@ -130,26 +131,49 @@ class HomeAltDriverModel {
         }
     }
 
-    async allorderhistory(id) {
-        return new Promise((resolve, reject) => {
-            pool.query('SELECT get_jumlah_orderan_masuk_driver(' + id + ')', (error, results) => {
-                if (error) {
-                    return reject(error);
-                }
-                return resolve(results.rows[0].get_jumlah_orderan_masuk_driver);
-            })
-        })
-    }
+    async history(id, time) {
 
-    async lastorder(id) {
-        return new Promise((resolve, reject) => {
-            pool.query('SELECT get_jumlah_orderan_masuk_driver(' + id + ')', (error, results) => {
-                if (error) {
-                    return reject(error);
+        try {
+            let start = moment(time.start).format('YYYY-MM-DD 00:00:00.000+08');
+            let end = moment(time.end).format('YYYY-MM-DD 23:59:59.000+08');
+            if (time.start === undefined && time.status === undefined) {
+                const history = await pool.query(`SELECT * FROM orders.list_order_driver(` + id + `) ORDER BY created_at DESC`);
+                if (history.rowCount <= 0) {
+                    console.log("Data tidak tersedia");
+                    return {
+                        "status": "404",
+                        "errors": "Tidak ada riwayat transaksi"
+                    }
+                } else {
+                    return history.rows
                 }
-                return resolve(results.rows[0].get_jumlah_orderan_masuk_driver);
-            })
-        })
+            } else if (time.status) {
+                const history = await pool.query(`SELECT * FROM orders.list_order_driver(` + id + `) WHERE "status" = '${time.status}' ORDER BY created_at DESC`);
+                if (history.rowCount <= 0) {
+                    console.log("Data tidak tersedia");
+                    return {
+                        "status": "404",
+                        "errors": "Tidak ada riwayat transaksi"
+                    }
+                } else {
+                    return history.rows
+                }
+            } else {
+                const history = await pool.query(`SELECT * FROM orders.list_order_driver(` + id + `) WHERE "created_at" BETWEEN '${start}' AND '${end}' ORDER BY created_at DESC`);
+                if (history.rowCount <= 0) {
+                    console.log("Data tidak tersedia");
+                    return {
+                        "status": "404",
+                        "errors": "Tidak ada riwayat transaksi"
+                    }
+                } else {
+                    return history.rows
+                }
+            }
+
+        } catch (ex) {
+            console.log('Error : ' + ex);
+        };
     }
 }
 
