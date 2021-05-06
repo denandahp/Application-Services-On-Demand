@@ -175,6 +175,50 @@ class HomeAltDriverModel {
             console.log('Error : ' + ex);
         };
     }
+
+    async detailhistory(id, kode) {
+
+        try {
+            let cek = await pool.query(`SELECT * FROM ${listbyid}(` + id + `) WHERE "kode" = '${kode}' ORDER BY created_at DESC`);
+            // console.log(cek.rows[0]);
+            if (cek.rows[0] === undefined) {
+                return {
+                    "status": "404",
+                    "errors": "Kode tidak terdaftar di views (jride/jfood/jsend)"
+                }
+            } else if (cek.rows[0].service === "jride") {
+                let res = await pool.query(`SELECT status, kode, created_at, time_order_started, time_order_finished, customer_name, phone_customer, photo_customer, address_pickup, landmark_pickup, address_destination, landmark_destination, metode_pembayaran, ongkir, diskon_admin, total_price_driver FROM ${jrideviews} WHERE "kode" = '${kode}'`);
+                debug('detailhistory %o', res);
+                if (res.rowCount <= 0) {
+                    return {
+                        "status": "404",
+                        "errors": "ID Order tidak ditemukan"
+                    }
+                } else {
+                    return {
+                        layanan: "J-Ride",
+                        res: res.rows[0]
+                    }
+                }
+            } else if (cek.rows[0].service === "jfood") {
+                let res = await pool.query(`SELECT status, kode, created_at, time_order_started, time_order_finished, customer_name, phone, photo_driver, address_restaurant, landmark_restaurant, address_destination, landmark_destination, metode_pembayaran, ongkir, diskon, harga_total_driver FROM ${jfoodviews} WHERE "kode" = '${kode}'`);
+                debug('detailhistory %o', res);
+                if (res.rowCount <= 0) {
+                    return {
+                        "status": "404",
+                        "errors": "ID Order tidak ditemukan"
+                    }
+                } else {
+                    return {
+                        layanan: "J-Food",
+                        res: res.rows[0]
+                    }
+                }
+            }
+        } catch (ex) {
+            console.log('Error : ' + ex);
+        };
+    }
 }
 
 module.exports = new HomeAltDriverModel();
