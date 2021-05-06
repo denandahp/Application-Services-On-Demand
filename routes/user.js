@@ -26,6 +26,7 @@ Router.post('/login', user.login)
       .put('/activeautobid', auth, home.activeautobid)
       .put('/nonactiveautobid', auth, home.nonactiveautobid)
       .get('/homealt', auth, home.homealt)
-      .get('/history', auth, home.history)
+      .post('/history', auth, home.history)
+      .get('/detailhistory/:kode', auth, home.detailhistory)
 
 module.exports = Router;

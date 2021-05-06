@@ -115,6 +115,20 @@ class HomeAltDriverController {
         }
     }
 
+    async detailhistory(req, res, next) {
+
+        let id = req.user.data.id
+        let kode = req.params.kode
+        try {
+            let result = await user.detailhistory(id, kode);
+            res.status(200).send({
+                status: res.statusCode,
+                data: result
+            })
+        } catch (e) {
+            next(e.detail);
+        }
+    }
 }
 
 module.exports = new HomeAltDriverController();
