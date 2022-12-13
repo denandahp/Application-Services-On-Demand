@@ -20,5 +20,5 @@ After the apps running is succesfully, we can start by calling routes. For examp
 ### API Guide And Documentation :
 All API documentation can be accessed at the following link:
 ```
-[https://documenter.getpostman.com/view/9038393/TVYF9eGT](https://documenter.getpostman.com/view/9038393/TVYF9eGT)
+https://documenter.getpostman.com/view/9038393/TVYF9eGT
 ```
